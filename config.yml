@@ -1,0 +1,13 @@
+# The Public Crafters Config - Created by BananaPuncher714
+
+# This determines how high the items float above the crafting table.
+# 0.7 lets the blocks float just a little bit, and .61 lets the items lie flat
+item-height: .7
+
+# This is whether or not the armorstand will be a marker; it may make the items
+# appear darkened if this is true
+marker: false
+
+# This is how many ticks until the crafting table top updates
+# Set it to 2 if the items on the table lag when using pistons to move it
+update-delay: 0
