@@ -11,3 +11,11 @@ marker: false
 # This is how many ticks until the crafting table top updates
 # Set it to 2 if the items on the table lag when using pistons to move it
 update-delay: 0
+
+# This is how a material should be turned, accepts numeric and string ids, and is written in degrees of rotation
+orientation:
+    DIAMOND_BLOCK: "0, 0, 0"
+    
+# This is how much a material should be moved from its position, in x, y, and z
+offset:
+    DIAMOND_BLOCK: "0, 1, 0"

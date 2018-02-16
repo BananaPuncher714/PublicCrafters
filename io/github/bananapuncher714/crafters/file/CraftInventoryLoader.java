@@ -104,7 +104,10 @@ public final class CraftInventoryLoader {
 			String[] locArray = file.getName().split( "_" );
 			Location location = new Location( world, Integer.parseInt( locArray[ 0 ] ), Integer.parseInt( locArray[ 1 ] ), Integer.parseInt( locArray[ 2 ] ) );
 			itemMap.put( location, getItems( file ) );
+			file.delete();
 		}
+		
+		saveLoc.delete();
 		
 		return itemMap;
 	}

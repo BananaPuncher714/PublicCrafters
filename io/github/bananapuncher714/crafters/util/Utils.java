@@ -1,7 +1,11 @@
 package io.github.bananapuncher714.crafters.util;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 /**
  * A simple class to serialize and deserialize locations into a string that works as YAML values;
@@ -20,5 +24,24 @@ public final class Utils {
 	public static String getStringFromLocation( Location location ) {
 		String newLoc = location.getWorld().getName() + "_" + String.valueOf( location.getX() ) + "_" + String.valueOf( location.getY() ) + "_" + String.valueOf( location.getZ() ) + "_" + String.valueOf( location.getYaw() ) + "_" + String.valueOf( location.getPitch() );
 		return newLoc.replace( '.', ',' );
+	}
+	
+	public static Entity getEntityByUUID( UUID uuid, World world ) {
+		for ( Entity entity : world.getEntities() ) {
+			if ( entity.getUniqueId().equals( uuid ) ) {
+				return entity;
+			}
+		}
+		return null;
+	}
+	
+	public static Entity getEntityByUUID( UUID uuid ) {
+		for ( World world : Bukkit.getWorlds() ) {
+			Entity entity = getEntityByUUID( uuid, world );
+			if ( entity != null ) {
+				return entity;
+			}
+		}
+		return null;
 	}
 }

@@ -1,6 +1,6 @@
 name: PublicCrafters
 main: io.github.bananapuncher714.crafters.PublicCraftersMain
-version: 2.0
+version: 2.6
 author: BananaPuncher714
 description: Adds public workbenches to minecraft
 commands:

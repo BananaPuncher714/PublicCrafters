@@ -1,6 +1,7 @@
 package io.github.bananapuncher714.crafters;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,6 +31,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
 /**
  * The main class of all classes;
@@ -39,6 +43,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PublicCraftersMain extends JavaPlugin {
 	private static PublicCraftersMain instance;
 	
+	private Map< Material, EulerAngle > angles = new HashMap< Material, EulerAngle >();
+	private Map< Material, Vector > offsets = new HashMap< Material, Vector >();
 	private Set< UUID > pPlayers = new HashSet< UUID >();
 	private CraftInventoryManager manager;
 	private double height = .7;
@@ -124,6 +130,71 @@ public class PublicCraftersMain extends JavaPlugin {
 		height = config.getDouble( "item-height" );
 		marker = config.getBoolean( "marker" );
 		delay = config.getInt( "update-delay" );
+		
+		for ( String key : config.getConfigurationSection( "orientation" ).getKeys( false ) ) {
+			Material mat = null;
+			boolean found = false;
+			try {
+				mat = Material.getMaterial( Integer.parseInt( key ) );
+				found = true;
+			} catch ( Exception e ) {
+			}
+			if ( !found ) {
+				try {
+					mat = Material.getMaterial( key );
+				} catch ( Exception e2 ) {
+				}
+			}
+			if ( mat == null ) {
+				getLogger().warning( "Invalid material found in the config: '" + mat + "'" );
+				continue;
+			}
+			
+			String data = config.getString( "orientation." + key );
+			String[] orientation = data.split( "\\D+" );
+			if ( orientation.length != 3 ) {
+				getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
+				continue;
+			}
+			try {
+			EulerAngle angle = new EulerAngle( Math.toRadians( Double.parseDouble( orientation[ 0 ] ) ), Math.toRadians( Double.parseDouble( orientation[ 1 ] ) ), Math.toRadians( Double.parseDouble( orientation[ 2 ] ) ) );
+				angles.put( mat, angle );
+			} catch ( Exception exception ) {
+				getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
+			}
+		}
+		for ( String key : config.getConfigurationSection( "offset" ).getKeys( false ) ) {
+			Material mat = null;
+			boolean found = false;
+			try {
+				mat = Material.getMaterial( Integer.parseInt( key ) );
+				found = true;
+			} catch ( Exception e ) {
+			}
+			if ( !found ) {
+				try {
+					mat = Material.getMaterial( key );
+				} catch ( Exception e2 ) {
+				}
+			}
+			if ( mat == null ) {
+				getLogger().warning( "Invalid material found in the config: '" + mat + "'" );
+				continue;
+			}
+			
+			String data = config.getString( "offset." + key );
+			String[] orientation = data.split( "\\D+" );
+			if ( orientation.length != 3 ) {
+				getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
+				continue;
+			}
+			try {
+				Vector vector = new Vector( Double.parseDouble( orientation[ 0 ] ), Double.parseDouble( orientation[ 1 ] ), Double.parseDouble( orientation[ 2 ] ) );
+				offsets.put( mat, vector );
+			} catch ( Exception exception ) {
+				getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
+			}
+		}
 	}
 	
 	public boolean isPrivate( UUID playerUUID ) {
@@ -160,5 +231,13 @@ public class PublicCraftersMain extends JavaPlugin {
 	
 	public File getSaveFolder() {
 		return saveFolder;
+	}
+	
+	public EulerAngle getAngleForMaterial( Material material ) {
+		return angles.get( material );
+	}
+	
+	public Vector getOffsetForMaterial( Material material ) {
+		return offsets.get( material );
 	}
 }

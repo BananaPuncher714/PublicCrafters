@@ -2,12 +2,14 @@ package io.github.bananapuncher714.crafters.implementation.v1_12_R1;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import net.minecraft.server.v1_12_R1.AutoRecipeStackManager;
 import net.minecraft.server.v1_12_R1.Container;
 import net.minecraft.server.v1_12_R1.ContainerUtil;
 import net.minecraft.server.v1_12_R1.InventoryCrafting;
 import net.minecraft.server.v1_12_R1.ItemStack;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,17 +35,21 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
 		this.manager = manager;
-		// We need to access the items stored in the 3 by 3 grid
+		setDefaults();
+		display = new CraftDisplay( this );
+	}
+	
+	private void setDefaults() {
 		try {
+			// Set items
 			Field field = InventoryCrafting.class.getDeclaredField( "items" );
 			field.setAccessible( true );
 			items = ( List< ItemStack > ) field.get( this );
-		} catch ( Exception exception ) {
-			exception.printStackTrace();
+		} catch ( Exception e ) {
+			e.printStackTrace();
 		}
-		display = new CraftDisplay( this );
 	}
-
+	
 	@Override
 	public void setItem( int index, ItemStack item ) {
 		// Instead of updating one container, update all the containers

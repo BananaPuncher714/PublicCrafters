@@ -6,15 +6,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
 import io.github.bananapuncher714.crafters.PublicCraftersMain;
 import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
+import io.github.bananapuncher714.crafters.util.Utils;
 
 /**
  * The basic unit that is responsible for managing the items that appear on the crafting table
@@ -49,17 +53,33 @@ public class ItemDisplay {
 	}
 	
 	private UUID uuid;
-	private ArmorStand itemDisplay = null;
 
 	protected final int slot;
 	protected final ItemStack item;
 	protected final Location location;
 	protected final CraftDisplay parent;
+	protected EulerAngle handPose;
 	
 	public ItemDisplay( CraftDisplay container, Location loc, ItemStack item, int slot ) {
 		this.item = item;
 		this.slot = slot;
-		location = loc;
+		
+		handPose = PublicCraftersMain.getInstance().getAngleForMaterial( item.getType() );
+		if ( handPose == null ) {
+			if ( item.getType().isBlock() ) {
+				handPose = BLOCK_HAND_POSE;
+			} else {
+				handPose = ITEM_HAND_POSE;
+			}
+		}
+
+		location = loc.clone();
+		
+		Vector vector = PublicCraftersMain.getInstance().getOffsetForMaterial( item.getType() );
+		if ( vector != null ) {
+			location.add( vector );
+		}
+		
 		parent = container;
 	}
 	
@@ -67,7 +87,7 @@ public class ItemDisplay {
 	 * This is the important method when creating a subclass.
 	 */
 	public void init() {
-		itemDisplay = getModelStand( location );
+		ArmorStand itemDisplay = getModelStand( location );
 		itemDisplay.setItemInHand( item );
 		
 		if ( item.getType().isBlock() ) {
@@ -84,8 +104,9 @@ public class ItemDisplay {
 	 * This is a method you will want to override too, it is called whenever an ItemDisplay is no longer needed, and on server stop.
 	 */
 	public void remove() {
-		if ( itemDisplay != null ) {
-			itemDisplay.remove();
+		Entity display = Utils.getEntityByUUID( uuid, location.getWorld() );
+		if ( display != null ) {
+			display.remove();
 		}
 		unregisterEntity( uuid );
 	}
