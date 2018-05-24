@@ -36,6 +36,7 @@ public class VirtualItemDisplay extends ItemDisplay {
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
 			kill( location, player );
 		}
+		entities.remove( location );
 	}
 
 	public static void spawnAll( Player player ) {
@@ -124,7 +125,5 @@ public class VirtualItemDisplay extends ItemDisplay {
 		} catch ( Exception exception ) {
 			exception.printStackTrace();
 		}
-
-		entities.remove( location );
 	}
 }
