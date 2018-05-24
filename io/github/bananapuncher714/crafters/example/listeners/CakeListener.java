@@ -3,7 +3,7 @@ package io.github.bananapuncher714.crafters.example.listeners;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
 import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
@@ -65,7 +65,7 @@ public class CakeListener implements Listener {
 		if ( crafted ) {
 			if ( floater == null ) {
 				floater = new CakeFloater( craftDisplay.getLocation() );
-				floater.runTaskTimer( PublicCraftersMain.getInstance(), 0, 1 );
+				floater.runTaskTimer( PublicCrafters.getInstance(), 0, 1 );
 			}
 		} else if ( floater != null ) {
 			floater.cancel();

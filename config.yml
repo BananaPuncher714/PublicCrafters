@@ -19,3 +19,9 @@ orientation:
 # This is how much a material should be moved from its position, in x, y, and z
 offset:
     DIAMOND_BLOCK: "0, 1, 0"
+
+# Whether or not a player has private crafting enabled by default`
+private-by-default: false
+
+# Whether or not the items that appear are fake. May not work for every version
+virtual: true

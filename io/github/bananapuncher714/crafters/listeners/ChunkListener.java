@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.file.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 
@@ -10,8 +10,10 @@ import java.util.Map;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -30,7 +32,7 @@ public class ChunkListener implements Listener {
 	@EventHandler
 	public void onChunkLoadEvent( ChunkLoadEvent event ) {
 		Chunk chunk = event.getChunk();
-		Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( PublicCraftersMain.getInstance().getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ() );
+		Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( PublicCrafters.getInstance().getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ() );
 		for ( Location location : itemMap.keySet() ) {
 			manager.load( location, itemMap.get( location ) );
 		}
@@ -39,8 +41,11 @@ public class ChunkListener implements Listener {
 	/**
 	 * Gonna have to disable this for now, seeing as I can't determine if its a lazy unload or not.
 	 */
-//	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-//	public void onChunkUnloadEvent( ChunkUnloadEvent event ) {
-//		manager.unload( event.getChunk() );
-//	}
+	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
+	public void onChunkUnloadEvent( ChunkUnloadEvent event ) {
+		if ( event.getChunk().isLoaded() ) {
+			return;
+		}
+		manager.unload( event.getChunk() );
+	}
 }

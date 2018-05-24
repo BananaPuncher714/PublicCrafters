@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.crafters.util.Utils;
@@ -64,7 +64,7 @@ public class ItemDisplay {
 		this.item = item;
 		this.slot = slot;
 		
-		handPose = PublicCraftersMain.getInstance().getAngleForMaterial( item.getType() );
+		handPose = PublicCrafters.getInstance().getAngleForMaterial( item.getType() );
 		if ( handPose == null ) {
 			if ( item.getType().isBlock() ) {
 				handPose = BLOCK_HAND_POSE;
@@ -75,7 +75,7 @@ public class ItemDisplay {
 
 		location = loc.clone();
 		
-		Vector vector = PublicCraftersMain.getInstance().getOffsetForMaterial( item.getType() );
+		Vector vector = PublicCrafters.getInstance().getOffsetForMaterial( item.getType() );
 		if ( vector != null ) {
 			location.add( vector );
 		}
@@ -90,11 +90,7 @@ public class ItemDisplay {
 		ArmorStand itemDisplay = getModelStand( location );
 		itemDisplay.setItemInHand( item );
 		
-		if ( item.getType().isBlock() ) {
-			itemDisplay.setRightArmPose( BLOCK_HAND_POSE );
-		} else {
-			itemDisplay.setRightArmPose( ITEM_HAND_POSE );
-		}
+		itemDisplay.setRightArmPose( handPose );
 		
 		uuid = itemDisplay.getUniqueId();
 		registerEntity( uuid );
@@ -170,7 +166,7 @@ public class ItemDisplay {
 		model.setVisible( false );
 		model.setGravity( false );
 		model.setSmall( true );
-		model.setMarker( PublicCraftersMain.getInstance().isMarker() );
+		model.setMarker( PublicCrafters.getInstance().isMarker() );
 		NBTEditor.setEntityTag( model, 1, "DisabledSlots" );
 		NBTEditor.setEntityTag( model, ( byte ) 1, "Invulnerable" );
 		return model;

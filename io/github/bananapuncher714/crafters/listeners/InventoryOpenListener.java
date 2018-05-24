@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -25,9 +26,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author BananaPuncher714
  */
 public class InventoryOpenListener implements Listener {
-	PublicCraftersMain plugin;
+	PublicCrafters plugin;
 	
-	public InventoryOpenListener( PublicCraftersMain main ) {
+	public InventoryOpenListener( PublicCrafters main ) {
 		plugin = main;
 	}
 	
@@ -38,17 +39,19 @@ public class InventoryOpenListener implements Listener {
 		}
 		
 		Block block = event.getClickedBlock();
-		if ( block.getType() != Material.WORKBENCH ) {
+		Material type = block.getType();
+		InventoryType invType = getTypeFromMaterial( type );
+		if ( invType == null ) {
 			return;
 		}
 		
 		Player player = event.getPlayer();
-		if ( player.isSneaking() || plugin.isPrivate( player.getUniqueId() ) ) {
+		if ( player.isSneaking() || ( plugin.isPrivateByDefault() ^ plugin.isPrivate( player.getUniqueId() ) ) ) {
 			return;
 		}
 		
 		event.setCancelled( true );
-		PublicCraftersMain.getInstance().getManager().openWorkbench( player, block.getLocation() );
+		PublicCrafters.getInstance().getManager().openWorkbench( player, block.getLocation(), invType );
 	}
 	
 	/**
@@ -78,7 +81,14 @@ public class InventoryOpenListener implements Listener {
 			return;
 		}
 		
-		PublicCraftersMain.getInstance().getManager().openWorkbench( player, display.getCraftDisplay().getInventory().getLocation() );
+		PublicCrafters.getInstance().getManager().openWorkbench( player, display.getCraftDisplay().getInventory().getLocation(), InventoryType.WORKBENCH );
 	}
 
+	public static InventoryType getTypeFromMaterial( Material material ) {
+		switch ( material ) {
+		case WORKBENCH: return InventoryType.WORKBENCH;
+//		case ANVIL: return InventoryType.ANVIL;
+		default: return null;
+		}
+	}
 }

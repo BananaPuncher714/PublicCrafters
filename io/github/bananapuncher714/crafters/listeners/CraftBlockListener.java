@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 
 import java.util.HashSet;
@@ -27,9 +27,9 @@ import org.bukkit.event.entity.EntityExplodeEvent;
  * @author BananaPuncher714
  */
 public class CraftBlockListener implements Listener {
-	private PublicCraftersMain plugin;
+	private final PublicCrafters plugin;
 	
-	public CraftBlockListener( PublicCraftersMain plugin ) {
+	public CraftBlockListener( PublicCrafters plugin ) {
 		this.plugin = plugin;
 	}
 	

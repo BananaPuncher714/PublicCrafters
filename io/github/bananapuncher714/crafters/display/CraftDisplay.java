@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.display;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
 import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
 import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
@@ -34,7 +34,7 @@ public class CraftDisplay implements Runnable {
 	 * It must be a {@link PublicCraftingInventory}, NOT your normal Bukkit inventory
 	 */
 	public CraftDisplay( PublicCraftingInventory inventory ) {
-		this( inventory, PublicCraftersMain.getInstance().getHeight() );
+		this( inventory, PublicCrafters.getInstance().getHeight() );
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class CraftDisplay implements Runnable {
 	 * All this really does is run the {@link #run()} method some ticks after this is called
 	 */
 	public void update() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask( PublicCraftersMain.getInstance(), this, PublicCraftersMain.getInstance().getUpdateDelay() );
+		Bukkit.getScheduler().scheduleSyncDelayedTask( PublicCrafters.getInstance(), this, PublicCrafters.getInstance().getUpdateDelay() );
 	}
 	
 	/**

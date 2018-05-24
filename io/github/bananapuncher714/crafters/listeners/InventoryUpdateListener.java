@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
@@ -18,9 +18,9 @@ import org.bukkit.inventory.Inventory;
  * @author BananaPuncher714
  */
 public class InventoryUpdateListener implements Listener {
-	PublicCraftersMain plugin;
+	PublicCrafters plugin;
 	
-	public InventoryUpdateListener( PublicCraftersMain plugin ) {
+	public InventoryUpdateListener( PublicCrafters plugin ) {
 		this.plugin = plugin;
 	}
 	
@@ -33,7 +33,7 @@ public class InventoryUpdateListener implements Listener {
 		if ( event.getRawSlot() != event.getSlot() ) {
 			return;
 		}
-		Location location = PublicCraftersMain.getInstance().getManager().getLocation( inventory );
+		Location location = PublicCrafters.getInstance().getManager().getLocation( inventory );
 		if ( location != null ) {
 			HumanEntity human = event.getWhoClicked();
 			if ( human instanceof Player ) {

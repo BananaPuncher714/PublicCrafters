@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.command;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,9 +16,9 @@ import org.bukkit.entity.Player;
  *
  */
 public class CraftingCommand implements CommandExecutor {
-	private PublicCraftersMain plugin;
+	private PublicCrafters plugin;
 	
-	public CraftingCommand( PublicCraftersMain main ) {
+	public CraftingCommand( PublicCrafters main ) {
 		plugin = main;
 	}
 	
@@ -41,7 +41,7 @@ public class CraftingCommand implements CommandExecutor {
 			Player player = ( Player ) sender;
 			if ( player.hasPermission( "publiccrafters.private" ) ) {
 				plugin.setPrivate( player.getUniqueId(), !plugin.isPrivate( player.getUniqueId() ) );
-				player.sendMessage( ChatColor.AQUA + "You have set private crafting to " + plugin.isPrivate( player.getUniqueId() ) );
+				player.sendMessage( ChatColor.AQUA + "You have set private crafting to " + ( plugin.isPrivateByDefault() ^ plugin.isPrivate( player.getUniqueId() ) ) );
 			} else {
 				player.sendMessage( ChatColor.RED + "You do not have permission to run this command!" );
 			}
@@ -53,7 +53,7 @@ public class CraftingCommand implements CommandExecutor {
 	private void cmd_reload( CommandSender sender, String[] args ) {
 		if ( sender.hasPermission( "publiccrafters.reload" ) ) {
 			sender.sendMessage( ChatColor.AQUA + "Reloading the config..." );
-			PublicCraftersMain.getInstance().reload();
+			PublicCrafters.getInstance().reload();
 			sender.sendMessage( ChatColor.GREEN + "Done!" );
 		} else {
 			sender.sendMessage( ChatColor.RED + "You do not have permission to run this command!" );

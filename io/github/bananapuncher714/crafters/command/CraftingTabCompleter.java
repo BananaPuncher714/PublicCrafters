@@ -20,23 +20,23 @@ import org.bukkit.util.StringUtil;
 public class CraftingTabCompleter implements TabCompleter {
 
 	@Override
-	public List<String> onTabComplete(CommandSender arg0, Command arg1, String arg2, String[] arg3) {
+	public List< String > onTabComplete( CommandSender sender, Command command, String label, String[] args ) {
 		List< String > completions = new ArrayList< String >();
-		if ( !( arg0 instanceof Player ) ) {
+		if ( !( sender instanceof Player ) ) {
 			completions.add( "reload" );
 			return completions;
 		}
-		List< String > aos = new ArrayList< String >();
-		Player player = ( Player ) arg0;
-		if ( arg3.length == 1 ) {
+		List< String > suggestions = new ArrayList< String >();
+		Player player = ( Player ) sender;
+		if ( args.length == 1 ) {
 			if ( player.hasPermission( "publiccrafters.reload" ) ) {
-				aos.add( "reload" );
+				suggestions.add( "reload" );
 			}
 			if ( player.hasPermission( "publiccrafters.private" ) ) {
-				aos.add( "toggle" );
+				suggestions.add( "toggle" );
 			}
 		}
-		StringUtil.copyPartialMatches( arg3[ arg3.length - 1 ], aos, completions);
+		StringUtil.copyPartialMatches( args[ args.length - 1 ], suggestions, completions);
 		Collections.sort( completions );
 		return completions;
 	}

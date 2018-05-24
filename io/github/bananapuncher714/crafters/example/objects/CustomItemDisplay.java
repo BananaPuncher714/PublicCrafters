@@ -8,7 +8,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
 import io.github.bananapuncher714.crafters.example.util.RivenMath;
@@ -57,7 +57,7 @@ public class CustomItemDisplay extends ItemDisplay {
 			stand.setMarker( true );
 			stands.add( stand );
 		}
-		runnable.runTaskTimer( PublicCraftersMain.getInstance(), 0, 1 );
+		runnable.runTaskTimer( PublicCrafters.getInstance(), 0, 1 );
 	}
 	
 	@Override

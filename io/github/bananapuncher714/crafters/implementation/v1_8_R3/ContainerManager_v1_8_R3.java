@@ -1,6 +1,6 @@
 package io.github.bananapuncher714.crafters.implementation.v1_8_R3;
 
-import io.github.bananapuncher714.crafters.PublicCraftersMain;
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.file.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,6 +42,9 @@ public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 	
 	public Location getLocation( Inventory inventory ) {
 		if ( inventory == null ) {
+			return null;
+		}
+		if ( !( inventory instanceof CraftInventory ) ) {
 			return null;
 		}
 		try {
@@ -75,7 +79,7 @@ public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 	public void stopAll() {
 		for ( PublicCraftingInventory inventory : benches.values() ) {
 			inventory.getCraftDisplay().stop();
-			CraftInventoryLoader.save( PublicCraftersMain.getInstance().getSaveFolder(), inventory );
+			CraftInventoryLoader.save( PublicCrafters.getInstance().getSaveFolder(), inventory );
 			
 		}
 	}
@@ -100,7 +104,7 @@ public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 				CustomInventoryCrafting crafting = benches.get( location );
 				locations.add( location );
 				crafting.getCraftDisplay().stop();
-				CraftInventoryLoader.save( PublicCraftersMain.getInstance().getSaveFolder(), crafting );
+				CraftInventoryLoader.save( PublicCrafters.getInstance().getSaveFolder(), crafting );
 			}
 		}
 		found = !locations.isEmpty();
@@ -111,7 +115,7 @@ public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 	}
 	
 	@Override
-	public void openWorkbench( Player player, Location loc ) {
+	public void openWorkbench( Player player, Location loc, InventoryType type ) {
 		( ( CraftPlayer ) player ).getHandle().openTileEntity( new CustomTileEntityContainerWorkbench( this, loc ) );
 	}
 	

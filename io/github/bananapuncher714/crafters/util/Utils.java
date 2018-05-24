@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
@@ -43,5 +44,19 @@ public final class Utils {
 			}
 		}
 		return null;
+	}
+	
+	public static Material getMaterialFromString( String materialName ) {
+		boolean found = false;
+		Material mat = null;
+		try {
+			mat = Material.getMaterial( Integer.parseInt( materialName ) );
+			found = true;
+		} catch ( Exception e ) {
+		}
+		if ( !found ) {
+			mat = Material.getMaterial( materialName );
+		}
+		return mat;
 	}
 }

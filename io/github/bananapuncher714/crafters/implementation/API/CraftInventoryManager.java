@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,7 +51,7 @@ public interface CraftInventoryManager {
 	 * @param location
 	 * The location; will create a new {@link PublicCraftingInventory} if none exists
 	 */
-	public void openWorkbench( Player player, Location location );
+	public void openWorkbench( Player player, Location location, InventoryType type );
 	
 	/**
 	 * Stop and save all the loaded {@link PublicCraftingInventory}
