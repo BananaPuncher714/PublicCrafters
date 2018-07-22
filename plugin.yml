@@ -1,8 +1,13 @@
 name: PublicCrafters
 main: io.github.bananapuncher714.crafters.PublicCrafters
-version: 3.1
+version: 4.0
 author: BananaPuncher714
 description: Adds public workbenches to Minecraft
 commands:
     craftingtable:
         description: Toggles private crafting
+permissions:
+    publiccrafters.private:
+        default: true
+    publiccrafters.reload:
+        default: op

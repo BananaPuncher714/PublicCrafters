@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 
@@ -48,21 +49,26 @@ public class VirtualItemDisplay extends ItemDisplay {
 
 	public static void spawn( Location loc, Player p, EulerAngle handPose, ItemStack item ) {
 		try {
-			Object worldServer = ReflectionUtil.getMethod( "getWorldHandle" ).invoke( loc.getWorld() );
-			Object armorStand = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
+			Object armorStand;
+			if ( !entities.containsKey( loc ) ) {
+				Object worldServer = ReflectionUtil.getMethod( "getWorldHandle" ).invoke( loc.getWorld() );
+				armorStand = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
 
-			ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
-			ReflectionUtil.getMethod( "setMarker").invoke( armorStand, true );
-			ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
-			ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, true );
-			ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
-			ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
+				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
+				ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
+				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
+				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, true );
+				ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
+				ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
 
-			ArmorStand bukkitStand = ( ArmorStand ) ReflectionUtil.getMethod( "getBukkitEntity" ).invoke( armorStand );
-			bukkitStand.setItemInHand( item );
-			NBTEditor.setEntityTag( bukkitStand, 1, "DisabledSlots" );
-			NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Invulnerable" );
-			bukkitStand.setRightArmPose( handPose );
+				ArmorStand bukkitStand = ( ArmorStand ) ReflectionUtil.getMethod( "getBukkitEntity" ).invoke( armorStand );
+				bukkitStand.setItemInHand( item );
+				NBTEditor.setEntityTag( bukkitStand, 1, "DisabledSlots" );
+				NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Invulnerable" );
+				bukkitStand.setRightArmPose( handPose );
+			} else {
+				armorStand = entities.get( loc );
+			}
 
 			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
 

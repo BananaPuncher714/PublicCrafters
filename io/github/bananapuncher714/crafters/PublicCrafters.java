@@ -95,7 +95,7 @@ public class PublicCrafters extends JavaPlugin {
 				manager.unload( chunk );
 			}
 		}
-//		manager.stopAll();
+		//		manager.stopAll();
 	}
 
 	private void loadChunks() {
@@ -136,46 +136,52 @@ public class PublicCrafters extends JavaPlugin {
 		delay = config.getInt( "update-delay" );
 		privateByDefault = config.getBoolean( "private-by-default" );
 		virtual = config.getBoolean( "virtual" );
-		
-		for ( String key : config.getConfigurationSection( "orientation" ).getKeys( false ) ) {
-			Material mat = Utils.getMaterialFromString( key );
-			if ( mat == null ) {
-				getLogger().warning( "Invalid material found in the config: '" + key + "'" );
-				continue;
-			}
 
-			String data = config.getString( "orientation." + key );
-			String[] orientation = data.split( "\\D+" );
-			if ( orientation.length != 3 ) {
-				getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
-				continue;
-			}
-			try {
-				EulerAngle angle = new EulerAngle( Math.toRadians( Double.parseDouble( orientation[ 0 ] ) ), Math.toRadians( Double.parseDouble( orientation[ 1 ] ) ), Math.toRadians( Double.parseDouble( orientation[ 2 ] ) ) );
-				angles.put( mat, angle );
-			} catch ( Exception exception ) {
-				getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
+		angles.clear();
+		if ( config.getConfigurationSection( "orientation" ) != null ) {
+			for ( String key : config.getConfigurationSection( "orientation" ).getKeys( false ) ) {
+				Material mat = Utils.getMaterialFromString( key );
+				if ( mat == null ) {
+					getLogger().warning( "Invalid material found in the config: '" + key + "'" );
+					continue;
+				}
+
+				String data = config.getString( "orientation." + key );
+				String[] orientation = data.split( "\\D+" );
+				if ( orientation.length != 3 ) {
+					getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
+					continue;
+				}
+				try {
+					EulerAngle angle = new EulerAngle( Math.toRadians( Double.parseDouble( orientation[ 0 ] ) ), Math.toRadians( Double.parseDouble( orientation[ 1 ] ) ), Math.toRadians( Double.parseDouble( orientation[ 2 ] ) ) );
+					angles.put( mat, angle );
+				} catch ( Exception exception ) {
+					getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
+				}
 			}
 		}
-		for ( String key : config.getConfigurationSection( "offset" ).getKeys( false ) ) {
-			Material mat = Utils.getMaterialFromString( key );
+		offsets.clear();
+		if ( config.getConfigurationSection( "offset" ) != null ) {
+			for ( String key : config.getConfigurationSection( "offset" ).getKeys( false ) ) {
+				Material mat = Utils.getMaterialFromString( key );
 
-			if ( mat == null ) {
-				getLogger().warning( "Invalid material found in the config: '" + key + "'" );
-				continue;
-			}
+				if ( mat == null ) {
+					getLogger().warning( "Invalid material found in the config: '" + key + "'" );
+					continue;
+				}
 
-			String data = config.getString( "offset." + key );
-			String[] orientation = data.split( "\\D+" );
-			if ( orientation.length != 3 ) {
-				getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
-				continue;
-			}
-			try {
-				Vector vector = new Vector( Double.parseDouble( orientation[ 0 ] ), Double.parseDouble( orientation[ 1 ] ), Double.parseDouble( orientation[ 2 ] ) );
-				offsets.put( mat, vector );
-			} catch ( Exception exception ) {
-				getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
+				String data = config.getString( "offset." + key );
+				String[] orientation = data.split( "\\D+" );
+				if ( orientation.length != 3 ) {
+					getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
+					continue;
+				}
+				try {
+					Vector vector = new Vector( Double.parseDouble( orientation[ 0 ] ), Double.parseDouble( orientation[ 1 ] ), Double.parseDouble( orientation[ 2 ] ) );
+					offsets.put( mat, vector );
+				} catch ( Exception exception ) {
+					getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
+				}
 			}
 		}
 	}
@@ -211,15 +217,15 @@ public class PublicCrafters extends JavaPlugin {
 	public boolean isPrivateByDefault() {
 		return privateByDefault;
 	}
-	
+
 	public boolean isVirtual() {
 		return virtual;
 	}
-	
+
 	public int getUpdateDelay() {
 		return delay;
 	}
-	
+
 	public File getSaveFolder() {
 		return saveFolder;
 	}

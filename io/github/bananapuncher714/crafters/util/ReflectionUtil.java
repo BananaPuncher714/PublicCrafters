@@ -55,8 +55,8 @@ public final class ReflectionUtil {
 			classCache.put( "World", Class.forName( "net.minecraft.server." + version + "." + "World" ) );
 			
 			classCache.put( "EnumItemSlot", Class.forName( "net.minecraft.server." + version + "." + "EnumItemSlot" ) );
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		} catch ( ClassNotFoundException e ) {
+//			e.printStackTrace();
 		}
 
 		methodCache = new HashMap< String, Method >();
@@ -81,7 +81,7 @@ public final class ReflectionUtil {
 			methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "getEquipment", getNMSClass( "EnumItemSlot" ) ) );
 			methodCache.put( "valueOf", getNMSClass( "EnumItemSlot" ).getMethod( "valueOf", String.class ) );
 		} catch( Exception e ) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		constructorCache = new HashMap< Class< ? >, Constructor< ? > >();
@@ -94,7 +94,7 @@ public final class ReflectionUtil {
 			
 			connection = getNMSClass( "EntityPlayer" ).getField( "playerConnection" );
 		} catch( Exception e ) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 	
