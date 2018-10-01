@@ -23,5 +23,8 @@ offset:
 # Whether or not a player has private crafting enabled by default`
 private-by-default: false
 
+# Whether or not the table should drop their items if no one is using it
+drop-item: false
+
 # Whether or not the items that appear are fake. May not work for every version
 virtual: true

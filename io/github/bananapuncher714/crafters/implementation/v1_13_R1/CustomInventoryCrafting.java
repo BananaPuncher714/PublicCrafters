@@ -153,7 +153,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	
 	@Override
 	public void update() {
-		if ( bloc.getBlock().getType() != Material.WORKBENCH ) {
+		if ( !bloc.getBlock().getType().name().equalsIgnoreCase( "CRAFTING_TABLE" ) ) {
 			remove();
 			manager.benches.remove( bloc );
 		} else {

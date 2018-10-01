@@ -26,6 +26,8 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryCrafting;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
+import io.github.bananapuncher714.crafters.PublicCrafters;
+
 public class CustomContainerWorkbench extends ContainerWorkbench {
 	public InventoryCraftResult resultInventory;
 	public CustomInventoryCrafting craftInventory;
@@ -183,6 +185,18 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		}
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
+		
+		if ( craftInventory.transaction.isEmpty() && PublicCrafters.getInstance().isDropItem() ) {
+			if ( !world.isClientSide ) {
+				for (int i = 0; i < 9; i++ ) {
+					ItemStack itemstack = craftInventory.getItem( i );
+					craftInventory.setItem( i, null );
+					if ( itemstack != null ) {
+						entity.drop( itemstack, false );
+					}
+				}
+			}
+		}
 	}
 	
 	// Overrides 1.12
@@ -195,7 +209,8 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		if ( !checkReachable ) {
 			return true;
 		}
-		return craftInventory.getLocation().getBlock().getType() == Material.WORKBENCH;
+		// Should make more efficient
+		return craftInventory.getLocation().getBlock().getType().name().equalsIgnoreCase( "CRAFTING_TABLE" );
 	}
 
 	@Override

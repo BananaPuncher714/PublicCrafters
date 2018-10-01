@@ -55,16 +55,20 @@ public class VirtualItemDisplay extends ItemDisplay {
 				armorStand = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
 
 				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
-				ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
 				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
-				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, true );
+				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) );
 				ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
-				ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
+				if ( !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+					ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
+					ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
+				}
 
+				
 				ArmorStand bukkitStand = ( ArmorStand ) ReflectionUtil.getMethod( "getBukkitEntity" ).invoke( armorStand );
 				bukkitStand.setItemInHand( item );
 				NBTEditor.setEntityTag( bukkitStand, 1, "DisabledSlots" );
 				NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Invulnerable" );
+				NBTEditor.setEntityTag( bukkitStand, PublicCrafters.getInstance().isMarker() ? ( byte ) 1 : ( byte ) 0, "Marker" );
 				bukkitStand.setRightArmPose( handPose );
 			} else {
 				armorStand = entities.get( loc );
@@ -96,7 +100,12 @@ public class VirtualItemDisplay extends ItemDisplay {
 
 	private static void update( Player player, Object armorStand ) {
 		try {
-			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ) ) );
+			Object packet;
+			if ( ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), 0, ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, 0 ) );
+			} else {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ) ) );
+			}
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
 			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
 		} catch ( Exception exception ) {
@@ -111,7 +120,12 @@ public class VirtualItemDisplay extends ItemDisplay {
 		try {
 			Object stand = entities.get( location );
 
-			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "asNMSCopy" ).invoke( null, item ) );
+			Object packet;
+			if ( ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), 0, ReflectionUtil.getMethod( "asNMSCopy" ).invoke( null, item ) );
+			} else {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "asNMSCopy" ).invoke( null, item ) );
+			}
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
 			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
 		} catch ( Exception exception ) {

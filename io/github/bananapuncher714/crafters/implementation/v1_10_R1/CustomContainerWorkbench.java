@@ -9,6 +9,7 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryView;
 
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import net.minecraft.server.v1_10_R1.Container;
 import net.minecraft.server.v1_10_R1.CraftingManager;
 import net.minecraft.server.v1_10_R1.EntityHuman;
@@ -128,6 +129,18 @@ public class CustomContainerWorkbench extends Container {
 		super.b( entity );
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
+		
+		if ( craftInventory.transaction.isEmpty() && PublicCrafters.getInstance().isDropItem() ) {
+			if ( !world.isClientSide ) {
+				for (int i = 0; i < 9; i++ ) {
+					ItemStack itemstack = craftInventory.getItem( i );
+					craftInventory.setItem( i, null );
+					if ( itemstack != null ) {
+						entity.drop( itemstack, false );
+					}
+				}
+			}
+		}
 	}
 	
 	@Override

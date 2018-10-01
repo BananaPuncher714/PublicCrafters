@@ -85,8 +85,10 @@ public class InventoryOpenListener implements Listener {
 	}
 
 	public static InventoryType getTypeFromMaterial( Material material ) {
-		switch ( material ) {
-		case WORKBENCH: return InventoryType.WORKBENCH;
+		String name = material.name();
+		switch ( name ) {
+		case "CRAFTING_TABLE":
+		case "WORKBENCH": return InventoryType.WORKBENCH;
 //		case ANVIL: return InventoryType.ANVIL;
 		default: return null;
 		}

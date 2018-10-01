@@ -53,6 +53,7 @@ public class PublicCrafters extends JavaPlugin {
 	private boolean marker = false;
 	private boolean privateByDefault = false;
 	private boolean virtual = false;
+	private boolean dropItem = false;
 	private int delay = 0;
 	private final File saveFolder = new File( getDataFolder() + "/" + "saves" );
 
@@ -62,11 +63,13 @@ public class PublicCrafters extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 
+		saveResource( "README.md", true );
 		saveDefaultConfig();
 		loadConfig();
 
 		manager = ReflectionUtil.getManager();
-
+		getLogger().info( "Detected version '" + ReflectionUtil.getVersion() + "'" );
+		
 		registerListeners();
 		registerCommands();
 
@@ -135,8 +138,9 @@ public class PublicCrafters extends JavaPlugin {
 		marker = config.getBoolean( "marker" );
 		delay = config.getInt( "update-delay" );
 		privateByDefault = config.getBoolean( "private-by-default" );
+		dropItem = config.getBoolean( "drop-item" );
 		virtual = config.getBoolean( "virtual" );
-
+		
 		angles.clear();
 		if ( config.getConfigurationSection( "orientation" ) != null ) {
 			for ( String key : config.getConfigurationSection( "orientation" ).getKeys( false ) ) {
@@ -216,6 +220,10 @@ public class PublicCrafters extends JavaPlugin {
 
 	public boolean isPrivateByDefault() {
 		return privateByDefault;
+	}
+	
+	public boolean isDropItem() {
+		return dropItem;
 	}
 
 	public boolean isVirtual() {
