@@ -3,6 +3,15 @@ package io.github.bananapuncher714.crafters.implementation.v1_13_R2;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryView;
+import org.bukkit.entity.HumanEntity;
+
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import net.minecraft.server.v1_13_R2.ContainerWorkbench;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -16,17 +25,6 @@ import net.minecraft.server.v1_13_R2.PlayerInventory;
 import net.minecraft.server.v1_13_R2.Slot;
 import net.minecraft.server.v1_13_R2.SlotResult;
 import net.minecraft.server.v1_13_R2.World;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_13_R2.event.CraftEventFactory;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryCrafting;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryView;
-import org.bukkit.entity.HumanEntity;
-
-import io.github.bananapuncher714.crafters.PublicCrafters;
 
 public class CustomContainerWorkbench extends ContainerWorkbench {
 	public InventoryCraftResult resultInventory;
@@ -156,7 +154,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 			IRecipe irecipe = world.getMinecraftServer().getCraftingManager().b( craftInventory, world );
 			if ((resultInventory.a(world, entityplayer, irecipe)) && (irecipe != null)) {
 				resultInventory.a( irecipe );
-				itemstack = irecipe.craftItem(resultInventory);
+				itemstack = irecipe.craftItem( craftInventory );
 		      }
 			itemstack = CraftEventFactory.callPreCraftEvent(craftInventory, resultInventory, itemstack, getBukkitView(), false);
 

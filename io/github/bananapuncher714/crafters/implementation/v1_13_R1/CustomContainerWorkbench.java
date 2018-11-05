@@ -157,7 +157,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 			IRecipe irecipe = world.getMinecraftServer().getCraftingManager().b( craftInventory, world );
 			if ((resultInventory.a(world, entityplayer, irecipe)) && (irecipe != null)) {
 				resultInventory.a( irecipe );
-				itemstack = irecipe.craftItem(resultInventory);
+				itemstack = irecipe.craftItem( craftInventory );
 		      }
 			itemstack = CraftEventFactory.callPreCraftEvent(craftInventory, resultInventory, itemstack, getBukkitView(), false);
 
