@@ -6,18 +6,22 @@ import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 
 /**
  * Handles whenever a player clicks on a crafting table or an entity that's part of a {@link PublicCraftingInventory} or {@link CraftDisplay};
@@ -26,14 +30,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author BananaPuncher714
  */
 public class InventoryOpenListener implements Listener {
-	PublicCrafters plugin;
+	private final PublicCrafters plugin;
 	
 	public InventoryOpenListener( PublicCrafters main ) {
 		plugin = main;
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onPlayerInteractEvent( PlayerInteractEvent event ) {
+	private void onPlayerInteractEvent( PlayerInteractEvent event ) {
 		if ( event.getAction() != Action.RIGHT_CLICK_BLOCK ) {
 			return;
 		}
@@ -61,7 +65,7 @@ public class InventoryOpenListener implements Listener {
 	 * The PlayerInteractEvent
 	 */
 	@EventHandler( priority = EventPriority.LOWEST )
-	public void onEntityInteractEvent( PlayerInteractAtEntityEvent event ) {
+	private void onEntityInteractEvent( PlayerInteractAtEntityEvent event ) {
 		Entity entity = event.getRightClicked();
 		ItemDisplay display = ItemDisplay.getItemDisplay( entity.getUniqueId() );
 		if ( display == null ) {
@@ -82,6 +86,25 @@ public class InventoryOpenListener implements Listener {
 		}
 		
 		PublicCrafters.getInstance().getManager().openWorkbench( player, display.getCraftDisplay().getInventory().getLocation(), InventoryType.WORKBENCH );
+	}
+	
+	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
+	private void onInventoryUpdateListener( InventoryClickEvent event ) {
+		Inventory inventory = event.getInventory();
+		if ( inventory == null ) {
+			return;
+		}
+		if ( event.getRawSlot() != event.getSlot() ) {
+			return;
+		}
+		Location location = PublicCrafters.getInstance().getManager().getLocation( inventory );
+		if ( location != null ) {
+			HumanEntity human = event.getWhoClicked();
+			if ( human instanceof Player ) {
+				Player player = ( Player ) human;
+				plugin.getManager().animate( player );
+			}
+		}
 	}
 
 	public static InventoryType getTypeFromMaterial( Material material ) {

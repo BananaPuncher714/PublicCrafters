@@ -1,5 +1,15 @@
 package io.github.bananapuncher714.crafters.implementation.v1_8_R3;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryView;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.InventoryView;
+
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import net.minecraft.server.v1_8_R3.Container;
 import net.minecraft.server.v1_8_R3.CraftingManager;
 import net.minecraft.server.v1_8_R3.EntityHuman;
@@ -11,17 +21,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_8_R3.Slot;
 import net.minecraft.server.v1_8_R3.SlotResult;
 import net.minecraft.server.v1_8_R3.World;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryCrafting;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryView;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.InventoryView;
-
-import io.github.bananapuncher714.crafters.PublicCrafters;
 
 public class CustomContainerWorkbench extends Container {
 	IInventory resultInventory;
@@ -99,6 +98,12 @@ public class CustomContainerWorkbench extends Container {
 	@Override
 	public void a( IInventory inventory ) {
 		setCraftResult();
+	}
+	
+	@Override
+	public ItemStack clickItem( int i, int j, int inventoryclicktype, EntityHuman entityhuman ) {
+		craftInventory.selfContainer.setContainer( this );
+		return super.clickItem( i, j, inventoryclicktype, entityhuman );
 	}
 	
 	public void setCraftResult() {

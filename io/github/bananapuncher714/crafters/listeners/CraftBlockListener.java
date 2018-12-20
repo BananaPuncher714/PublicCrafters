@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -39,19 +40,19 @@ public class CraftBlockListener implements Listener {
 	 * The BlockBreakEvent
 	 */
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onBlockBreakEvent( BlockBreakEvent event ) {
+	private void onBlockBreakEvent( BlockBreakEvent event ) {
 		plugin.getManager().remove( event.getBlock().getLocation() );
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onBlockExplodeEvent( BlockExplodeEvent event ) {
+	private void onBlockExplodeEvent( BlockExplodeEvent event ) {
 		for ( Block block : event.blockList() ) {
 			plugin.getManager().remove( block.getLocation() );
 		}
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onEntityExplodeEvent( EntityExplodeEvent event ) {
+	private void onEntityExplodeEvent( EntityExplodeEvent event ) {
 		for ( Block block : event.blockList() ) {
 			plugin.getManager().remove( block.getLocation() );
 		}
@@ -64,7 +65,7 @@ public class CraftBlockListener implements Listener {
 	 * The BlockPistonExtendEvent
 	 */
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onPistonExtendEvent( BlockPistonExtendEvent event ) {
+	private void onPistonExtendEvent( BlockPistonExtendEvent event ) {
 		BlockFace face = event.getDirection();
 		Set< PublicCraftingInventory > moveThese = new HashSet< PublicCraftingInventory >();
 		for ( Block block : event.getBlocks() ) {
@@ -79,7 +80,7 @@ public class CraftBlockListener implements Listener {
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onPistonRetractEvent( BlockPistonRetractEvent event ) {
+	private void onPistonRetractEvent( BlockPistonRetractEvent event ) {
 		BlockFace face = event.getDirection();
 		Set< PublicCraftingInventory > moveThese = new HashSet< PublicCraftingInventory >();
 		for ( Block block : event.getBlocks() ) {

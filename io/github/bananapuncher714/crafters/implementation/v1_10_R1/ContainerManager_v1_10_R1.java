@@ -1,7 +1,7 @@
 package io.github.bananapuncher714.crafters.implementation.v1_10_R1;
 
+import io.github.bananapuncher714.crafters.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.file.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 import io.netty.util.internal.ThreadLocalRandom;
@@ -9,6 +9,8 @@ import net.minecraft.server.v1_10_R1.EntityPlayer;
 import net.minecraft.server.v1_10_R1.InventoryCraftResult;
 import net.minecraft.server.v1_10_R1.Packet;
 import net.minecraft.server.v1_10_R1.PacketPlayOutAnimation;
+import net.minecraft.server.v1_10_R1.Container;
+import net.minecraft.server.v1_10_R1.EntityHuman;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
@@ -86,7 +89,7 @@ public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 	
 	@Override
 	public void load( Location location, List< ItemStack > items ) {
-		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, null, 3, 3 );
+		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, new SelfContainer(), 3, 3 );
 		InventoryCraftResult result = new InventoryCraftResult();
 		crafting.resultInventory = result;
 		
@@ -140,6 +143,27 @@ public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 			}
 			EntityPlayer NMSPlayer = ( ( CraftPlayer ) player ).getHandle();
 			NMSPlayer.playerConnection.sendPacket( packet );
+		}
+	}
+	
+	protected static class SelfContainer extends Container {
+		private CustomContainerWorkbench container;
+		
+		protected SelfContainer() {
+		}
+		
+		protected void setContainer( CustomContainerWorkbench container ) {
+			this.container = container;
+		}
+		
+		@Override
+		public boolean a( EntityHuman entity ) {
+			return container == null ? false : container.a( entity );
+		}
+
+		@Override
+		public InventoryView getBukkitView() {
+			return container == null ? null : container.getBukkitView();
 		}
 	}
 }

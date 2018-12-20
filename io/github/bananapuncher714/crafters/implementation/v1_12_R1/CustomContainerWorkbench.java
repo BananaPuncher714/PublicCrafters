@@ -3,6 +3,7 @@ package io.github.bananapuncher714.crafters.implementation.v1_12_R1;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import net.minecraft.server.v1_12_R1.InventoryClickType;
 import net.minecraft.server.v1_12_R1.ContainerWorkbench;
 import net.minecraft.server.v1_12_R1.CraftingManager;
 import net.minecraft.server.v1_12_R1.EntityHuman;
@@ -148,6 +149,12 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	@Override
 	public boolean a( ItemStack itemstack, Slot slot ) {
 		return isNotResultSlot( slot );
+	}
+	
+	@Override
+	public ItemStack a( int i, int j, InventoryClickType inventoryclicktype, EntityHuman entityhuman ) {
+		craftInventory.selfContainer.setContainer( this );
+		return super.a( i, j, inventoryclicktype, entityhuman );
 	}
 	
 	public void setCraftResult() {

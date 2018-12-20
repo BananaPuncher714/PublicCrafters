@@ -14,6 +14,7 @@ import com.google.common.collect.Sets;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.v1_13_R2.ContainerManager_v1_13_R2.SelfContainer;
 import net.minecraft.server.v1_13_R2.Container;
 import net.minecraft.server.v1_13_R2.ContainerUtil;
 import net.minecraft.server.v1_13_R2.InventoryCrafting;
@@ -27,11 +28,13 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	private Location bloc;
 	private CraftDisplay display;
 	private ContainerManager_v1_13_R2 manager;
+	protected SelfContainer selfContainer;
 	
-	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_13_R2 manager, Container container, int i, int j ) {
+	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_13_R2 manager, SelfContainer container, int i, int j ) {
 		super( container, i, j );
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
+		selfContainer = container;
 		this.manager = manager;
 		setDefaults();
 		display = new CraftDisplay( this );

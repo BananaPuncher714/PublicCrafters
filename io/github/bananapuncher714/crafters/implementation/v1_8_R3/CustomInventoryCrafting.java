@@ -14,6 +14,7 @@ import com.google.common.collect.Sets;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.v1_8_R3.ContainerManager_v1_8_R3.SelfContainer;
 import net.minecraft.server.v1_8_R3.Container;
 import net.minecraft.server.v1_8_R3.InventoryCrafting;
 import net.minecraft.server.v1_8_R3.ItemStack;
@@ -25,12 +26,14 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	private Location bloc;
 	private CraftDisplay display;
 	private ContainerManager_v1_8_R3 manager;
+	protected SelfContainer selfContainer;
 	
-	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_8_R3 manager, Container container, int i, int j ) {
+	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_8_R3 manager, SelfContainer container, int i, int j ) {
 		super( container, i, j );
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
 		this.manager = manager;
+		selfContainer = container;
 		// We need to access the items stored in the 3 by 3 grid
 		try {
 			Field field = InventoryCrafting.class.getDeclaredField( "items" );

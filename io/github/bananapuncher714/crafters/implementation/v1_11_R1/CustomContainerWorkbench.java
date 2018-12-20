@@ -15,6 +15,7 @@ import net.minecraft.server.v1_11_R1.CraftingManager;
 import net.minecraft.server.v1_11_R1.EntityHuman;
 import net.minecraft.server.v1_11_R1.EntityPlayer;
 import net.minecraft.server.v1_11_R1.IInventory;
+import net.minecraft.server.v1_11_R1.InventoryClickType;
 import net.minecraft.server.v1_11_R1.ItemStack;
 import net.minecraft.server.v1_11_R1.Items;
 import net.minecraft.server.v1_11_R1.PacketPlayOutSetSlot;
@@ -102,6 +103,12 @@ public class CustomContainerWorkbench extends Container {
 	@Override
 	public void a( IInventory inventory ) {
 		setCraftResult();
+	}
+	
+	@Override
+	public ItemStack a( int i, int j, InventoryClickType inventoryclicktype, EntityHuman entityhuman ) {
+		craftInventory.selfContainer.setContainer( this );
+		return super.a( i, j, inventoryclicktype, entityhuman );
 	}
 	
 	public void setCraftResult() {

@@ -1,6 +1,5 @@
 package io.github.bananapuncher714.crafters.events;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
@@ -12,9 +11,8 @@ import io.github.bananapuncher714.crafters.display.ItemDisplay;
  * @author daniel
  *
  */
-public class ItemDisplayDestroyEvent extends Event {
+public class ItemDisplayDestroyEvent extends ItemDisplayEvent {
 	private static final HandlerList handlers = new HandlerList();
-	ItemDisplay item;
 	
 	@Override
 	public HandlerList getHandlers() {
@@ -26,10 +24,6 @@ public class ItemDisplayDestroyEvent extends Event {
 	}
 	
 	public ItemDisplayDestroyEvent( ItemDisplay item ) {
-		this.item = item;
-	}
-	
-	public ItemDisplay getItemDisplay() {
-		return item;
+		super( item );
 	}
 }

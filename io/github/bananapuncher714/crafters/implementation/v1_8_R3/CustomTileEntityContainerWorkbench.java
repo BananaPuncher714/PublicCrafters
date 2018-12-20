@@ -11,6 +11,8 @@ import net.minecraft.server.v1_8_R3.PlayerInventory;
 
 import org.bukkit.Location;
 
+import io.github.bananapuncher714.crafters.implementation.v1_8_R3.ContainerManager_v1_8_R3.SelfContainer;
+
 public class CustomTileEntityContainerWorkbench implements ITileEntityContainer {
 	private Location bloc;
 	private ContainerManager_v1_8_R3 manager;
@@ -39,7 +41,7 @@ public class CustomTileEntityContainerWorkbench implements ITileEntityContainer 
 	public Container createContainer( PlayerInventory paramPlayerInventory, EntityHuman ent ) {		
 		CustomInventoryCrafting crafting = manager.benches.get( bloc );
 		if ( crafting == null ) {
-			crafting = new CustomInventoryCrafting( bloc, manager, null, 3, 3 );
+			crafting = new CustomInventoryCrafting( bloc, manager, new SelfContainer(), 3, 3 );
 			manager.put( bloc, crafting );
 		}
 		

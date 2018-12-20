@@ -1,7 +1,7 @@
 package io.github.bananapuncher714.crafters.listeners;
 
+import io.github.bananapuncher714.crafters.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.file.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class ChunkListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onChunkLoadEvent( ChunkLoadEvent event ) {
+	private void onChunkLoadEvent( ChunkLoadEvent event ) {
 		Chunk chunk = event.getChunk();
 		Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( PublicCrafters.getInstance().getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ() );
 		for ( Location location : itemMap.keySet() ) {
@@ -38,11 +38,8 @@ public class ChunkListener implements Listener {
 		}
 	}
 
-	/**
-	 * Gonna have to disable this for now, seeing as I can't determine if its a lazy unload or not.
-	 */
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
-	public void onChunkUnloadEvent( ChunkUnloadEvent event ) {
+	private void onChunkUnloadEvent( ChunkUnloadEvent event ) {
 		if ( event.getChunk().isLoaded() ) {
 			return;
 		}

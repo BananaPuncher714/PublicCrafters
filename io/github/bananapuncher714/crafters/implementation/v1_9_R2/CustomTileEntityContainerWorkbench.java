@@ -3,6 +3,7 @@ package io.github.bananapuncher714.crafters.implementation.v1_9_R2;
 
 import org.bukkit.Location;
 
+import io.github.bananapuncher714.crafters.implementation.v1_9_R2.ContainerManager_v1_9_R2.SelfContainer;
 import net.minecraft.server.v1_9_R2.ChatMessage;
 import net.minecraft.server.v1_9_R2.Container;
 import net.minecraft.server.v1_9_R2.EntityHuman;
@@ -40,7 +41,7 @@ public class CustomTileEntityContainerWorkbench implements ITileEntityContainer 
 	public Container createContainer( PlayerInventory paramPlayerInventory, EntityHuman ent ) {		
 		CustomInventoryCrafting crafting = manager.benches.get( bloc );
 		if ( crafting == null ) {
-			crafting = new CustomInventoryCrafting( bloc, manager, null, 3, 3 );
+			crafting = new CustomInventoryCrafting( bloc, manager, new SelfContainer(), 3, 3 );
 			manager.put( bloc, crafting );
 		}
 		

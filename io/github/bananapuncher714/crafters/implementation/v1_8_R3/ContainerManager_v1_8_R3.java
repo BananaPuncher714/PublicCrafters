@@ -1,21 +1,11 @@
 package io.github.bananapuncher714.crafters.implementation.v1_8_R3;
 
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.file.CraftInventoryLoader;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import net.minecraft.server.v1_8_R3.InventoryCraftResult;
-import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -25,7 +15,19 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.bananapuncher714.crafters.CraftInventoryLoader;
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import net.minecraft.server.v1_8_R3.Container;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.InventoryCraftResult;
+import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
 
 public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
@@ -86,7 +88,7 @@ public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 	
 	@Override
 	public void load( Location location, List< ItemStack > items ) {
-		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, null, 3, 3 );
+		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, new SelfContainer(), 3, 3 );
 		InventoryCraftResult result = new InventoryCraftResult();
 		crafting.resultInventory = result;
 		
@@ -140,6 +142,27 @@ public class ContainerManager_v1_8_R3 implements CraftInventoryManager {
 			}
 			EntityPlayer NMSPlayer = ( ( CraftPlayer ) player ).getHandle();
 			NMSPlayer.playerConnection.sendPacket( packet );
+		}
+	}
+	
+	protected static class SelfContainer extends Container {
+		private CustomContainerWorkbench container;
+		
+		protected SelfContainer() {
+		}
+		
+		protected void setContainer( CustomContainerWorkbench container ) {
+			this.container = container;
+		}
+		
+		@Override
+		public boolean a( EntityHuman entity ) {
+			return container == null ? false : container.a( entity );
+		}
+
+		@Override
+		public InventoryView getBukkitView() {
+			return container == null ? null : container.getBukkitView();
 		}
 	}
 }

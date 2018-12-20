@@ -1,15 +1,6 @@
 package io.github.bananapuncher714.crafters.implementation.v1_12_R1;
 
-import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
-import net.minecraft.server.v1_12_R1.AutoRecipeStackManager;
-import net.minecraft.server.v1_12_R1.Container;
-import net.minecraft.server.v1_12_R1.ContainerUtil;
-import net.minecraft.server.v1_12_R1.InventoryCrafting;
-import net.minecraft.server.v1_12_R1.ItemStack;
-
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +12,14 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 
 import com.google.common.collect.Sets;
 
+import io.github.bananapuncher714.crafters.display.CraftDisplay;
+import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.v1_12_R1.ContainerManager_v1_12_R1.SelfContainer;
+import net.minecraft.server.v1_12_R1.Container;
+import net.minecraft.server.v1_12_R1.ContainerUtil;
+import net.minecraft.server.v1_12_R1.InventoryCrafting;
+import net.minecraft.server.v1_12_R1.ItemStack;
+
 
 public class CustomInventoryCrafting extends InventoryCrafting implements PublicCraftingInventory {
 	Set< Container > containers = Sets.newHashSet();
@@ -29,11 +28,13 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	private Location bloc;
 	private CraftDisplay display;
 	private ContainerManager_v1_12_R1 manager;
+	protected SelfContainer selfContainer;
 	
-	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_12_R1 manager, Container container, int i, int j ) {
+	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_12_R1 manager, SelfContainer container, int i, int j ) {
 		super( container, i, j );
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
+		selfContainer = container;
 		this.manager = manager;
 		setDefaults();
 		display = new CraftDisplay( this );

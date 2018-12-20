@@ -17,6 +17,7 @@ import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.IInventory;
 import net.minecraft.server.v1_13_R2.IRecipe;
+import net.minecraft.server.v1_13_R2.InventoryClickType;
 import net.minecraft.server.v1_13_R2.InventoryCraftResult;
 import net.minecraft.server.v1_13_R2.ItemStack;
 import net.minecraft.server.v1_13_R2.NonNullList;
@@ -147,6 +148,12 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		return isNotResultSlot( slot );
 	}
 	
+	@Override
+	public ItemStack a( int i, int j, InventoryClickType inventoryclicktype, EntityHuman entityhuman ) {
+		craftInventory.selfContainer.setContainer( this );
+		return super.a( i, j, inventoryclicktype, entityhuman );
+	}
+	
 	public void setCraftResult() {
 		if ( !world.isClientSide ) {
 			EntityPlayer entityplayer = ( EntityPlayer ) ((CraftHumanEntity)viewer).getHandle();
@@ -177,6 +184,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	@Override
 	public void b( EntityHuman entity ) {
 		PlayerInventory playerinventory = entity.inventory;
+		craftInventory.selfContainer.setContainer( this );
 		if ( !playerinventory.getCarried().isEmpty() ) {
 			entity.drop( playerinventory.getCarried(), false );
 			playerinventory.setCarried( ItemStack.a );

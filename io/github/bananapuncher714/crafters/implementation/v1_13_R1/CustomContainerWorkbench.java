@@ -3,23 +3,7 @@ package io.github.bananapuncher714.crafters.implementation.v1_13_R1;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import net.minecraft.server.v1_13_R1.ContainerWorkbench;
-import net.minecraft.server.v1_13_R1.CraftingManager;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.IInventory;
-import net.minecraft.server.v1_13_R1.IRecipe;
-import net.minecraft.server.v1_13_R1.InventoryCraftResult;
-import net.minecraft.server.v1_13_R1.ItemStack;
-import net.minecraft.server.v1_13_R1.NonNullList;
-import net.minecraft.server.v1_13_R1.PacketPlayOutSetSlot;
-import net.minecraft.server.v1_13_R1.PlayerInventory;
-import net.minecraft.server.v1_13_R1.Slot;
-import net.minecraft.server.v1_13_R1.SlotResult;
-import net.minecraft.server.v1_13_R1.World;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_13_R1.event.CraftEventFactory;
@@ -28,6 +12,20 @@ import org.bukkit.craftbukkit.v1_13_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
+import net.minecraft.server.v1_13_R1.ContainerWorkbench;
+import net.minecraft.server.v1_13_R1.EntityHuman;
+import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R1.IInventory;
+import net.minecraft.server.v1_13_R1.IRecipe;
+import net.minecraft.server.v1_13_R1.InventoryClickType;
+import net.minecraft.server.v1_13_R1.InventoryCraftResult;
+import net.minecraft.server.v1_13_R1.ItemStack;
+import net.minecraft.server.v1_13_R1.NonNullList;
+import net.minecraft.server.v1_13_R1.PacketPlayOutSetSlot;
+import net.minecraft.server.v1_13_R1.PlayerInventory;
+import net.minecraft.server.v1_13_R1.Slot;
+import net.minecraft.server.v1_13_R1.SlotResult;
+import net.minecraft.server.v1_13_R1.World;
 
 public class CustomContainerWorkbench extends ContainerWorkbench {
 	public InventoryCraftResult resultInventory;
@@ -148,6 +146,12 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	@Override
 	public boolean a( ItemStack itemstack, Slot slot ) {
 		return isNotResultSlot( slot );
+	}
+	
+	@Override
+	public ItemStack a( int i, int j, InventoryClickType inventoryclicktype, EntityHuman entityhuman ) {
+		craftInventory.selfContainer.setContainer( this );
+		return super.a( i, j, inventoryclicktype, entityhuman );
 	}
 	
 	public void setCraftResult() {

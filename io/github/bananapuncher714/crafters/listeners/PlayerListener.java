@@ -1,6 +1,5 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,14 +12,14 @@ import io.github.bananapuncher714.crafters.display.VirtualItemDisplay;
 import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
 
 public class PlayerListener implements Listener {
-	PublicCrafters plugin;
+	private final PublicCrafters plugin;
 	
 	public PlayerListener( PublicCrafters plugin ) {
 		this.plugin = plugin;
 	}
 	
 	@EventHandler
-	public void onPlayerJoinEvent( PlayerJoinEvent event ) {
+	private void onPlayerJoinEvent( PlayerJoinEvent event ) {
 		if ( !plugin.isVirtual() ) {
 			return;
 		}
@@ -30,7 +29,7 @@ public class PlayerListener implements Listener {
 	}
 	
 	@EventHandler( priority = EventPriority.LOWEST )
-	public void onItemDisplayCreateEvent( ItemDisplayCreateEvent event ) {
+	private void onItemDisplayCreateEvent( ItemDisplayCreateEvent event ) {
 		if ( !plugin.isVirtual() ) {
 			return;
 		}

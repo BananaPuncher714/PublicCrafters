@@ -8,20 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import io.github.bananapuncher714.crafters.command.CraftingCommand;
-import io.github.bananapuncher714.crafters.command.CraftingTabCompleter;
-import io.github.bananapuncher714.crafters.example.listeners.CakeListener;
-import io.github.bananapuncher714.crafters.example.listeners.CraftingListener;
-import io.github.bananapuncher714.crafters.file.CraftInventoryLoader;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
-import io.github.bananapuncher714.crafters.listeners.ChunkListener;
-import io.github.bananapuncher714.crafters.listeners.CraftBlockListener;
-import io.github.bananapuncher714.crafters.listeners.InventoryOpenListener;
-import io.github.bananapuncher714.crafters.listeners.InventoryUpdateListener;
-import io.github.bananapuncher714.crafters.listeners.PlayerListener;
-import io.github.bananapuncher714.crafters.util.ReflectionUtil;
-import io.github.bananapuncher714.crafters.util.Utils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -35,6 +21,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
+
+import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import io.github.bananapuncher714.crafters.listeners.ChunkListener;
+import io.github.bananapuncher714.crafters.listeners.CraftBlockListener;
+import io.github.bananapuncher714.crafters.listeners.InventoryOpenListener;
+import io.github.bananapuncher714.crafters.listeners.PlayerListener;
+import io.github.bananapuncher714.crafters.util.ReflectionUtil;
+import io.github.bananapuncher714.crafters.util.Utils;
 
 /**
  * The main class of all classes;
@@ -118,18 +112,18 @@ public class PublicCrafters extends JavaPlugin {
 
 	private void registerListeners() {
 		Bukkit.getPluginManager().registerEvents( new InventoryOpenListener( this ), this );
-		Bukkit.getPluginManager().registerEvents( new InventoryUpdateListener( this ), this );
 		Bukkit.getPluginManager().registerEvents( new CraftBlockListener( this ), this );
 		Bukkit.getPluginManager().registerEvents( new ChunkListener( manager ), this );
 		Bukkit.getPluginManager().registerEvents( new PlayerListener( this ), this );
-		//		Bukkit.getPluginManager().registerEvents( new CraftingListener(), this );
-		//		cake = new CakeListener();
-		//		Bukkit.getPluginManager().registerEvents( cake, this );
+//		Bukkit.getPluginManager().registerEvents( new CraftingListener(), this );
+//		cake = new CakeListener();
+//		Bukkit.getPluginManager().registerEvents( cake, this );
 	}
 
 	private void registerCommands() {
-		getCommand( "craftingtable" ).setExecutor( new CraftingCommand( this ) );
-		getCommand( "craftingtable" ).setTabCompleter( new CraftingTabCompleter() );
+		CraftingCommand command = new CraftingCommand( this );
+		getCommand( "craftingtable" ).setExecutor( command );
+		getCommand( "craftingtable" ).setTabCompleter( command );
 	}
 
 	private void loadConfig() {

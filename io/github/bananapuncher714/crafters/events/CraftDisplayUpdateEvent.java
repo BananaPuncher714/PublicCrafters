@@ -1,7 +1,6 @@
 package io.github.bananapuncher714.crafters.events;
 
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
@@ -13,9 +12,8 @@ import io.github.bananapuncher714.crafters.display.ItemDisplay;
  * 
  * @author BananaPuncher714
  */
-public class CraftDisplayUpdateEvent extends Event implements Cancellable {
+public class CraftDisplayUpdateEvent extends CraftDisplayEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
-	CraftDisplay display;
 	boolean cancelled = false;
 	
 	@Override
@@ -28,11 +26,7 @@ public class CraftDisplayUpdateEvent extends Event implements Cancellable {
 	}
 
 	public CraftDisplayUpdateEvent( CraftDisplay display ) {
-		this.display = display;
-	}
-	
-	public CraftDisplay getDisplay() {
-		return display;
+		super( display );
 	}
 
 	@Override
