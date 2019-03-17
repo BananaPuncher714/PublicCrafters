@@ -195,7 +195,7 @@ public class PublicCrafters extends JavaPlugin {
 				}
 
 				String data = config.getString( "orientation." + key );
-				String[] orientation = data.split( "\\D+" );
+				String[] orientation = data.split( "[^\\d.-]+" );
 				if ( orientation.length != 3 ) {
 					getLogger().warning( "Invalid orientation for material '" + key + "':'" + data + "'" );
 					continue;
@@ -219,7 +219,7 @@ public class PublicCrafters extends JavaPlugin {
 				}
 
 				String data = config.getString( "offset." + key );
-				String[] orientation = data.split( "\\D+" );
+				String[] orientation = data.split( "[^\\d.-]+" );
 				if ( orientation.length != 3 ) {
 					getLogger().warning( "Invalid offset for material '" + key + "':'" + data + "'" );
 					continue;
