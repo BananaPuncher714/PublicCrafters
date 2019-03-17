@@ -3,15 +3,21 @@ package io.github.bananapuncher714.crafters;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+
+import io.github.bananapuncher714.crafters.util.Utils;
 
 /**
  * Command handling and tab completion
@@ -43,6 +49,9 @@ public class CraftingCommand implements CommandExecutor, TabCompleter {
 			if ( player.hasPermission( "publiccrafters.private" ) ) {
 				suggestions.add( "toggle" );
 			}
+			if ( player.hasPermission( "publiccrafters.admin" ) ) {
+				suggestions.add( "lock" );
+			}
 		}
 		StringUtil.copyPartialMatches( args[ args.length - 1 ], suggestions, completions);
 		Collections.sort( completions );
@@ -61,6 +70,8 @@ public class CraftingCommand implements CommandExecutor, TabCompleter {
 					commandToggle( sender, args );
 				} else if ( option.equalsIgnoreCase( "reload" ) ) {
 					commandReload( sender, args );
+				} else if ( option.equalsIgnoreCase( "lock" ) ) {
+					commandLock( sender, args );
 				}
 			}
 		} catch ( IllegalArgumentException exception ) {
@@ -84,6 +95,25 @@ public class CraftingCommand implements CommandExecutor, TabCompleter {
 		sender.sendMessage( ChatColor.AQUA + "Reloading the config..." );
 		PublicCrafters.getInstance().reload();
 		sender.sendMessage( ChatColor.GREEN + "Done!" );
+	}
+	
+	private void commandLock( CommandSender sender, String args[] ) {
+		Validate.isTrue( sender.hasPermission( "publiccrafters.admin" ), ChatColor.RED + "You do not have permission to run this command!" );
+		Validate.isTrue( sender instanceof Player, ChatColor.RED + "You must be a player to run this command!" );
+		Player player = ( Player ) sender;
+		
+		Block block = player.getTargetBlock( ( Set< Material > ) null, 10 );
+		Validate.notNull( block, ChatColor.RED + "You must be looking at a crafting table!" );
+		Validate.isTrue( block.getType() == Utils.getWorkbenchMaterial(), ChatColor.RED + "You must be looking at a crafting table!" );
+		
+		Location location = block.getLocation();
+		if ( plugin.getAdminTables().remove( location ) ) {
+			player.sendMessage( ChatColor.AQUA + "Successfully unlocked a crafting table!" );
+		} else {
+			plugin.getAdminTables().add( location );
+			player.sendMessage( ChatColor.AQUA + "Successfully locked a crafting table!" );
+		}
+		
 	}
 	
 	private String[] pop( String[] array ) {

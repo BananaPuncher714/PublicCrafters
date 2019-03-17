@@ -59,4 +59,9 @@ public final class Utils {
 		}
 		return mat;
 	}
+	
+	public static Material getWorkbenchMaterial() {
+		Material material = Material.getMaterial( "WORKBENCH" );
+		return material == null ? Material.getMaterial( "CRAFTING_TABLE" ) : material;
+	}
 }

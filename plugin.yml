@@ -1,6 +1,6 @@
 name: PublicCrafters
 main: io.github.bananapuncher714.crafters.PublicCrafters
-version: 4.4
+version: 4.5
 author: BananaPuncher714
 description: Adds public workbenches to Minecraft
 api-version: 1.13
@@ -8,6 +8,8 @@ commands:
     craftingtable:
         description: Toggles private crafting
 permissions:
+    publiccrafters.admin:
+        default: op
     publiccrafters.private:
         default: true
     publiccrafters.reload:

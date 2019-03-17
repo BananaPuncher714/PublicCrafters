@@ -1,6 +1,8 @@
 package io.github.bananapuncher714.crafters;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +53,8 @@ public class PublicCrafters extends JavaPlugin {
 	private int delay = 0;
 	private final File saveFolder = new File( getDataFolder() + "/" + "saves" );
 
+	private final Set< Location > adminTables = new HashSet< Location >();
+	
 	//	private CakeListener cake;
 
 	@Override
@@ -68,6 +72,7 @@ public class PublicCrafters extends JavaPlugin {
 		registerCommands();
 
 		loadChunks();
+		loadAdminTables();
 	}
 
 	@Override
@@ -84,6 +89,7 @@ public class PublicCrafters extends JavaPlugin {
 		}
 		// Save the inventories
 		unloadChunks();
+		saveAdminTables();
 	}
 
 	private void unloadChunks() {
@@ -92,7 +98,7 @@ public class PublicCrafters extends JavaPlugin {
 				manager.unload( chunk );
 			}
 		}
-		//		manager.stopAll();
+//		manager.stopAll();
 	}
 
 	private void loadChunks() {
@@ -105,7 +111,51 @@ public class PublicCrafters extends JavaPlugin {
 			}
 		}
 	}
-
+	
+	private void loadAdminTables() {
+		File file = new File( getDataFolder() + "/" + "data.yml" );
+		if ( !file.exists() ) {
+			return;
+		}
+		FileConfiguration data = YamlConfiguration.loadConfiguration( file );
+		if ( !data.contains( "admin-tables" ) ) {
+			return;
+		}
+		
+		for ( String loc : data.getStringList( "admin-tables" ) ) {
+			adminTables.add( Utils.getLocationFromString( loc ) );
+		}
+	}
+	
+	private void saveAdminTables() {
+		File file = new File( getDataFolder() + "/" + "data.yml" );
+		if ( adminTables.isEmpty() ) {
+			file.delete();
+			return;
+		}
+		if ( !file.exists() ) {
+			try {
+				file.createNewFile();
+			} catch ( IOException e ) {
+				e.printStackTrace();
+			}
+		}
+		FileConfiguration data = YamlConfiguration.loadConfiguration( file );
+		
+		data.set( "admin-tables", null );
+		List< String > tableStrings = new ArrayList< String >();
+		for ( Location location : adminTables ) {
+			tableStrings.add( Utils.getStringFromLocation( location ) );
+		}
+		data.set( "admin-tables", tableStrings );
+		
+		try {
+			data.save( file );
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void reload() {
 		loadConfig();
 	}
@@ -238,5 +288,9 @@ public class PublicCrafters extends JavaPlugin {
 
 	public Vector getOffsetForMaterial( Material material ) {
 		return offsets.get( material );
+	}
+	
+	public Set< Location > getAdminTables() {
+		return adminTables;
 	}
 }

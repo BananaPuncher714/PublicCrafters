@@ -55,6 +55,10 @@ public class InventoryOpenListener implements Listener {
 		}
 		
 		event.setCancelled( true );
+		// Check to see if the block is an admin table, and if the play can access it
+		if ( plugin.getAdminTables().contains( block.getLocation() ) && !player.hasPermission( "publiccrafters.admin" ) ) {
+			return;
+		}
 		PublicCrafters.getInstance().getManager().openWorkbench( player, block.getLocation(), invType );
 	}
 	
@@ -77,15 +81,6 @@ public class InventoryOpenListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerInteractEvent PIE = new PlayerInteractEvent( player, Action.RIGHT_CLICK_BLOCK, player.getItemInHand(), display.getCraftDisplay().getLocation().getBlock(), BlockFace.UP );
 		Bukkit.getPluginManager().callEvent( PIE );
-		if ( PIE.isCancelled() ) {
-			return;
-		}
-		
-		if ( player.isSneaking() || plugin.isPrivate( player.getUniqueId() ) ) {
-			return;
-		}
-		
-		PublicCrafters.getInstance().getManager().openWorkbench( player, display.getCraftDisplay().getInventory().getLocation(), InventoryType.WORKBENCH );
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )

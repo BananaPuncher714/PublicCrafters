@@ -6,6 +6,7 @@ import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInve
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -41,13 +42,16 @@ public class CraftBlockListener implements Listener {
 	 */
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
 	private void onBlockBreakEvent( BlockBreakEvent event ) {
-		plugin.getManager().remove( event.getBlock().getLocation() );
+		Location location = event.getBlock().getLocation();
+		plugin.getManager().remove( location );
+		plugin.getAdminTables().remove( location );
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
 	private void onBlockExplodeEvent( BlockExplodeEvent event ) {
 		for ( Block block : event.blockList() ) {
 			plugin.getManager().remove( block.getLocation() );
+			plugin.getAdminTables().remove( block.getLocation() );
 		}
 	}
 	
@@ -55,6 +59,7 @@ public class CraftBlockListener implements Listener {
 	private void onEntityExplodeEvent( EntityExplodeEvent event ) {
 		for ( Block block : event.blockList() ) {
 			plugin.getManager().remove( block.getLocation() );
+			plugin.getAdminTables().remove( block.getLocation() );
 		}
 	}
 	
@@ -68,12 +73,17 @@ public class CraftBlockListener implements Listener {
 	private void onPistonExtendEvent( BlockPistonExtendEvent event ) {
 		BlockFace face = event.getDirection();
 		Set< PublicCraftingInventory > moveThese = new HashSet< PublicCraftingInventory >();
+		Set< Location > newLocations = new HashSet< Location >();
 		for ( Block block : event.getBlocks() ) {
 			PublicCraftingInventory crafting = plugin.getManager().get( block.getLocation() );
 			if ( crafting != null ) {
 				moveThese.add( crafting );
 			}
+			if ( plugin.getAdminTables().remove( block.getLocation() ) ) {
+				newLocations.add( block.getRelative( face ).getLocation() );
+			}
 		}
+		plugin.getAdminTables().addAll( newLocations );
 		for ( PublicCraftingInventory crafting : moveThese ) {
 			crafting.move( crafting.getLocation().getBlock().getRelative( face ).getLocation() );
 		}
@@ -83,12 +93,17 @@ public class CraftBlockListener implements Listener {
 	private void onPistonRetractEvent( BlockPistonRetractEvent event ) {
 		BlockFace face = event.getDirection();
 		Set< PublicCraftingInventory > moveThese = new HashSet< PublicCraftingInventory >();
+		Set< Location > newLocations = new HashSet< Location >();
 		for ( Block block : event.getBlocks() ) {
 			PublicCraftingInventory crafting = plugin.getManager().get( block.getLocation() );
 			if ( crafting != null ) {
 				moveThese.add( crafting );
 			}
+			if ( plugin.getAdminTables().remove( block.getLocation() ) ) {
+				newLocations.add( block.getRelative( face ).getLocation() );
+			}
 		}
+		plugin.getAdminTables().addAll( newLocations );
 		for ( PublicCraftingInventory crafting : moveThese ) {
 			crafting.move( crafting.getLocation().getBlock().getRelative( face ).getLocation() );
 		}

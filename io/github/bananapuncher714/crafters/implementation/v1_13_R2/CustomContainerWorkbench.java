@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.util.Utils;
 import net.minecraft.server.v1_13_R2.ContainerWorkbench;
 import net.minecraft.server.v1_13_R2.EntityHuman;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
@@ -216,7 +217,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 			return true;
 		}
 		// Should make more efficient
-		return craftInventory.getLocation().getBlock().getType().name().equalsIgnoreCase( "CRAFTING_TABLE" );
+		return craftInventory.getLocation().getBlock().getType() == Utils.getWorkbenchMaterial();
 	}
 
 	@Override
