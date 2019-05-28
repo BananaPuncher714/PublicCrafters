@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.v1_12_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_14_R1;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -10,8 +10,8 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -23,17 +23,17 @@ import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 import io.netty.util.internal.ThreadLocalRandom;
-import net.minecraft.server.v1_12_R1.Container;
-import net.minecraft.server.v1_12_R1.EntityHuman;
-import net.minecraft.server.v1_12_R1.EntityPlayer;
-import net.minecraft.server.v1_12_R1.IInventory;
-import net.minecraft.server.v1_12_R1.InventoryCraftResult;
-import net.minecraft.server.v1_12_R1.Packet;
-import net.minecraft.server.v1_12_R1.PacketPlayOutAnimation;
+import net.minecraft.server.v1_14_R1.ChatMessage;
+import net.minecraft.server.v1_14_R1.Container;
+import net.minecraft.server.v1_14_R1.EntityHuman;
+import net.minecraft.server.v1_14_R1.EntityPlayer;
+import net.minecraft.server.v1_14_R1.InventoryCraftResult;
+import net.minecraft.server.v1_14_R1.Packet;
+import net.minecraft.server.v1_14_R1.PacketPlayOutAnimation;
+import net.minecraft.server.v1_14_R1.TileInventory;
 
-public class ContainerManager_v1_12_R1 implements CraftInventoryManager {
+public class ContainerManager_v1_14_R1 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
-	protected Map< Location, IInventory > tables = new HashMap< Location, IInventory >();
 	
 	protected CustomInventoryCrafting put( Location loc, CustomInventoryCrafting cont ) {
 		CustomInventoryCrafting crafting = benches.get( loc );
@@ -91,7 +91,8 @@ public class ContainerManager_v1_12_R1 implements CraftInventoryManager {
 	
 	@Override
 	public void load( Location location, List< ItemStack > items ) {
-		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, new SelfContainer(), 3, 3 );
+		// Is 0 really ok as an id?!?
+		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, new SelfContainer( 0 ), 3, 3 );
 		InventoryCraftResult result = new InventoryCraftResult();
 		crafting.resultInventory = result;
 		
@@ -121,12 +122,8 @@ public class ContainerManager_v1_12_R1 implements CraftInventoryManager {
 
 	@Override
 	public void openWorkbench( Player player, Location loc, InventoryType type ) {
-		// Enchantment tables do not display enchantment options for some reason
-		if ( type == InventoryType.ENCHANTING ) {
-			( ( CraftPlayer ) player ).getHandle().openTileEntity( new CustomTileEntityContainerEnchantTable( this, loc ) );
-		} else if ( type == InventoryType.WORKBENCH ) {
-			( ( CraftPlayer ) player ).getHandle().openTileEntity( new CustomTileEntityContainerWorkbench( this, loc ) );
-		}
+		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), new ChatMessage( "container.crafting", new Object[ 0 ] ) );
+		( ( CraftPlayer ) player ).getHandle().openContainer( tileEntity );
 	}
 	
 	@Override
@@ -156,7 +153,8 @@ public class ContainerManager_v1_12_R1 implements CraftInventoryManager {
 	protected static class SelfContainer extends Container {
 		private CustomContainerWorkbench container;
 		
-		protected SelfContainer() {
+		protected SelfContainer( int id ) {
+			super( null, id );
 		}
 		
 		protected void setContainer( CustomContainerWorkbench container ) {

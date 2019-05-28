@@ -52,7 +52,7 @@ public class VirtualItemDisplay extends ItemDisplay {
 			Object armorStand;
 			if ( !entities.containsKey( loc ) ) {
 				Object worldServer = ReflectionUtil.getMethod( "getWorldHandle" ).invoke( loc.getWorld() );
-				armorStand = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
+				armorStand = ReflectionUtil.constructArmorStand( worldServer );
 
 				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
 				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );

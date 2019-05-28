@@ -2,10 +2,13 @@ package io.github.bananapuncher714.crafters.util;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import net.minecraft.server.v1_10_R1.EntityArmorStand;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -25,6 +28,8 @@ public final class ReflectionUtil {
 	private static final HashMap< String, Method > methodCache;
 	private static final HashMap< Class< ? >, Constructor< ? > > constructorCache;
 	private static Field connection;
+	private static Field modifiers;
+	private static Object entityTypeArmorStand;
 	
 	static {
 		version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -56,6 +61,10 @@ public final class ReflectionUtil {
 			
 			if ( !version.equalsIgnoreCase( "v1_8_R3" ) ) {
 				classCache.put( "EnumItemSlot", Class.forName( "net.minecraft.server." + version + "." + "EnumItemSlot" ) );
+			}
+			
+			if ( version.contains( "v1_14" ) ) {
+				classCache.put( "EntityTypes", Class.forName( "net.minecraft.server." + version + "." + "EntityTypes" ) );
 			}
 		} catch ( ClassNotFoundException e ) {
 			e.printStackTrace();
@@ -93,7 +102,11 @@ public final class ReflectionUtil {
 
 		constructorCache = new HashMap< Class< ? >, Constructor< ? > >();
 		try {
-			constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "World" ) ) );
+			if ( version.contains( "v1_14" ) ) {
+				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "EntityTypes" ), getNMSClass( "World" ) ) );
+			} else {
+				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "World" ) ) );
+			}
 			
 			constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntityLiving" ),  getNMSClass( "PacketPlayOutSpawnEntityLiving" ).getConstructor( getNMSClass( "EntityLiving" ) ) );
 			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
@@ -104,6 +117,12 @@ public final class ReflectionUtil {
 			constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int[].class ) );
 			
 			connection = getNMSClass( "EntityPlayer" ).getField( "playerConnection" );
+			modifiers = Field.class.getDeclaredField( "modifiers" );
+            modifiers.setAccessible( true );
+            
+            if ( version.contains( "v1_14" ) ) {
+            	entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "ARMOR_STAND" ).get( null );
+            }
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
@@ -134,6 +153,15 @@ public final class ReflectionUtil {
 		return connection;
 	}
 	
+	public static Object constructArmorStand( Object worldServer ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		if ( version.contains( "v1_14" ) ) {
+			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( entityTypeArmorStand, worldServer );
+		} else {
+			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
+		}
+
+	}
+	
 	public static CraftInventoryManager getManager() {
 		Object instance = null;
 		try {
@@ -143,6 +171,17 @@ public final class ReflectionUtil {
 		}
 		
 		return ( CraftInventoryManager ) instance; 
+	}
+	
+	public static void set( Object object, String name, Object value ) {
+		try {
+			Field field = object.getClass().getDeclaredField( name );
+			modifiers.set( field, field.getModifiers() & ~Modifier.FINAL );
+			
+			field.set( object, value );
+		} catch ( IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e ) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static String getVersion() {

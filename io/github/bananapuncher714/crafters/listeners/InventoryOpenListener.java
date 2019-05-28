@@ -107,6 +107,7 @@ public class InventoryOpenListener implements Listener {
 		switch ( name ) {
 		case "CRAFTING_TABLE":
 		case "WORKBENCH": return InventoryType.WORKBENCH;
+//		case "ENCHANTMENT_TABLE": return InventoryType.ENCHANTING;
 //		case ANVIL: return InventoryType.ANVIL;
 		default: return null;
 		}
