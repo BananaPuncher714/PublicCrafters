@@ -1,18 +1,9 @@
 package io.github.bananapuncher714.crafters.example.listeners;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
 import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;

@@ -1,5 +1,8 @@
 package io.github.bananapuncher714.crafters.implementation.v1_8_R3;
 
+import org.bukkit.Location;
+
+import io.github.bananapuncher714.crafters.implementation.v1_8_R3.ContainerManager_v1_8_R3.SelfContainer;
 import net.minecraft.server.v1_8_R3.ChatMessage;
 import net.minecraft.server.v1_8_R3.Container;
 import net.minecraft.server.v1_8_R3.EntityHuman;
@@ -8,10 +11,6 @@ import net.minecraft.server.v1_8_R3.IInventory;
 import net.minecraft.server.v1_8_R3.ITileEntityContainer;
 import net.minecraft.server.v1_8_R3.InventoryCraftResult;
 import net.minecraft.server.v1_8_R3.PlayerInventory;
-
-import org.bukkit.Location;
-
-import io.github.bananapuncher714.crafters.implementation.v1_8_R3.ContainerManager_v1_8_R3.SelfContainer;
 
 public class CustomTileEntityContainerWorkbench implements ITileEntityContainer {
 	private Location bloc;

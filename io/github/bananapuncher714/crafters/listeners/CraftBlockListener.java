@@ -1,8 +1,5 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,10 +11,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 
 /**
  * This is a relatively easy class to understand

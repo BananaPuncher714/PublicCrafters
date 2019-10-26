@@ -1,12 +1,12 @@
 package io.github.bananapuncher714.crafters.implementation.API;
 
-import io.github.bananapuncher714.crafters.display.CraftDisplay;
-
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.bananapuncher714.crafters.display.CraftDisplay;
 
 /**
  * This is a representation of a public workbench inventory;

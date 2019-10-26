@@ -92,7 +92,10 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 
 	@Override
 	public org.bukkit.inventory.ItemStack getResult() {
-		return CraftItemStack.asBukkitCopy( resultInventory.getItem( 0 ) );
+		if ( this.resultInventory != null ) {
+			return CraftItemStack.asBukkitCopy( resultInventory.getItem( 0 ) );
+		}
+		return null;
 	}
 	
 	protected void setItems( List< org.bukkit.inventory.ItemStack > items ) {

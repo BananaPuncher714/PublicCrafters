@@ -1,9 +1,5 @@
 package io.github.bananapuncher714.crafters.util;
 
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
-import net.minecraft.server.v1_10_R1.EntityArmorStand;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +9,9 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 
 /**
  * Yet another simplified reflection utility to load the proper {@link CraftInventoryManager} for each version;
@@ -173,9 +172,10 @@ public final class ReflectionUtil {
 		return ( CraftInventoryManager ) instance; 
 	}
 	
-	public static void set( Object object, String name, Object value ) {
+	public static void set( Class< ? > clazz, Object object, String name, Object value ) {
 		try {
-			Field field = object.getClass().getDeclaredField( name );
+			Field field = clazz.getDeclaredField( name );
+			field.setAccessible( true );
 			modifiers.set( field, field.getModifiers() & ~Modifier.FINAL );
 			
 			field.set( object, value );

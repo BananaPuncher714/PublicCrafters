@@ -2,6 +2,7 @@ package io.github.bananapuncher714.crafters.example.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;

@@ -14,6 +14,10 @@ import io.github.bananapuncher714.crafters.display.ItemDisplay;
 public class ItemDisplayDestroyEvent extends ItemDisplayEvent {
 	private static final HandlerList handlers = new HandlerList();
 	
+	public ItemDisplayDestroyEvent( ItemDisplay item ) {
+		super( item );
+	}
+	
 	@Override
 	public HandlerList getHandlers() {
 	    return handlers;
@@ -21,9 +25,5 @@ public class ItemDisplayDestroyEvent extends ItemDisplayEvent {
 
 	public static HandlerList getHandlerList() {
 	    return handlers;
-	}
-	
-	public ItemDisplayDestroyEvent( ItemDisplay item ) {
-		super( item );
 	}
 }

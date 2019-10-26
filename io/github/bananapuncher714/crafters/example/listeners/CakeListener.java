@@ -3,11 +3,6 @@ package io.github.bananapuncher714.crafters.example.listeners;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
-import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -17,6 +12,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
+
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.display.CraftDisplay;
+import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
+import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
 
 public class CakeListener implements Listener {
 	private Map< Location, CakeFloater > locations = new HashMap< Location, CakeFloater >();

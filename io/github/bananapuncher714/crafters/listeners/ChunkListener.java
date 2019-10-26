@@ -1,9 +1,5 @@
 package io.github.bananapuncher714.crafters.listeners;
 
-import io.github.bananapuncher714.crafters.CraftInventoryLoader;
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
-
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +11,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.bananapuncher714.crafters.CraftInventoryLoader;
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
 
 /**
  * Meant to handle loading and unloading tables as the chunks load and unload;

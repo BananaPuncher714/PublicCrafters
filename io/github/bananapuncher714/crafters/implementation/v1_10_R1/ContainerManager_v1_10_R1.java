@@ -1,17 +1,5 @@
 package io.github.bananapuncher714.crafters.implementation.v1_10_R1;
 
-import io.github.bananapuncher714.crafters.CraftInventoryLoader;
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
-import io.netty.util.internal.ThreadLocalRandom;
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.InventoryCraftResult;
-import net.minecraft.server.v1_10_R1.Packet;
-import net.minecraft.server.v1_10_R1.PacketPlayOutAnimation;
-import net.minecraft.server.v1_10_R1.Container;
-import net.minecraft.server.v1_10_R1.EntityHuman;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +17,18 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.bananapuncher714.crafters.CraftInventoryLoader;
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.netty.util.internal.ThreadLocalRandom;
+import net.minecraft.server.v1_10_R1.Container;
+import net.minecraft.server.v1_10_R1.EntityHuman;
+import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.InventoryCraftResult;
+import net.minecraft.server.v1_10_R1.Packet;
+import net.minecraft.server.v1_10_R1.PacketPlayOutAnimation;
 
 public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 

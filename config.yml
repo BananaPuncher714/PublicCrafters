@@ -28,3 +28,7 @@ drop-item: false
 
 # Whether or not the items that appear are fake. May not work for every version
 virtual: true
+
+# Whether or not to display an actual item above the table
+display-crafted-item: true
+crafted-item-height: .15

@@ -4,32 +4,24 @@ import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.display.ItemDisplay;
+import io.github.bananapuncher714.crafters.display.CraftResultDisplay;
 
-/**
- * Called whenever a {@link CraftDisplay} is about to create a new {@link ItemDisplay};
- * This is where you can use a custom ItemDisplay instead;
- * Created on 2017-12-10
- * 
- * @author BananaPuncher714
- */
-public class ItemDisplayCreateEvent extends ItemDisplayEvent implements Cancellable {
+public class CraftResultDisplayCreateEvent extends CraftResultDisplayEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private final Location location;
 	boolean cancelled = false;
 	
-	public ItemDisplayCreateEvent( Location location, ItemDisplay item ) {
-		super( item );
-		this.location = location;
+	public CraftResultDisplayCreateEvent( CraftResultDisplay display, Location location ) {
+		super( display );
+		this.location = location.clone();
 	}
 	
 	public Location getLocation() {
 		return location.clone();
 	}
 	
-	public void setItemDisplay( ItemDisplay display ) {
-		item = display;
+	public void setCraftResultDisplay( CraftResultDisplay display ) {
+		this.display = display;
 	}
 
 	@Override
@@ -41,7 +33,7 @@ public class ItemDisplayCreateEvent extends ItemDisplayEvent implements Cancella
 	public void setCancelled( boolean cancel ) {
 		cancelled = cancel;
 	}
-	
+
 	@Override
 	public HandlerList getHandlers() {
 	    return handlers;

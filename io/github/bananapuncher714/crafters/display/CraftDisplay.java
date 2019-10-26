@@ -1,12 +1,5 @@
 package io.github.bananapuncher714.crafters.display;
 
-import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
-import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
-import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
-import io.github.bananapuncher714.crafters.events.ItemDisplayDestroyEvent;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +8,25 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import io.github.bananapuncher714.crafters.PublicCrafters;
+import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
+import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
+import io.github.bananapuncher714.crafters.events.CraftResultDisplayCreateEvent;
+import io.github.bananapuncher714.crafters.events.CraftResultDisplayDestroyEvent;
+import io.github.bananapuncher714.crafters.events.CraftResultDisplayEvent;
+import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
+import io.github.bananapuncher714.crafters.events.ItemDisplayDestroyEvent;
+import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+
 /**
  * This is a per-inventory object, it manages all the 9 slots of a crafting table;
  * Created on 2017-12-07
  * 
  * @author BananaPuncher714
  */
-public class CraftDisplay implements Runnable {
+public class CraftDisplay {
 	protected final List< ItemDisplay > displays = new ArrayList< ItemDisplay >();
+	protected CraftResultDisplay resultDisplay;
 	protected final Location blockLoc;
 	protected final PublicCraftingInventory inventory;
 	protected double height;
@@ -52,14 +56,14 @@ public class CraftDisplay implements Runnable {
 		for ( int i = 0; i < 9; i++ ) {
 			displays.add( null );
 		}
-		update();
+		updateDisplays();
 	}
 
 	/**
 	 * All this really does is run the {@link #run()} method some ticks after this is called
 	 */
 	public void update() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask( PublicCrafters.getInstance(), this, PublicCrafters.getInstance().getUpdateDelay() );
+		Bukkit.getScheduler().scheduleSyncDelayedTask( PublicCrafters.getInstance(), this::updateDisplays, PublicCrafters.getInstance().getUpdateDelay() );
 	}
 	
 	/**
@@ -81,6 +85,8 @@ public class CraftDisplay implements Runnable {
 				update( i, j, true );
 			}
 		}
+		
+		updateResult();
 	}
 	
 	/**
@@ -93,6 +99,45 @@ public class CraftDisplay implements Runnable {
 	 */
 	public void update( int col, int row ) {
 		update( col, row, false );
+	}
+	
+	/**
+	 * Update the displays to show what item is being crafted
+	 */
+	public void updateResult() {
+		ItemStack result = inventory.getResult();
+		if ( result == null || result.getType() == Material.AIR ) {
+			if ( resultDisplay != null ) {
+				CraftResultDisplayEvent event = new CraftResultDisplayDestroyEvent( resultDisplay );
+				Bukkit.getPluginManager().callEvent( event );
+				resultDisplay.remove();
+			}
+			return;
+		}
+		if ( resultDisplay != null ) {
+			ItemStack resultItem = resultDisplay.getItem();
+			if ( result.isSimilar( resultItem ) ) {
+				return;
+			}
+			
+			CraftResultDisplayEvent destroyEvent = new CraftResultDisplayDestroyEvent( resultDisplay );
+			Bukkit.getPluginManager().callEvent( destroyEvent );
+			resultDisplay.remove();
+		}
+		
+		if ( PublicCrafters.getInstance().isShowResult() ) {
+			Location spawnLoc = blockLoc.clone();
+			spawnLoc.add( .5, 1 + PublicCrafters.getInstance().getResultHeight(), .5 );
+			resultDisplay = new CraftResultDisplay( this, spawnLoc, result );
+			CraftResultDisplayCreateEvent createEvent = new CraftResultDisplayCreateEvent( resultDisplay, spawnLoc.clone() );
+			Bukkit.getPluginManager().callEvent( createEvent );
+			if ( createEvent.isCancelled() ) {
+				return;
+			}
+			
+			resultDisplay = createEvent.getDisplay();
+			resultDisplay.init();
+		}
 	}
 	
 	/**
@@ -157,6 +202,10 @@ public class CraftDisplay implements Runnable {
 				display.remove();
 			}
 		}
+		
+		if ( resultDisplay != null ) {
+			resultDisplay.remove();
+		}
 	}
 
 	public PublicCraftingInventory getInventory() {
@@ -171,11 +220,7 @@ public class CraftDisplay implements Runnable {
 		return blockLoc;
 	}
 	
-	/**
-	 * You shouldn't run this directly, use the {@link #update()} method instead
-	 */
-	@Override
-	public void run() {
+	private void updateDisplays() {
 		if ( inventory == null ) {
 			return;
 		}
@@ -191,5 +236,7 @@ public class CraftDisplay implements Runnable {
 				update( i, j );
 			}
 		}
+		
+		updateResult();
 	}
 }

@@ -28,7 +28,7 @@ public class PlayerListener implements Listener {
 		
 	}
 	
-	@EventHandler( priority = EventPriority.LOWEST )
+	@EventHandler( priority = EventPriority.HIGHEST )
 	private void onItemDisplayCreateEvent( ItemDisplayCreateEvent event ) {
 		if ( !plugin.isVirtual() ) {
 			return;

@@ -1,12 +1,5 @@
 package io.github.bananapuncher714.crafters.implementation.v1_9_R2;
 
-import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
-import io.github.bananapuncher714.crafters.implementation.v1_9_R2.ContainerManager_v1_9_R2.SelfContainer;
-import net.minecraft.server.v1_9_R2.Container;
-import net.minecraft.server.v1_9_R2.InventoryCrafting;
-import net.minecraft.server.v1_9_R2.ItemStack;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +11,13 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
 
 import com.google.common.collect.Sets;
+
+import io.github.bananapuncher714.crafters.display.CraftDisplay;
+import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.v1_9_R2.ContainerManager_v1_9_R2.SelfContainer;
+import net.minecraft.server.v1_9_R2.Container;
+import net.minecraft.server.v1_9_R2.InventoryCrafting;
+import net.minecraft.server.v1_9_R2.ItemStack;
 
 public class CustomInventoryCrafting extends InventoryCrafting implements PublicCraftingInventory {
 	Set< Container > containers = Sets.newHashSet();
@@ -98,7 +98,10 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 
 	@Override
 	public org.bukkit.inventory.ItemStack getResult() {
-		return CraftItemStack.asBukkitCopy( resultInventory.getItem( 0 ) );
+		if ( this.resultInventory != null ) {
+			return CraftItemStack.asBukkitCopy( resultInventory.getItem( 0 ) );
+		}
+		return null;
 	}
 	
 	protected void setItems( List< org.bukkit.inventory.ItemStack > items ) {

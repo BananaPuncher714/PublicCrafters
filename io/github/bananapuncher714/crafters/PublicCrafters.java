@@ -51,6 +51,10 @@ public class PublicCrafters extends JavaPlugin {
 	private boolean virtual = false;
 	private boolean dropItem = false;
 	private int delay = 0;
+	
+	private boolean showResult = true;
+	private double resultHeight = .15;
+	
 	private final File saveFolder = new File( getDataFolder() + "/" + "saves" );
 
 	private final Set< Location > adminTables = new HashSet< Location >();
@@ -184,6 +188,8 @@ public class PublicCrafters extends JavaPlugin {
 		privateByDefault = config.getBoolean( "private-by-default" );
 		dropItem = config.getBoolean( "drop-item" );
 		virtual = config.getBoolean( "virtual" );
+		showResult = config.getBoolean( "display-crafted-item", true );
+		resultHeight = config.getDouble( "crafted-item-height", .15 );
 		
 		angles.clear();
 		if ( config.getConfigurationSection( "orientation" ) != null ) {
@@ -272,6 +278,14 @@ public class PublicCrafters extends JavaPlugin {
 
 	public boolean isVirtual() {
 		return virtual;
+	}
+	
+	public boolean isShowResult() {
+		return showResult;
+	}
+	
+	public double getResultHeight() {
+		return resultHeight;
 	}
 
 	public int getUpdateDelay() {

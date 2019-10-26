@@ -29,10 +29,10 @@ import net.minecraft.server.v1_14_R1.World;
  * @author BananaPuncher714
  */
 public class CustomContainerWorkbench extends ContainerWorkbench {
-	public InventoryCraftResult resultInventory;
-	public CustomInventoryCrafting craftInventory;
-	World world;
-	HumanEntity viewer;
+	protected InventoryCraftResult resultInventory;
+	protected CustomInventoryCrafting craftInventory;
+	protected World world;
+	protected HumanEntity viewer;
 	private List< Slot > theseSlots;
 	
 	public CustomContainerWorkbench( int id, HumanEntity player, Location blockLocation, CustomInventoryCrafting crafting, InventoryCraftResult result ) {
@@ -65,12 +65,13 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 			}
 		}
 		
-		ReflectionUtil.set( this, "craftInventory", crafting );
-		ReflectionUtil.set( this, "resultInventory", result );
+		ReflectionUtil.set( ContainerWorkbench.class, this, "craftInventory", crafting );
+		ReflectionUtil.set( ContainerWorkbench.class, this, "resultInventory", result );
 		
 		viewer = player;
 		resultInventory = result;
 		craftInventory = crafting;
+		
 		world = ( ( CraftWorld ) blockLocation.getWorld() ).getHandle();
 
 		a( new SlotResult( ( ( CraftHumanEntity ) player ).getHandle(), craftInventory, resultInventory, 0, 124, 35));
@@ -138,6 +139,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	
 	public void setInventoryCrafting( CustomInventoryCrafting crafting ) {
 		craftInventory = crafting;
+		ReflectionUtil.set( ContainerWorkbench.class, this, "craftInventory", crafting );
 	}
 	
 	@Override
@@ -153,6 +155,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	
 	@Override
 	public void a( IInventory iinventory ) {
+		// Crafting
 		a( windowId, world, ( ( CraftHumanEntity ) viewer ).getHandle(), craftInventory, resultInventory, this );
 	}
 	

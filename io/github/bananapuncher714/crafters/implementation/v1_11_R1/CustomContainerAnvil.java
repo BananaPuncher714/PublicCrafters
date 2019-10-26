@@ -21,7 +21,6 @@ import net.minecraft.server.v1_11_R1.Enchantment;
 import net.minecraft.server.v1_11_R1.EnchantmentManager;
 import net.minecraft.server.v1_11_R1.EntityHuman;
 import net.minecraft.server.v1_11_R1.IBlockData;
-import net.minecraft.server.v1_11_R1.ICrafting;
 import net.minecraft.server.v1_11_R1.IInventory;
 import net.minecraft.server.v1_11_R1.InventoryCraftResult;
 import net.minecraft.server.v1_11_R1.ItemNameTag;
