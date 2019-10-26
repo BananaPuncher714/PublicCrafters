@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.Inventory;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
+import io.github.bananapuncher714.crafters.display.CraftResultDisplay;
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 
@@ -99,6 +101,13 @@ public class InventoryOpenListener implements Listener {
 				Player player = ( Player ) human;
 				plugin.getManager().animate( player );
 			}
+		}
+	}
+	
+	@EventHandler( priority = EventPriority.HIGHEST )
+	private void onInventoryUpdateListener( InventoryPickupItemEvent event ) {
+		if ( CraftResultDisplay.isRegistered( event.getItem().getUniqueId() ) ) {
+			event.setCancelled( true );
 		}
 	}
 

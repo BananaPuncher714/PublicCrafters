@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
@@ -42,6 +43,7 @@ public final class ReflectionUtil {
 		try {
 			classCache.put( "CraftPlayer", Class.forName( "org.bukkit.craftbukkit." + version + ".entity.CraftPlayer" ) );
 			classCache.put( "PlayerConnection", Class.forName( "net.minecraft.server." + version + "." + "PlayerConnection" ) );
+			classCache.put( "DataWatcher", Class.forName( "net.minecraft.server." + version + "." + "DataWatcher" ) );
 			
 			classCache.put( "CraftWorld", Class.forName( "org.bukkit.craftbukkit." + version + "." + "CraftWorld" ) );
 			classCache.put( "CraftItemStack", Class.forName( "org.bukkit.craftbukkit." + version + ".inventory." + "CraftItemStack" ) );
@@ -49,10 +51,13 @@ public final class ReflectionUtil {
 			classCache.put( "ItemStack", Class.forName( "net.minecraft.server." + version + "." + "ItemStack" ) );
 			
 			classCache.put( "EntityArmorStand", Class.forName( "net.minecraft.server." + version + "." + "EntityArmorStand" ) );
+			classCache.put( "Entity", Class.forName( "net.minecraft.server." + version + "." + "Entity" ) );
+			classCache.put( "EntityItem", Class.forName( "net.minecraft.server." + version + "." + "EntityItem" ) );
 			classCache.put( "EntityLiving", Class.forName( "net.minecraft.server." + version + "." + "EntityLiving" ) );
 			classCache.put( "EntityPlayer", Class.forName( "net.minecraft.server." + version + "." + "EntityPlayer" ) );
 
 			classCache.put( "Packet", Class.forName( "net.minecraft.server." + version + "." + "Packet" ) );
+			classCache.put( "PacketPlayOutEntityMetadata", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutEntityMetadata" ) );
 			classCache.put( "PacketPlayOutEntityDestroy", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutEntityDestroy" ) );
 			classCache.put( "PacketPlayOutEntityEquipment", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutEntityEquipment" ) );
 			classCache.put( "PacketPlayOutSpawnEntityLiving", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutSpawnEntityLiving" ) );
@@ -81,9 +86,10 @@ public final class ReflectionUtil {
 			methodCache.put( "setLocation", getNMSClass( "EntityArmorStand" ).getMethod( "setLocation", double.class, double.class, double.class, float.class, float.class ) );
 			methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "setSmall", boolean.class ) );
 			methodCache.put( "setInvisible", getNMSClass( "EntityArmorStand" ).getMethod( "setInvisible", boolean.class ) );
-			methodCache.put( "getId", getNMSClass( "EntityArmorStand" ).getMethod( "getId" ) );
+			methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "getId" ) );
 			methodCache.put( "getBukkitEntity", getNMSClass( "EntityArmorStand" ).getMethod( "getBukkitEntity" ) );
 			methodCache.put( "getArmorStandHandle", getNMSClass( "CraftArmorStand" ).getMethod( "getHandle" ) );
+			methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "getDataWatcher" ) );
 			
 			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
 				methodCache.put( "setNoGravity", getNMSClass( "EntityArmorStand" ).getMethod( "setGravity", boolean.class ) );
@@ -101,12 +107,15 @@ public final class ReflectionUtil {
 
 		constructorCache = new HashMap< Class< ? >, Constructor< ? > >();
 		try {
+			constructorCache.put( getNMSClass( "EntityItem" ),  getNMSClass( "EntityItem" ).getConstructor( getNMSClass( "World" ), double.class, double.class, double.class, getNMSClass( "ItemStack" ) ) );
 			if ( version.contains( "v1_14" ) ) {
 				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "EntityTypes" ), getNMSClass( "World" ) ) );
 			} else {
 				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "World" ) ) );
 			}
 			
+			constructorCache.put( getNMSClass( "PacketPlayOutEntityMetadata" ),  getNMSClass( "PacketPlayOutEntityMetadata" ).getConstructor( int.class, getNMSClass( "DataWatcher" ), boolean.class ) );
+			constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntity" ),  getNMSClass( "PacketPlayOutSpawnEntity" ).getConstructor( getNMSClass( "Entity" ), int.class ) );
 			constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntityLiving" ),  getNMSClass( "PacketPlayOutSpawnEntityLiving" ).getConstructor( getNMSClass( "EntityLiving" ) ) );
 			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
 				constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, int.class, getNMSClass( "ItemStack" ) ) );
@@ -158,7 +167,11 @@ public final class ReflectionUtil {
 		} else {
 			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
 		}
+	}
 
+	public static Object spawnItem( Object worldServer, Location location, ItemStack item ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Object nmsItem = getMethod( "asNMSCopy" ).invoke( null, item );
+		return getConstructor( getNMSClass( "EntityItem" ) ).newInstance( worldServer, location.getX(), location.getY(), location.getZ(), nmsItem );
 	}
 	
 	public static CraftInventoryManager getManager() {

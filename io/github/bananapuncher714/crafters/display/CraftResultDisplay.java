@@ -1,5 +1,7 @@
 package io.github.bananapuncher714.crafters.display;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -12,7 +14,14 @@ import org.bukkit.inventory.ItemStack;
 import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.Utils;
 
+/**
+ * This isn't completely reliable, as even though the item still exists, the item can disappear when shoved into lava by the client
+ * 
+ * @author BananaPuncher714
+ */
 public class CraftResultDisplay {
+	protected final static Set< UUID > REGISTERED_ITEMS = new HashSet< UUID >();
+	
 	private UUID uuid;
 	private UUID itemUUID;
 	
@@ -37,6 +46,8 @@ public class CraftResultDisplay {
 		NBTEditor.set( itemDisplay, -32768, "Age" );
 		
 		armorstand.setPassenger( itemDisplay );
+		
+		REGISTERED_ITEMS.add( itemUUID );
 	}
 	
 	public void remove() {
@@ -48,6 +59,8 @@ public class CraftResultDisplay {
 		if ( item != null ) {
 			item.remove();
 		}
+		
+		REGISTERED_ITEMS.remove( itemUUID );
 	}
 	
 	public Location getLocation() {
@@ -78,5 +91,9 @@ public class CraftResultDisplay {
 		NBTEditor.setEntityTag( model, 1, "DisabledSlots" );
 		NBTEditor.setEntityTag( model, ( byte ) 1, "Invulnerable" );
 		return model;
+	}
+	
+	public static boolean isRegistered( UUID uuid ) {
+		return REGISTERED_ITEMS.contains( uuid );
 	}
 }

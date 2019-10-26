@@ -111,6 +111,7 @@ public class CraftDisplay {
 				CraftResultDisplayEvent event = new CraftResultDisplayDestroyEvent( resultDisplay );
 				Bukkit.getPluginManager().callEvent( event );
 				resultDisplay.remove();
+				resultDisplay = null;
 			}
 			return;
 		}
@@ -123,6 +124,7 @@ public class CraftDisplay {
 			CraftResultDisplayEvent destroyEvent = new CraftResultDisplayDestroyEvent( resultDisplay );
 			Bukkit.getPluginManager().callEvent( destroyEvent );
 			resultDisplay.remove();
+			resultDisplay = null;
 		}
 		
 		if ( PublicCrafters.getInstance().isShowResult() ) {
