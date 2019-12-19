@@ -41,9 +41,9 @@ public class CraftResultDisplay {
 		
 		Item itemDisplay = location.getWorld().dropItem( location, item );
 		itemUUID = itemDisplay.getUniqueId();
-		itemDisplay.setInvulnerable( true );
 		itemDisplay.setPickupDelay( Integer.MAX_VALUE );
 		NBTEditor.set( itemDisplay, -32768, "Age" );
+		NBTEditor.set( itemDisplay, ( byte ) 1, "Invulnerable" );
 		
 		armorstand.setPassenger( itemDisplay );
 		
