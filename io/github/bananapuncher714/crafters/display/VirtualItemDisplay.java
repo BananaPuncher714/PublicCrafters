@@ -70,18 +70,22 @@ public class VirtualItemDisplay extends ItemDisplay {
 				NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Invulnerable" );
 				NBTEditor.setEntityTag( bukkitStand, PublicCrafters.getInstance().isMarker() ? ( byte ) 1 : ( byte ) 0, "Marker" );
 				bukkitStand.setRightArmPose( handPose );
+				
+				entities.put( loc, armorStand );
 			} else {
 				armorStand = entities.get( loc );
 			}
 
 			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
-
+			Object metadataPacket = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ),
+					ReflectionUtil.getMethod( "getDataWatcher" ).invoke( armorStand ), true );
+			
 			if ( p != null ) {
 				Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( p ) );
 				ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
+				ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, metadataPacket );
 			}
 
-			entities.put( loc, armorStand );
 		} catch ( Exception exception ) {
 			exception.printStackTrace();
 		}
@@ -90,9 +94,12 @@ public class VirtualItemDisplay extends ItemDisplay {
 	private static void respawn( Player player, Object armorStand ) {
 		try {
 			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
-
+			Object metadataPacket = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ),
+					ReflectionUtil.getMethod( "getDataWatcher" ).invoke( armorStand ), true );
+			
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
 			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
+			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, metadataPacket );
 		} catch ( Exception exception ) {
 			exception.printStackTrace();
 		}

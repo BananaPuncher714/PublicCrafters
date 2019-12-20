@@ -67,7 +67,7 @@ public final class ReflectionUtil {
 				classCache.put( "EnumItemSlot", Class.forName( "net.minecraft.server." + version + "." + "EnumItemSlot" ) );
 			}
 			
-			if ( version.contains( "v1_14" ) ) {
+			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
 				classCache.put( "EntityTypes", Class.forName( "net.minecraft.server." + version + "." + "EntityTypes" ) );
 			}
 		} catch ( ClassNotFoundException e ) {
@@ -108,7 +108,7 @@ public final class ReflectionUtil {
 		constructorCache = new HashMap< Class< ? >, Constructor< ? > >();
 		try {
 			constructorCache.put( getNMSClass( "EntityItem" ),  getNMSClass( "EntityItem" ).getConstructor( getNMSClass( "World" ), double.class, double.class, double.class, getNMSClass( "ItemStack" ) ) );
-			if ( version.contains( "v1_14" ) ) {
+			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
 				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "EntityTypes" ), getNMSClass( "World" ) ) );
 			} else {
 				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "World" ) ) );
@@ -128,7 +128,7 @@ public final class ReflectionUtil {
 			modifiers = Field.class.getDeclaredField( "modifiers" );
             modifiers.setAccessible( true );
             
-            if ( version.contains( "v1_14" ) ) {
+            if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
             	entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "ARMOR_STAND" ).get( null );
             }
 		} catch( Exception e ) {
@@ -162,7 +162,7 @@ public final class ReflectionUtil {
 	}
 	
 	public static Object constructArmorStand( Object worldServer ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		if ( version.contains( "v1_14" ) ) {
+		if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
 			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( entityTypeArmorStand, worldServer );
 		} else {
 			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );

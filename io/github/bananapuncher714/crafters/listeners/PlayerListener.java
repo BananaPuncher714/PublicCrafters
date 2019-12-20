@@ -36,6 +36,7 @@ public class PlayerListener implements Listener {
 		if ( !plugin.isVirtual() ) {
 			return;
 		}
+		
 		ItemDisplay display = event.getItemDisplay();
 		VirtualItemDisplay vDisplay = new VirtualItemDisplay( display.getCraftDisplay(), display.getLocation(), display.getItem(), display.getSlot() );
 		event.setItemDisplay( vDisplay );
