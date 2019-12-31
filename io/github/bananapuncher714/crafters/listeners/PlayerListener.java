@@ -42,14 +42,13 @@ public class PlayerListener implements Listener {
 		event.setItemDisplay( vDisplay );
 	}
 	
-	// TODO Fix this sometime, perhaps in the future
-//	@EventHandler( priority = EventPriority.HIGHEST )
-//	private void onCraftResultCreateEvent( CraftResultDisplayCreateEvent event ) {
-//		if ( !plugin.isVirtual() ) {
-//			return;
-//		}
-//		CraftResultDisplay display = event.getDisplay();
-//		VirtualCraftResultDisplay vDisplay = new VirtualCraftResultDisplay( display.getCraftDisplay(), display.getLocation(), display.getItem() );
-//		event.setCraftResultDisplay( vDisplay );
-//	}
+	@EventHandler( priority = EventPriority.HIGHEST )
+	private void onCraftResultCreateEvent( CraftResultDisplayCreateEvent event ) {
+		if ( !plugin.isVirtual() ) {
+			return;
+		}
+		CraftResultDisplay display = event.getDisplay();
+		VirtualCraftResultDisplay vDisplay = new VirtualCraftResultDisplay( display.getCraftDisplay(), display.getLocation(), display.getItem() );
+		event.setCraftResultDisplay( vDisplay );
+	}
 }

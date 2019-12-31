@@ -55,7 +55,7 @@ public final class ReflectionUtil {
 			classCache.put( "EntityItem", Class.forName( "net.minecraft.server." + version + "." + "EntityItem" ) );
 			classCache.put( "EntityLiving", Class.forName( "net.minecraft.server." + version + "." + "EntityLiving" ) );
 			classCache.put( "EntityPlayer", Class.forName( "net.minecraft.server." + version + "." + "EntityPlayer" ) );
-
+			
 			classCache.put( "Packet", Class.forName( "net.minecraft.server." + version + "." + "Packet" ) );
 			classCache.put( "PacketPlayOutEntityMetadata", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutEntityMetadata" ) );
 			classCache.put( "PacketPlayOutEntityDestroy", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutEntityDestroy" ) );
@@ -65,6 +65,9 @@ public final class ReflectionUtil {
 			
 			if ( !version.equalsIgnoreCase( "v1_8_R3" ) ) {
 				classCache.put( "EnumItemSlot", Class.forName( "net.minecraft.server." + version + "." + "EnumItemSlot" ) );
+				classCache.put( "PacketPlayOutAttachMount", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutMount" ) );
+			} else {
+				classCache.put( "PacketPlayOutUpdateEntityNBT", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutUpdateEntityNBT" ) );
 			}
 			
 			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
@@ -119,8 +122,10 @@ public final class ReflectionUtil {
 			constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntityLiving" ),  getNMSClass( "PacketPlayOutSpawnEntityLiving" ).getConstructor( getNMSClass( "EntityLiving" ) ) );
 			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
 				constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, int.class, getNMSClass( "ItemStack" ) ) );
+				constructorCache.put( getNMSClass( "PacketPlayOutAttachEntity" ), getNMSClass( "PacketPlayOutAttachEntity" ).getConstructor( int.class, getNMSClass( "Entity" ), getNMSClass( "Entity" ) ) );
 			} else {
 				constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, getNMSClass( "EnumItemSlot" ), getNMSClass( "ItemStack" ) ) );
+				constructorCache.put( getNMSClass( "PacketPlayOutMount" ), getNMSClass( "PacketPlayOutMount" ).getConstructor( getNMSClass( "Entity" ) ) );
 			}
 			constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int[].class ) );
 			
@@ -172,6 +177,19 @@ public final class ReflectionUtil {
 	public static Object spawnItem( Object worldServer, Location location, ItemStack item ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Object nmsItem = getMethod( "asNMSCopy" ).invoke( null, item );
 		return getConstructor( getNMSClass( "EntityItem" ) ).newInstance( worldServer, location.getX(), location.getY(), location.getZ(), nmsItem );
+	}
+	
+	public static Object getMountPacket( Object horse, Object passenger ) {
+		try {
+			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
+				return getConstructor( getNMSClass( "PacketPlayOutAttachEntity" ) ).newInstance( 0, passenger, horse );
+			} else {
+				return getConstructor( getNMSClass( "PacketPlayOutMount" ) ).newInstance( horse );
+			}
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static CraftInventoryManager getManager() {

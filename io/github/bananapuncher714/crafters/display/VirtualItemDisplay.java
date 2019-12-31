@@ -75,12 +75,12 @@ public class VirtualItemDisplay extends ItemDisplay {
 			} else {
 				armorStand = entities.get( loc );
 			}
-
-			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
-			Object metadataPacket = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ),
-					ReflectionUtil.getMethod( "getDataWatcher" ).invoke( armorStand ), true );
 			
 			if ( p != null ) {
+				Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
+				Object metadataPacket = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ),
+						ReflectionUtil.getMethod( "getDataWatcher" ).invoke( armorStand ), true );
+				
 				Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( p ) );
 				ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
 				ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, metadataPacket );
