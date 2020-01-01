@@ -91,51 +91,38 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		a( craftInventory );
 	}
 	
-	// Overrides 1.12
-	public ItemStack b( EntityHuman entityhuman, int i ) {
-		return shiftClick( entityhuman, i );
-	}
-	
-	// Overrides 1.12.2
-	public ItemStack shiftClick(EntityHuman entityhuman, int i) {
-		ItemStack itemstack = ItemStack.a;
-		Slot slot = ( Slot ) theseSlots.get(i);
-		if ((slot != null) && (slot.hasItem())) {
-			ItemStack itemstack1 = slot.getItem();
-
-			itemstack = itemstack1.cloneItemStack();
-			if (i == 0) {
-				itemstack1.getItem().b(itemstack1, world, entityhuman);
-				if (!a(itemstack1, 10, 46, true)) {
-					return ItemStack.a;
-				}
-				slot.a(itemstack1, itemstack);
-			} else if ((i >= 10) && (i < 37)) {
-				if (!a(itemstack1, 37, 46, false)) {
-					return ItemStack.a;
-				}
-			} else if ((i >= 37) && (i < 46)) {
-				if (!a(itemstack1, 10, 37, false)) {
-					return ItemStack.a;
-				}
-			} else if (!a(itemstack1, 10, 46, false)) {
-				return ItemStack.a;
-			}
-			if (itemstack1.isEmpty()) {
-				slot.set(ItemStack.a);
-			} else {
-				slot.d();
-			}
-			if (itemstack1.getCount() == itemstack.getCount()) {
-				return ItemStack.a;
-			}
-			ItemStack itemstack2 = slot.a(entityhuman, itemstack1);
-			if (i == 0) {
-				entityhuman.drop(itemstack2, false);
-			}
-		}
-		return itemstack;
-	}
+	// Overrides 1.15.1
+	@Override
+	 public ItemStack shiftClick(EntityHuman entityhuman, int i) {
+        ItemStack itemstack = ItemStack.a;
+        Slot slot = (Slot)this.slots.get(i);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.cloneItemStack();
+            if (i == 0) {
+                this.containerAccess.a( (world, blockposition) -> { itemstack1.getItem().b(itemstack1, world, entityhuman ); } );
+                if (!this.a(itemstack1, 10, 46, true)) {
+                    return ItemStack.a;
+                }
+                slot.a(itemstack1, itemstack);
+            } else if (i >= 10 && i < 46 ? !this.a(itemstack1, 1, 10, false) && (i < 37 ? !this.a(itemstack1, 37, 46, false) : !this.a(itemstack1, 10, 37, false)) : !this.a(itemstack1, 10, 46, false)) {
+                return ItemStack.a;
+            }
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.a);
+            } else {
+                slot.d();
+            }
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.a;
+            }
+            ItemStack itemstack2 = slot.a(entityhuman, itemstack1);
+            if (i == 0) {
+                entityhuman.drop(itemstack2, false);
+            }
+        }
+        return itemstack;
+    }
 	
 	public void setInventoryCrafting( CustomInventoryCrafting crafting ) {
 		craftInventory = crafting;
