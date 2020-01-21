@@ -40,7 +40,7 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 		}
 		entities.remove( location );
 	}
-
+	
 	public static void spawnAll( Player player ) {
 		for ( Location key : entities.keySet() ) {
 			Object item = entities.get( key );

@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
@@ -28,7 +29,17 @@ public class PlayerListener implements Listener {
 		}
 		Player player = event.getPlayer();
 		VirtualItemDisplay.spawnAll( player );
-		
+		VirtualCraftResultDisplay.spawnAll( player );
+	}
+	
+	@EventHandler
+	private void onPlayerChangeWorldEvent( PlayerChangedWorldEvent event ) {
+		if ( !plugin.isVirtual() ) {
+			return;
+		}
+		Player player = event.getPlayer();
+		VirtualItemDisplay.spawnAll( player );
+		VirtualCraftResultDisplay.spawnAll( player );
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST )
