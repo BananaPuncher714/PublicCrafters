@@ -1,0 +1,34 @@
+# The Public Crafters Config - Created by BananaPuncher714
+
+# This determines how high the items float above the crafting table.
+# 0.7 lets the blocks float just a little bit, and .61 lets the items lie flat
+item-height: .7
+
+# This is whether or not the armorstand will be a marker; it may make the items
+# appear darkened if this is true
+marker: false
+
+# This is how many ticks until the crafting table top updates
+# Set it to 2 if the items on the table lag when using pistons to move it
+update-delay: 0
+
+# This is how a material should be turned, accepts numeric and string ids, and is written in degrees of rotation
+orientation:
+    DIAMOND_BLOCK: "0, 0, 0"
+    
+# This is how much a material should be moved from its position, in x, y, and z
+offset:
+    DIAMOND_BLOCK: "0, 1, 0"
+
+# Whether or not a player has private crafting enabled by default`
+private-by-default: false
+
+# Whether or not the table should drop their items if no one is using it
+drop-item: false
+
+# Whether or not the items that appear are fake. May not work for every version
+virtual: true
+
+# Whether or not to display an actual item above the table
+display-crafted-item: true
+crafted-item-height: .15
