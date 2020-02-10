@@ -9,6 +9,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
@@ -65,6 +66,13 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 				itemBukkitEntity.setVelocity( new Vector( 0, 0, 0 ) );
 				NBTEditor.setEntityTag( itemBukkitEntity, ( byte ) 1, "NoGravity" );
 				NBTEditor.setEntityTag( itemBukkitEntity, ( byte ) 1, "Invulnerable" );
+
+				ItemMeta meta = item.getItemMeta();
+				if ( meta.hasDisplayName() ) {
+					// Make the item display its name if it has a custom one
+					itemBukkitEntity.setCustomName( meta.getDisplayName() );
+					itemBukkitEntity.setCustomNameVisible( true );
+				}
 				
 				armorStand = ReflectionUtil.constructArmorStand( worldServer );
 
