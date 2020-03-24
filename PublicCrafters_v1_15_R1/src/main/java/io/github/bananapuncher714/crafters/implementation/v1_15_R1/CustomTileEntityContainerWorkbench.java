@@ -23,7 +23,7 @@ public class CustomTileEntityContainerWorkbench implements ITileEntityContainer 
 	 * This is an ITileEntityContainer method that returns a new container for whatever tile entity
 	 */
 	@Override
-	public Container createMenu( int id, PlayerInventory inv, EntityHuman ent ) {		
+	public Container createMenu( int id, PlayerInventory inv, EntityHuman ent ) {	
 		CustomInventoryCrafting crafting = manager.benches.get( bloc );
 		if ( crafting == null ) {
 			crafting = new CustomInventoryCrafting( bloc, manager, new SelfContainer( id ), 3, 3 );

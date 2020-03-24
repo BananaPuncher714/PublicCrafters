@@ -8,17 +8,29 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 
 import com.google.common.collect.Sets;
+import com.mojang.authlib.GameProfile;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
 import io.github.bananapuncher714.crafters.implementation.v1_15_R1.ContainerManager_v1_15_R1.SelfContainer;
 import net.minecraft.server.v1_15_R1.Container;
 import net.minecraft.server.v1_15_R1.ContainerUtil;
+import net.minecraft.server.v1_15_R1.EntityHuman;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.EnumProtocolDirection;
+import net.minecraft.server.v1_15_R1.InventoryCraftResult;
 import net.minecraft.server.v1_15_R1.InventoryCrafting;
 import net.minecraft.server.v1_15_R1.ItemStack;
+import net.minecraft.server.v1_15_R1.MinecraftServer;
+import net.minecraft.server.v1_15_R1.NetworkManager;
+import net.minecraft.server.v1_15_R1.Packet;
+import net.minecraft.server.v1_15_R1.PlayerConnection;
+import net.minecraft.server.v1_15_R1.PlayerInteractManager;
+import net.minecraft.server.v1_15_R1.WorldServer;
 
 /**
  * The important class, this is universal and what makes crafting tables public
@@ -103,6 +115,14 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		for ( org.bukkit.inventory.ItemStack item : items ) {
 			this.items.set( index++, CraftItemStack.asNMSCopy( item ) );
 		}
+		
+		// Want to update the result without having to use a real player
+		if ( this.resultInventory instanceof InventoryCraftResult ) {
+			CustomContainerWorkbench container = new CustomContainerWorkbench( 0, manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
+			
+			container.a( this );
+		}
+		
 		display.forceUpdate();
 	}
 	

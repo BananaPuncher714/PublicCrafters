@@ -17,6 +17,7 @@ import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInve
 import io.github.bananapuncher714.crafters.implementation.v1_12_R1.ContainerManager_v1_12_R1.SelfContainer;
 import net.minecraft.server.v1_12_R1.Container;
 import net.minecraft.server.v1_12_R1.ContainerUtil;
+import net.minecraft.server.v1_12_R1.InventoryCraftResult;
 import net.minecraft.server.v1_12_R1.InventoryCrafting;
 import net.minecraft.server.v1_12_R1.ItemStack;
 
@@ -99,6 +100,14 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		for ( org.bukkit.inventory.ItemStack item : items ) {
 			this.items.set( index++, CraftItemStack.asNMSCopy( item ) );
 		}
+		
+		// Want to update the result without having to use a real player
+		if ( this.resultInventory instanceof InventoryCraftResult ) {
+			CustomContainerWorkbench container = new CustomContainerWorkbench( manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
+			
+			container.a( this );
+		}
+		
 		display.forceUpdate();
 	}
 	

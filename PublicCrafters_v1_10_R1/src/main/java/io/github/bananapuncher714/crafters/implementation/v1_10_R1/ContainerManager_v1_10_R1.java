@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -18,6 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import com.mojang.authlib.GameProfile;
+
 import io.github.bananapuncher714.crafters.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
@@ -26,12 +29,30 @@ import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.server.v1_10_R1.Container;
 import net.minecraft.server.v1_10_R1.EntityHuman;
 import net.minecraft.server.v1_10_R1.EntityPlayer;
+import net.minecraft.server.v1_10_R1.EnumProtocolDirection;
 import net.minecraft.server.v1_10_R1.InventoryCraftResult;
+import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_10_R1.NetworkManager;
 import net.minecraft.server.v1_10_R1.Packet;
 import net.minecraft.server.v1_10_R1.PacketPlayOutAnimation;
+import net.minecraft.server.v1_10_R1.PlayerConnection;
+import net.minecraft.server.v1_10_R1.PlayerInteractManager;
+import net.minecraft.server.v1_10_R1.WorldServer;
 
 public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
+	protected final EntityPlayer mockPlayer;
+	
+	public ContainerManager_v1_10_R1() {
+		MinecraftServer server = MinecraftServer.getServer();
+		WorldServer world = server.getWorldServer( 0 );
+		mockPlayer = new EntityPlayer( server, world, new GameProfile( UUID.randomUUID(), "" ), new PlayerInteractManager( world ) );
+		
+		mockPlayer.playerConnection = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.CLIENTBOUND ), mockPlayer ) {
+			@Override
+			public void sendPacket( Packet< ? > packet ) {}
+		};
+	}
 	
 	protected CustomInventoryCrafting put( Location loc, CustomInventoryCrafting cont ) {
 		CustomInventoryCrafting crafting = benches.get( loc );
