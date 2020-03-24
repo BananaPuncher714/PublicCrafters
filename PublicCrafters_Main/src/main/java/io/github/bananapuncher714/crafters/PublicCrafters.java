@@ -54,6 +54,7 @@ public class PublicCrafters extends JavaPlugin {
 	private int delay = 0;
 	
 	private boolean showResult = true;
+	private boolean showResultName = true;
 	private double resultHeight = .15;
 	
 	private final File saveFolder = new File( getDataFolder() + "/" + "saves" );
@@ -192,6 +193,7 @@ public class PublicCrafters extends JavaPlugin {
 		dropItem = config.getBoolean( "drop-item" );
 		virtual = config.getBoolean( "virtual" );
 		showResult = config.getBoolean( "display-crafted-item", true );
+		showResultName = config.getBoolean( "display-crafted-item-name", true );
 		resultHeight = config.getDouble( "crafted-item-height", .15 );
 		
 		angles.clear();
@@ -285,6 +287,10 @@ public class PublicCrafters extends JavaPlugin {
 	
 	public boolean isShowResult() {
 		return showResult;
+	}
+	
+	public boolean isShowResultName() {
+		return showResultName;
 	}
 	
 	public double getResultHeight() {

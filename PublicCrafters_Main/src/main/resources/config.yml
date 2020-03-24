@@ -31,4 +31,5 @@ virtual: true
 
 # Whether or not to display an actual item above the table
 display-crafted-item: true
+display-crafted-item-name: true
 crafted-item-height: .15

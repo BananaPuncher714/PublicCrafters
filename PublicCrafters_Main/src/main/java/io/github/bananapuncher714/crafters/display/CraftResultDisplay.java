@@ -10,7 +10,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.Utils;
 
@@ -42,6 +44,13 @@ public class CraftResultDisplay {
 		Item itemDisplay = location.getWorld().dropItem( location, item );
 		itemUUID = itemDisplay.getUniqueId();
 		itemDisplay.setPickupDelay( Integer.MAX_VALUE );
+		if ( PublicCrafters.getInstance().isShowResultName() ) {
+			ItemMeta meta = item.getItemMeta();
+			if ( meta.hasDisplayName() ) {
+				itemDisplay.setCustomName( meta.getDisplayName() );
+				itemDisplay.setCustomNameVisible( true );
+			}
+		}
 		NBTEditor.set( itemDisplay, -32768, "Age" );
 		NBTEditor.set( itemDisplay, ( byte ) 1, "Invulnerable" );
 		

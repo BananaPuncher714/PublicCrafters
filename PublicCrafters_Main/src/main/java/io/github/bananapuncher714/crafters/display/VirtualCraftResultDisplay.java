@@ -67,11 +67,13 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 				NBTEditor.setEntityTag( itemBukkitEntity, ( byte ) 1, "NoGravity" );
 				NBTEditor.setEntityTag( itemBukkitEntity, ( byte ) 1, "Invulnerable" );
 
-				ItemMeta meta = item.getItemMeta();
-				if ( meta.hasDisplayName() ) {
-					// Make the item display its name if it has a custom one
-					itemBukkitEntity.setCustomName( meta.getDisplayName() );
-					itemBukkitEntity.setCustomNameVisible( true );
+				if ( PublicCrafters.getInstance().isShowResultName() ) {
+					ItemMeta meta = item.getItemMeta();
+					if ( meta.hasDisplayName() ) {
+						// Display a custom name if it has one and is enabled in the config
+						itemBukkitEntity.setCustomName( meta.getDisplayName() );
+						itemBukkitEntity.setCustomNameVisible( true );
+					}
 				}
 				
 				armorStand = ReflectionUtil.constructArmorStand( worldServer );
