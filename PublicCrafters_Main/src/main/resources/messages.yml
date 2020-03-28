@@ -1,0 +1,9 @@
+# Messages that will be displayed to the player and such. You can use '&' for the color code character.
+must-be-player: "You must be a player to run this command!"
+no-permission: "§cYou do not have permission to run this command!"
+set-crafting: "§bYou have set private crafting to %s"
+reloading-config: "§bReloading the config..."
+done-reloading-config: "§aDone reloading the config!"
+must-look-at-table: "§cYou must be looking at a crafting table!"
+locked-crafting-table: "§bSuccessfully locked a crafting table!"
+unlocked-crafting-table: "§bSuccessfully unlocked a crafting table!"

@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,11 +25,10 @@ public final class ReflectionUtil {
 	private static Class< CraftInventoryManager > containerManager = null;
 	private static String version;
 
-	private static final HashMap< String, Class<?> > classCache;
-	private static final HashMap< String, Method > methodCache;
-	private static final HashMap< Class< ? >, Constructor< ? > > constructorCache;
+	private static final Map< String, Class<?> > classCache;
+	private static final Map< String, Method > methodCache;
+	private static final Map< Class< ? >, Constructor< ? > > constructorCache;
 	private static Field connection;
-	private static Field modifiers;
 	private static Object entityTypeArmorStand;
 	
 	static {
@@ -130,8 +130,6 @@ public final class ReflectionUtil {
 			constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int[].class ) );
 			
 			connection = getNMSClass( "EntityPlayer" ).getField( "playerConnection" );
-			modifiers = Field.class.getDeclaredField( "modifiers" );
-            modifiers.setAccessible( true );
             
             if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
             	entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "ARMOR_STAND" ).get( null );
@@ -201,18 +199,6 @@ public final class ReflectionUtil {
 		}
 		
 		return ( CraftInventoryManager ) instance; 
-	}
-	
-	public static void set( Class< ? > clazz, Object object, String name, Object value ) {
-		try {
-			Field field = clazz.getDeclaredField( name );
-			field.setAccessible( true );
-			modifiers.set( field, field.getModifiers() & ~Modifier.FINAL );
-			
-			field.set( object, value );
-		} catch ( IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e ) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static String getVersion() {

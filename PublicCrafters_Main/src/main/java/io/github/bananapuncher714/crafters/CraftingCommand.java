@@ -81,37 +81,37 @@ public class CraftingCommand implements CommandExecutor, TabCompleter {
 	}
 
 	private void commandToggle( CommandSender sender, String[] args ) {
-		Validate.isTrue( sender instanceof Player, "You must be a player to run this command!" );
-		Validate.isTrue( sender.hasPermission( "publiccrafters.private" ), ChatColor.RED + "You do not have permission to run this command!" );
+		Validate.isTrue( sender instanceof Player, plugin.getMessageFor( "must-be-player" ) );
+		Validate.isTrue( sender.hasPermission( "publiccrafters.private" ), plugin.getMessageFor( "no-permission" ) );
 		
 		Player player = ( Player ) sender;
 		plugin.setPrivate( player.getUniqueId(), !plugin.isPrivate( player.getUniqueId() ) );
-		player.sendMessage( ChatColor.AQUA + "You have set private crafting to " + ( plugin.isPrivateByDefault() ^ plugin.isPrivate( player.getUniqueId() ) ) );
+		player.sendMessage( String.format( plugin.getMessageFor( "set-crafting" ), ( plugin.isPrivateByDefault() ^ plugin.isPrivate( player.getUniqueId() ) ) ) );
 	}
 	
 	private void commandReload( CommandSender sender, String[] args ) {
-		Validate.isTrue( sender.hasPermission( "publiccrafters.reload" ), ChatColor.RED + "You do not have permission to run this command!" );
+		Validate.isTrue( sender.hasPermission( "publiccrafters.reload" ), plugin.getMessageFor( "no-permission" ) );
 		
-		sender.sendMessage( ChatColor.AQUA + "Reloading the config..." );
+		sender.sendMessage( plugin.getMessageFor( "reloading-config" ) );
 		PublicCrafters.getInstance().reload();
-		sender.sendMessage( ChatColor.GREEN + "Done!" );
+		sender.sendMessage( plugin.getMessageFor( "done-reloading-config" ) );
 	}
 	
 	private void commandLock( CommandSender sender, String args[] ) {
-		Validate.isTrue( sender.hasPermission( "publiccrafters.admin" ), ChatColor.RED + "You do not have permission to run this command!" );
-		Validate.isTrue( sender instanceof Player, ChatColor.RED + "You must be a player to run this command!" );
+		Validate.isTrue( sender.hasPermission( "publiccrafters.admin" ), plugin.getMessageFor( "no-permission" ) );
+		Validate.isTrue( sender instanceof Player, plugin.getMessageFor( "must-be-player" ) );
 		Player player = ( Player ) sender;
 		
 		Block block = player.getTargetBlock( ( Set< Material > ) null, 10 );
-		Validate.notNull( block, ChatColor.RED + "You must be looking at a crafting table!" );
-		Validate.isTrue( block.getType() == Utils.getWorkbenchMaterial(), ChatColor.RED + "You must be looking at a crafting table!" );
+		Validate.notNull( block, plugin.getMessageFor( "must-look-at-table" ) );
+		Validate.isTrue( block.getType() == Utils.getWorkbenchMaterial(), plugin.getMessageFor( "must-look-at-table" ) );
 		
 		Location location = block.getLocation();
 		if ( plugin.getAdminTables().remove( location ) ) {
-			player.sendMessage( ChatColor.AQUA + "Successfully unlocked a crafting table!" );
+			player.sendMessage( plugin.getMessageFor( "unlocked-crafting-table" ) );
 		} else {
 			plugin.getAdminTables().add( location );
-			player.sendMessage( ChatColor.AQUA + "Successfully locked a crafting table!" );
+			player.sendMessage( plugin.getMessageFor( "locked-crafting-table" ) );
 		}
 		
 	}

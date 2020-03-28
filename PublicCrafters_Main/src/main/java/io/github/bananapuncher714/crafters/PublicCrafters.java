@@ -32,6 +32,7 @@ import io.github.bananapuncher714.crafters.listeners.InventoryOpenListener;
 import io.github.bananapuncher714.crafters.listeners.PlayerListener;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.crafters.util.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * The main class of all classes;
@@ -61,6 +62,8 @@ public class PublicCrafters extends JavaPlugin {
 
 	private final Set< Location > adminTables = new HashSet< Location >();
 	
+	private final Map< String, String > messages = new HashMap< String, String >();
+	
 	//	private CakeListener cake;
 
 	@Override
@@ -70,9 +73,12 @@ public class PublicCrafters extends JavaPlugin {
 		new Metrics( this );
 		
 		saveResource( "README.md", true );
+		saveResource( "messages.yml", false );
 		saveDefaultConfig();
+		
 		loadConfig();
-
+		loadMessages();
+		
 		manager = ReflectionUtil.getManager();
 		getLogger().info( "Detected version '" + ReflectionUtil.getVersion() + "'" );
 		
@@ -166,6 +172,7 @@ public class PublicCrafters extends JavaPlugin {
 	
 	public void reload() {
 		loadConfig();
+		loadMessages();
 	}
 
 	private void registerListeners() {
@@ -245,6 +252,14 @@ public class PublicCrafters extends JavaPlugin {
 		}
 	}
 
+	private void loadMessages() {
+		messages.clear();
+		FileConfiguration config = YamlConfiguration.loadConfiguration( new File( getDataFolder() + "/" + "messages.yml" ) );
+		for ( String key : config.getKeys( true ) ) {
+			messages.put( key, ChatColor.translateAlternateColorCodes( '&', config.getString( key ) ) );
+		}
+	}
+	
 	public boolean isPrivate( UUID playerUUID ) {
 		return pPlayers.contains( playerUUID );
 	}
@@ -315,5 +330,9 @@ public class PublicCrafters extends JavaPlugin {
 	
 	public Set< Location > getAdminTables() {
 		return adminTables;
+	}
+	
+	public String getMessageFor( String key ) {
+		return messages.getOrDefault( key, "" );
 	}
 }
