@@ -1,19 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<properties>
 		<master.version>4</master.version>
 	</properties>
-  
-  <parent>
-    <groupId>io.github.bananapuncher714</groupId>
-    <artifactId>PublicCrafters_Master</artifactId>
-    <version>4</version>
-  </parent>
-  <artifactId>PublicCrafters</artifactId>
-  <version>4.12.5</version>
-  
-  	<build>
+
+	<parent>
+		<groupId>io.github.bananapuncher714</groupId>
+		<artifactId>PublicCrafters_Master</artifactId>
+		<version>4</version>
+	</parent>
+	<artifactId>PublicCrafters</artifactId>
+	<version>4.12.6</version>
+
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -36,8 +38,8 @@
 			</plugin>
 		</plugins>
 	</build>
-	
-		<dependencies>
+
+	<dependencies>
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>PublicCrafters_Main</artifactId>

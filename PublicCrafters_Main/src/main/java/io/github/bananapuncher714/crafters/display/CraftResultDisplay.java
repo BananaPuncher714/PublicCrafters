@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.Utils;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 
 /**
  * This isn't completely reliable, as even though the item still exists, the item can disappear when shoved into lava by the client

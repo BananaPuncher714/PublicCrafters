@@ -15,9 +15,9 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.crafters.util.Utils;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 
 /**
  * The basic unit that is responsible for managing the items that appear on the crafting table

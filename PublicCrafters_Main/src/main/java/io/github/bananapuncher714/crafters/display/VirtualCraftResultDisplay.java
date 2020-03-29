@@ -13,8 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 
 public class VirtualCraftResultDisplay extends CraftResultDisplay {
 	private static Map< Location, Object > entities = new HashMap< Location, Object >();

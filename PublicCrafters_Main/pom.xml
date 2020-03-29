@@ -24,6 +24,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.github.bananapuncher714</groupId>
+			<artifactId>NBTEditor</artifactId>
+			<version>7.13</version>
+		</dependency>
+		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
 			<version>1.5</version>
@@ -44,7 +49,7 @@
 						<relocation>
 							<pattern>org.bstats</pattern>
 							<!-- Replace this with your package! -->
-							<shadedPattern>io.github.bananapuncher714.cartographer</shadedPattern>
+							<shadedPattern>io.github.bananapuncher714.crafters</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>

@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.util.NBTEditor;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 
 public class VirtualItemDisplay extends ItemDisplay {
 	private static Map< Location, Object > entities = new HashMap< Location, Object >();
