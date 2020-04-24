@@ -2,9 +2,10 @@ package io.github.bananapuncher714.crafters.display;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,27 +24,38 @@ public class VirtualItemDisplay extends ItemDisplay {
 	
 	@Override
 	public void init() {
-		for ( Player player : Bukkit.getOnlinePlayers() ) {
+		for ( Player player : location.getWorld().getPlayers() ) {
 			spawn( location, player, handPose, item );
 			update( location, player, item );
 		}
-		if ( Bukkit.getOnlinePlayers().isEmpty() ) {
+		if ( location.getWorld().getPlayers().isEmpty() ) {
 			spawn( location, null, handPose, item );
 		}
 	}
 	
 	@Override
 	public void remove() {
-		for ( Player player : Bukkit.getOnlinePlayers() ) {
+		for ( Player player : location.getWorld().getPlayers() ) {
 			kill( location, player );
 		}
 		entities.remove( location );
 	}
 
 	public static void spawnAll( Player player ) {
-		for ( Object object : entities.values() ) {
-			respawn( player, object );
-			update( player, object );
+		for ( Entry< Location, Object > entry : entities.entrySet() ) {
+			if ( entry.getKey().getWorld() == player.getWorld() ) {
+				Object object = entry.getValue();
+				respawn( player, object );
+				update( player, object );
+			}
+		}
+	}
+	
+	public static void despawnAll( World world, Player player ) {
+		for ( Location location : entities.keySet() ) {
+			if ( location.getWorld() == world ) {
+				kill( location, player );
+			}
 		}
 	}
 

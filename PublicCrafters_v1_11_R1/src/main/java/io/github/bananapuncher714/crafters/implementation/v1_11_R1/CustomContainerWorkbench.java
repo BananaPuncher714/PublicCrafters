@@ -140,11 +140,10 @@ public class CustomContainerWorkbench extends Container {
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
 		
-		if ( craftInventory.transaction.isEmpty() && PublicCrafters.getInstance().isDropItem() ) {
+		if ( PublicCrafters.getInstance().isDropItem() ) {
 			if ( !world.isClientSide ) {
 				for (int i = 0; i < 9; i++ ) {
-					ItemStack itemstack = craftInventory.getItem( i );
-					craftInventory.setItem( i, null );
+					ItemStack itemstack = craftInventory.splitWithoutUpdate( i );
 					if ( itemstack != null ) {
 						entity.drop( itemstack, false );
 					}

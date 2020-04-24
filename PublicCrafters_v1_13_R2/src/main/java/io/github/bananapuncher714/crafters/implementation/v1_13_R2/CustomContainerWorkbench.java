@@ -184,25 +184,14 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	 */
 	@Override
 	public void b( EntityHuman entity ) {
-		PlayerInventory playerinventory = entity.inventory;
 		craftInventory.selfContainer.setContainer( this );
-		if ( !playerinventory.getCarried().isEmpty() ) {
-			entity.drop( playerinventory.getCarried(), false );
-			playerinventory.setCarried( ItemStack.a );
-		}
+		super.b( entity );
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
 		
-		if ( craftInventory.transaction.isEmpty() && PublicCrafters.getInstance().isDropItem() ) {
-			if ( !world.isClientSide ) {
-				for (int i = 0; i < 9; i++ ) {
-					ItemStack itemstack = craftInventory.getItem( i );
-					craftInventory.setItem( i, null );
-					if ( itemstack != null ) {
-						entity.drop( itemstack, false );
-					}
-				}
-			}
+		if ( !world.isClientSide && PublicCrafters.getInstance().isDropItem() ) {
+			a( entity, world, craftInventory );
+			craftInventory.update();
 		}
 	}
 	

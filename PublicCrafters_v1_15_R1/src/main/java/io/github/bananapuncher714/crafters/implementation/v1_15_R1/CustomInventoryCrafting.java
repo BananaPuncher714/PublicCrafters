@@ -71,6 +71,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	public void setItem( int index, ItemStack item ) {
 		// Instead of updating one container, update all the containers
 		// That are looking at the table, basically the viewers
+		
 		items.set( index, item );
 		for ( Container container : containers ) {
 			container.a( this );

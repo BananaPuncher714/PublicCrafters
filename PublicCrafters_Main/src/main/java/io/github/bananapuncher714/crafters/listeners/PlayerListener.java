@@ -38,7 +38,9 @@ public class PlayerListener implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
+		VirtualItemDisplay.despawnAll( event.getFrom(), player );
 		VirtualItemDisplay.spawnAll( player );
+		VirtualCraftResultDisplay.despawnAll( event.getFrom(), player );
 		VirtualCraftResultDisplay.spawnAll( player );
 	}
 	

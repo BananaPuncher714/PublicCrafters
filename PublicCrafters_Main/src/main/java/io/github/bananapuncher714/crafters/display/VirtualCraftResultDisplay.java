@@ -2,9 +2,10 @@ package io.github.bananapuncher714.crafters.display;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -26,17 +27,17 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 	
 	@Override
 	public void init() {
-		for ( Player player : Bukkit.getOnlinePlayers() ) {
+		for ( Player player : location.getWorld().getPlayers() ) {
 			spawn( location, player, item );
 		}
-		if ( Bukkit.getOnlinePlayers().isEmpty() ) {
+		if ( location.getWorld().getPlayers().isEmpty() ) {
 			spawn( location, null, item );
 		}
 	}
 	
 	@Override
 	public void remove() {
-		for ( Player player : Bukkit.getOnlinePlayers() ) {
+		for ( Player player : location.getWorld().getPlayers() ) {
 			kill( location, player );
 		}
 		entities.remove( location );
@@ -44,12 +45,22 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 	
 	public static void spawnAll( Player player ) {
 		for ( Location key : entities.keySet() ) {
-			Object item = entities.get( key );
-			Object armorstand = armorstands.get( key );
-			respawn( player, item, armorstand );
+			if ( player.getWorld() == key.getWorld() ) {
+				Object item = entities.get( key );
+				Object armorstand = armorstands.get( key );
+				respawn( player, item, armorstand );
+			}
 		}
 	}
 
+	public static void despawnAll( World world, Player player ) {
+		for ( Location location : entities.keySet() ) {
+			if ( location.getWorld() == world ) {
+				kill( location, player );
+			}
+		}
+	}
+	
 	public static void spawn( Location loc, Player p, ItemStack item ) {
 		try {
 			Object itemEntity;
@@ -142,7 +153,7 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 			exception.printStackTrace();
 		}
 	}
-
+	
 	public static void kill( Location location, Player player ) {
 		if ( !entities.containsKey( location ) ) {
 			return;
