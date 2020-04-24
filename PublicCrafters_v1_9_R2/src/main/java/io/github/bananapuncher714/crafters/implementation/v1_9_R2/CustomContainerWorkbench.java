@@ -139,8 +139,7 @@ public class CustomContainerWorkbench extends Container {
 		if ( craftInventory.transaction.isEmpty() && PublicCrafters.getInstance().isDropItem() ) {
 			if ( !world.isClientSide ) {
 				for (int i = 0; i < 9; i++ ) {
-					ItemStack itemstack = craftInventory.getItem( i );
-					craftInventory.setItem( i, null );
+					ItemStack itemstack = craftInventory.splitWithoutUpdate( i );
 					if ( itemstack != null ) {
 						entity.drop( itemstack, false );
 					}
