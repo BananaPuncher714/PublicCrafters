@@ -1,6 +1,6 @@
 name: PublicCrafters
 main: io.github.bananapuncher714.crafters.PublicCrafters
-version: 4.12.7
+version: 4.12.8
 author: BananaPuncher714
 description: Adds public workbenches to Minecraft
 api-version: 1.13

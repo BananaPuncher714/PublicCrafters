@@ -97,8 +97,8 @@ public class CraftResultDisplay {
 		model.setGravity( false );
 		model.setSmall( true );
 		model.setMarker( true );
-		NBTEditor.setEntityTag( model, 1, "DisabledSlots" );
-		NBTEditor.setEntityTag( model, ( byte ) 1, "Invulnerable" );
+		NBTEditor.set( model, 1, "DisabledSlots" );
+		NBTEditor.set( model, ( byte ) 1, "Invulnerable" );
 		return model;
 	}
 	

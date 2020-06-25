@@ -69,14 +69,14 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 				Object worldServer = ReflectionUtil.getMethod( "getWorldHandle" ).invoke( loc.getWorld() );
 				itemEntity = ReflectionUtil.spawnItem( worldServer, loc, item );
 				
-				if ( !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+				if ( !ReflectionUtil.getVersion().contains( "v1_8" ) ) {
 					ReflectionUtil.getMethod( "setInvulnerable").invoke( itemEntity, true );
 				}
 				
 				Item itemBukkitEntity = ( Item ) ReflectionUtil.getMethod( "getBukkitEntity" ).invoke( itemEntity );
 				itemBukkitEntity.setVelocity( new Vector( 0, 0, 0 ) );
-				NBTEditor.setEntityTag( itemBukkitEntity, ( byte ) 1, "NoGravity" );
-				NBTEditor.setEntityTag( itemBukkitEntity, ( byte ) 1, "Invulnerable" );
+				NBTEditor.set( itemBukkitEntity, true, "NoGravity" );
+				NBTEditor.set( itemBukkitEntity, true, "Invulnerable" );
 
 				if ( PublicCrafters.getInstance().isShowResultName() ) {
 					ItemMeta meta = item.getItemMeta();
@@ -91,17 +91,17 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX(), loc.getY(), loc.getZ(), 0f, 0f );
 				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
-				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) );
+				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, !ReflectionUtil.getVersion().contains( "v1_8" ) );
 				ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
-				if ( !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+				if ( !ReflectionUtil.getVersion().contains( "v1_8" ) ) {
 					ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
 					ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
 				}
 				
 				ArmorStand bukkitStand = ( ArmorStand ) ReflectionUtil.getMethod( "getBukkitEntity" ).invoke( armorStand );
-				NBTEditor.setEntityTag( bukkitStand, 1, "DisabledSlots" );
-				NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Invulnerable" );
-				NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Marker" );
+				NBTEditor.set( bukkitStand, 1, "DisabledSlots" );
+				NBTEditor.set( bukkitStand, true, "Invulnerable" );
+				NBTEditor.set( bukkitStand, true, "Marker" );
 				
 				bukkitStand.setPassenger( itemBukkitEntity );
 			} else {

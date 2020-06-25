@@ -1,6 +1,8 @@
 package io.github.bananapuncher714.crafters.display;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,6 +16,7 @@ import org.bukkit.util.EulerAngle;
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
+import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
 public class VirtualItemDisplay extends ItemDisplay {
 	private static Map< Location, Object > entities = new HashMap< Location, Object >();
@@ -68,9 +71,9 @@ public class VirtualItemDisplay extends ItemDisplay {
 
 				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
 				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
-				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) );
+				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_8 ) );
 				ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
-				if ( !ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+				if ( NBTEditor.getMinecraftVersion() != MinecraftVersion.v1_8 ) {
 					ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
 					ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
 				}
@@ -78,9 +81,9 @@ public class VirtualItemDisplay extends ItemDisplay {
 				
 				ArmorStand bukkitStand = ( ArmorStand ) ReflectionUtil.getMethod( "getBukkitEntity" ).invoke( armorStand );
 				bukkitStand.setItemInHand( item );
-				NBTEditor.setEntityTag( bukkitStand, 1, "DisabledSlots" );
-				NBTEditor.setEntityTag( bukkitStand, ( byte ) 1, "Invulnerable" );
-				NBTEditor.setEntityTag( bukkitStand, PublicCrafters.getInstance().isMarker() ? ( byte ) 1 : ( byte ) 0, "Marker" );
+				NBTEditor.set( bukkitStand, 1, "DisabledSlots" );
+				NBTEditor.set( bukkitStand, true, "Invulnerable" );
+				NBTEditor.set( bukkitStand, PublicCrafters.getInstance().isMarker(), "Marker" );
 				bukkitStand.setRightArmPose( handPose );
 				
 				entities.put( loc, armorStand );
@@ -120,8 +123,12 @@ public class VirtualItemDisplay extends ItemDisplay {
 	private static void update( Player player, Object armorStand ) {
 		try {
 			Object packet;
-			if ( ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
+			if ( ReflectionUtil.getVersion().contains( "v1_8" ) ) {
 				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), 0, ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, 0 ) );
+			} else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+				List< Object > equipment = new ArrayList< Object >();
+				equipment.add( ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "Pair" ) ).newInstance( ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ) ) ) );
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), equipment );
 			} else {
 				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ) ) );
 			}
@@ -140,10 +147,14 @@ public class VirtualItemDisplay extends ItemDisplay {
 			Object stand = entities.get( location );
 
 			Object packet;
-			if ( ReflectionUtil.getVersion().equalsIgnoreCase( "v1_8_R3" ) ) {
-				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), 0, ReflectionUtil.getMethod( "asNMSCopy" ).invoke( null, item ) );
+			if ( NBTEditor.getMinecraftVersion() == MinecraftVersion.v1_8 ) {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), 0, ReflectionUtil.getMethod( "getEquipment" ).invoke( stand, 0 ) );
+			} else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+				List< Object > equipment = new ArrayList< Object >();
+				equipment.add( ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "Pair" ) ).newInstance( ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "getEquipment" ).invoke( stand, ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ) ) ) );
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), equipment );
 			} else {
-				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "asNMSCopy" ).invoke( null, item ) );
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( stand ), ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ), ReflectionUtil.getMethod( "getEquipment" ).invoke( stand, ReflectionUtil.getMethod( "valueOf" ).invoke( null, "MAINHAND" ) ) );
 			}
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
 			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );

@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>NBTEditor</artifactId>
-			<version>7.13</version>
+			<version>7.15</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bstats</groupId>
@@ -49,7 +49,12 @@
 						<relocation>
 							<pattern>org.bstats</pattern>
 							<!-- Replace this with your package! -->
-							<shadedPattern>io.github.bananapuncher714.crafters</shadedPattern>
+							<shadedPattern>io.github.bananapuncher714.crafters.bstats</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>io.github.bananapuncher714.nbteditor</pattern>
+							<!-- Replace this with your package! -->
+							<shadedPattern>io.github.bananapuncher714.crafters.nbteditor</shadedPattern>
 						</relocation>
 					</relocations>
 				</configuration>

@@ -1,31 +1,31 @@
-package io.github.bananapuncher714.crafters.implementation.v1_15_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_16_R1;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftInventoryCrafting;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.util.Utils;
-import net.minecraft.server.v1_15_R1.AutoRecipeStackManager;
-import net.minecraft.server.v1_15_R1.ContainerAccess;
-import net.minecraft.server.v1_15_R1.ContainerWorkbench;
-import net.minecraft.server.v1_15_R1.EntityHuman;
-import net.minecraft.server.v1_15_R1.IInventory;
-import net.minecraft.server.v1_15_R1.IRecipe;
-import net.minecraft.server.v1_15_R1.InventoryClickType;
-import net.minecraft.server.v1_15_R1.InventoryCraftResult;
-import net.minecraft.server.v1_15_R1.InventoryCrafting;
-import net.minecraft.server.v1_15_R1.ItemStack;
-import net.minecraft.server.v1_15_R1.NonNullList;
-import net.minecraft.server.v1_15_R1.Slot;
-import net.minecraft.server.v1_15_R1.SlotResult;
-import net.minecraft.server.v1_15_R1.World;
+import net.minecraft.server.v1_16_R1.AutoRecipeStackManager;
+import net.minecraft.server.v1_16_R1.ContainerAccess;
+import net.minecraft.server.v1_16_R1.ContainerWorkbench;
+import net.minecraft.server.v1_16_R1.EntityHuman;
+import net.minecraft.server.v1_16_R1.IInventory;
+import net.minecraft.server.v1_16_R1.IRecipe;
+import net.minecraft.server.v1_16_R1.InventoryClickType;
+import net.minecraft.server.v1_16_R1.InventoryCraftResult;
+import net.minecraft.server.v1_16_R1.InventoryCrafting;
+import net.minecraft.server.v1_16_R1.ItemStack;
+import net.minecraft.server.v1_16_R1.NonNullList;
+import net.minecraft.server.v1_16_R1.Slot;
+import net.minecraft.server.v1_16_R1.SlotResult;
+import net.minecraft.server.v1_16_R1.World;
 
 /**
  * @author BananaPuncher714
@@ -94,7 +94,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	// Overrides 1.15.1
 	@Override
 	 public ItemStack shiftClick(EntityHuman entityhuman, int i) {
-        ItemStack itemstack = ItemStack.a;
+        ItemStack itemstack = ItemStack.b;
         Slot slot = (Slot)this.slots.get(i);
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
@@ -102,19 +102,19 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
             if (i == 0) {
                 this.containerAccess.a( (world, blockposition) -> { itemstack1.getItem().b(itemstack1, world, entityhuman ); } );
                 if (!this.a(itemstack1, 10, 46, true)) {
-                    return ItemStack.a;
+                    return ItemStack.b;
                 }
                 slot.a(itemstack1, itemstack);
             } else if (i >= 10 && i < 46 ? !this.a(itemstack1, 1, 10, false) && (i < 37 ? !this.a(itemstack1, 37, 46, false) : !this.a(itemstack1, 10, 37, false)) : !this.a(itemstack1, 10, 46, false)) {
-                return ItemStack.a;
+                return ItemStack.b;
             }
             if (itemstack1.isEmpty()) {
-                slot.set(ItemStack.a);
+                slot.set(ItemStack.b );
             } else {
                 slot.d();
             }
             if (itemstack1.getCount() == itemstack.getCount()) {
-                return ItemStack.a;
+                return ItemStack.b;
             }
             ItemStack itemstack2 = slot.a(entityhuman, itemstack1);
             if (i == 0) {

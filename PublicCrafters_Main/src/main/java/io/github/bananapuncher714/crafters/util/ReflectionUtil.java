@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
+import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
 /**
  * Yet another simplified reflection utility to load the proper {@link CraftInventoryManager} for each version;
@@ -63,15 +66,19 @@ public final class ReflectionUtil {
 			classCache.put( "PacketPlayOutSpawnEntityLiving", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutSpawnEntityLiving" ) );
 			classCache.put( "World", Class.forName( "net.minecraft.server." + version + "." + "World" ) );
 			
-			if ( !version.equalsIgnoreCase( "v1_8_R3" ) ) {
+			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_9 ) ) {
 				classCache.put( "EnumItemSlot", Class.forName( "net.minecraft.server." + version + "." + "EnumItemSlot" ) );
 				classCache.put( "PacketPlayOutAttachMount", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutMount" ) );
 			} else {
 				classCache.put( "PacketPlayOutUpdateEntityNBT", Class.forName( "net.minecraft.server." + version + "." + "PacketPlayOutUpdateEntityNBT" ) );
 			}
 			
-			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
+			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) || version.contains( "v1_16" ) ) {
 				classCache.put( "EntityTypes", Class.forName( "net.minecraft.server." + version + "." + "EntityTypes" ) );
+			}
+			
+			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+				classCache.put( "Pair", Class.forName( "com.mojang.datafixers.util.Pair" ) );
 			}
 		} catch ( ClassNotFoundException e ) {
 			e.printStackTrace();
@@ -94,7 +101,7 @@ public final class ReflectionUtil {
 			methodCache.put( "getArmorStandHandle", getNMSClass( "CraftArmorStand" ).getMethod( "getHandle" ) );
 			methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "getDataWatcher" ) );
 			
-			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
+			if ( NBTEditor.getMinecraftVersion() == MinecraftVersion.v1_8 ) {
 				methodCache.put( "setNoGravity", getNMSClass( "EntityArmorStand" ).getMethod( "setGravity", boolean.class ) );
 				methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "getEquipment", int.class ) );
 			} else {
@@ -111,7 +118,7 @@ public final class ReflectionUtil {
 		constructorCache = new HashMap< Class< ? >, Constructor< ? > >();
 		try {
 			constructorCache.put( getNMSClass( "EntityItem" ),  getNMSClass( "EntityItem" ).getConstructor( getNMSClass( "World" ), double.class, double.class, double.class, getNMSClass( "ItemStack" ) ) );
-			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
+			if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) || version.contains( "v1_16" ) ) {
 				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "EntityTypes" ), getNMSClass( "World" ) ) );
 			} else {
 				constructorCache.put( getNMSClass( "EntityArmorStand" ), getNMSClass( "EntityArmorStand" ).getConstructor( getNMSClass( "World" ) ) );
@@ -120,20 +127,28 @@ public final class ReflectionUtil {
 			constructorCache.put( getNMSClass( "PacketPlayOutEntityMetadata" ),  getNMSClass( "PacketPlayOutEntityMetadata" ).getConstructor( int.class, getNMSClass( "DataWatcher" ), boolean.class ) );
 			constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntity" ),  getNMSClass( "PacketPlayOutSpawnEntity" ).getConstructor( getNMSClass( "Entity" ), int.class ) );
 			constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntityLiving" ),  getNMSClass( "PacketPlayOutSpawnEntityLiving" ).getConstructor( getNMSClass( "EntityLiving" ) ) );
-			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
+			if ( NBTEditor.getMinecraftVersion() == MinecraftVersion.v1_8 ) {
 				constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, int.class, getNMSClass( "ItemStack" ) ) );
 				constructorCache.put( getNMSClass( "PacketPlayOutAttachEntity" ), getNMSClass( "PacketPlayOutAttachEntity" ).getConstructor( int.class, getNMSClass( "Entity" ), getNMSClass( "Entity" ) ) );
 			} else {
-				constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, getNMSClass( "EnumItemSlot" ), getNMSClass( "ItemStack" ) ) );
+				if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+					constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, List.class ) );
+				} else {
+					constructorCache.put( getNMSClass( "PacketPlayOutEntityEquipment" ), getNMSClass( "PacketPlayOutEntityEquipment" ).getConstructor( int.class, getNMSClass( "EnumItemSlot" ), getNMSClass( "ItemStack" ) ) );
+				}
 				constructorCache.put( getNMSClass( "PacketPlayOutMount" ), getNMSClass( "PacketPlayOutMount" ).getConstructor( getNMSClass( "Entity" ) ) );
 			}
 			constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int[].class ) );
 			
 			connection = getNMSClass( "EntityPlayer" ).getField( "playerConnection" );
             
-            if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
+            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_14 ) ) {
             	entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "ARMOR_STAND" ).get( null );
             }
+            
+			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+				constructorCache.put( getNMSClass( "Pair" ), getNMSClass( "Pair" ).getConstructor( Object.class, Object.class ) );
+			}
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
@@ -165,7 +180,7 @@ public final class ReflectionUtil {
 	}
 	
 	public static Object constructArmorStand( Object worldServer ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) ) {
+		if ( version.contains( "v1_14" ) || version.contains( "v1_15" ) || version.contains( "v1_16" ) ) {
 			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( entityTypeArmorStand, worldServer );
 		} else {
 			return getConstructor( ReflectionUtil.getNMSClass( "EntityArmorStand" ) ).newInstance( worldServer );
@@ -179,7 +194,7 @@ public final class ReflectionUtil {
 	
 	public static Object getMountPacket( Object horse, Object passenger ) {
 		try {
-			if ( version.equalsIgnoreCase( "v1_8_R3" ) ) {
+			if ( NBTEditor.getMinecraftVersion() == MinecraftVersion.v1_8 ) {
 				return getConstructor( getNMSClass( "PacketPlayOutAttachEntity" ) ).newInstance( 0, passenger, horse );
 			} else {
 				return getConstructor( getNMSClass( "PacketPlayOutMount" ) ).newInstance( horse );

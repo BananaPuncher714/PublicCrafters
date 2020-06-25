@@ -13,25 +13,19 @@
 		<version>4</version>
 	</parent>
 	<artifactId>PublicCrafters</artifactId>
-	<version>4.12.7</version>
+	<version>4.12.8</version>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4.1</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
-						<id>make-assembly</id>
 						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>shade</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -88,6 +82,11 @@
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>PublicCrafters_v1_15_R1</artifactId>
+			<version>${master.version}</version>
+		</dependency>
+				<dependency>
+			<groupId>io.github.bananapuncher714</groupId>
+			<artifactId>PublicCrafters_v1_16_R1</artifactId>
 			<version>${master.version}</version>
 		</dependency>
 	</dependencies>
