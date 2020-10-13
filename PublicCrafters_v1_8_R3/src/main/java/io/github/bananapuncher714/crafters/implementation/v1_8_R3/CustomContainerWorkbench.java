@@ -143,6 +143,9 @@ public class CustomContainerWorkbench extends Container {
 						entity.drop( itemstack, false );
 					}
 				}
+				
+				setCraftResult();
+				craftInventory.update();
 			}
 		}
 	}

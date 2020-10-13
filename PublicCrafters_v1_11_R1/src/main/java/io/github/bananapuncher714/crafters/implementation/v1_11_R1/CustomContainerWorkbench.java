@@ -28,7 +28,7 @@ public class CustomContainerWorkbench extends Container {
 	CustomInventoryCrafting craftInventory;
 	World world;
 	HumanEntity viewer;
-	
+
 	public CustomContainerWorkbench( HumanEntity player, Location blockLocation, CustomInventoryCrafting crafting, IInventory result ) {
 		viewer = player;
 		resultInventory = result;
@@ -51,7 +51,7 @@ public class CustomContainerWorkbench extends Container {
 		}
 		a( craftInventory );
 	}
-	
+
 	/**
 	 * The shift clicking method
 	 */
@@ -95,7 +95,7 @@ public class CustomContainerWorkbench extends Container {
 		}
 		return itemstack;
 	}
-	
+
 	public void setInventoryCrafting( CustomInventoryCrafting crafting ) {
 		craftInventory = crafting;
 	}
@@ -104,33 +104,33 @@ public class CustomContainerWorkbench extends Container {
 	public void a( IInventory inventory ) {
 		setCraftResult();
 	}
-	
+
 	@Override
 	public ItemStack a( int i, int j, InventoryClickType inventoryclicktype, EntityHuman entityhuman ) {
 		craftInventory.selfContainer.setContainer( this );
 		return super.a( i, j, inventoryclicktype, entityhuman );
 	}
-	
+
 	public void setCraftResult() {
-	    CraftingManager.getInstance().lastCraftView = getBukkitView();
-	    ItemStack craftResult = CraftingManager.getInstance().craft( craftInventory, world );
-	    resultInventory.setItem( 0, craftResult );
-	    if ( listeners.isEmpty() ) {
-	    	return;
-	    }
-	    if ( ( craftResult != null ) && ( craftResult.getItem() == Items.FILLED_MAP ) ) {
-	    	return;
-	    }
-	    for ( Object listener : listeners ) {
-	    	EntityPlayer player = ( EntityPlayer ) listener;
-	    	player.playerConnection.sendPacket( new PacketPlayOutSetSlot( player.activeContainer.windowId, 0, craftResult ) );
-	    }
+		CraftingManager.getInstance().lastCraftView = getBukkitView();
+		ItemStack craftResult = CraftingManager.getInstance().craft( craftInventory, world );
+		resultInventory.setItem( 0, craftResult );
+		if ( listeners.isEmpty() ) {
+			return;
+		}
+		if ( ( craftResult != null ) && ( craftResult.getItem() == Items.FILLED_MAP ) ) {
+			return;
+		}
+		for ( Object listener : listeners ) {
+			EntityPlayer player = ( EntityPlayer ) listener;
+			player.playerConnection.sendPacket( new PacketPlayOutSetSlot( player.activeContainer.windowId, 0, craftResult ) );
+		}
 	}
-	
+
 	public boolean isNotResultSlot( Slot slot ) {
 		return slot.inventory != resultInventory;
 	}
-	
+
 	/**
 	 * This might be for when the inventory closes?
 	 */
@@ -139,7 +139,7 @@ public class CustomContainerWorkbench extends Container {
 		super.b( entity );
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
-		
+
 		if ( PublicCrafters.getInstance().isDropItem() ) {
 			if ( !world.isClientSide ) {
 				for (int i = 0; i < 9; i++ ) {
@@ -148,23 +148,26 @@ public class CustomContainerWorkbench extends Container {
 						entity.drop( itemstack, false );
 					}
 				}
+
+				setCraftResult();
+				craftInventory.update();
 			}
 		}
 	}
-	
+
 	@Override
 	@Deprecated
 	public boolean a( EntityHuman entity ) {
 		return canReach( entity.getBukkitEntity() );
 	}
-	
+
 	public boolean canReach( HumanEntity entity ) {
 		if ( !checkReachable ) {
 			return true;
 		}
 		return craftInventory.getLocation().getBlock().getType() == Material.WORKBENCH;
 	}
-	
+
 	@Override
 	@Deprecated
 	public InventoryView getBukkitView() {
