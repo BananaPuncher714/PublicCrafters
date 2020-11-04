@@ -22,6 +22,7 @@
 		<module>PublicCrafters_v1_13_R1</module>
 		<module>PublicCrafters_v1_16_R1</module>
 		<module>PublicCrafters_v1_16_R2</module>
+		<module>PublicCrafters_v1_16_R3</module>
 	</modules>
 
 	<build>
