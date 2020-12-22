@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -45,7 +46,7 @@ public class PublicCrafters extends JavaPlugin {
 
 	private final Map< Material, EulerAngle > angles = new HashMap< Material, EulerAngle >();
 	private final Map< Material, Vector > offsets = new HashMap< Material, Vector >();
-	private final Set< UUID > pPlayers = new HashSet< UUID >();
+	private final Set< UUID > privatePlayers = new HashSet< UUID >();
 	private CraftInventoryManager manager;
 	private double height = .7;
 	private boolean marker = false;
@@ -86,7 +87,7 @@ public class PublicCrafters extends JavaPlugin {
 		registerCommands();
 
 		loadChunks();
-		loadAdminTables();
+		loadData();
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class PublicCrafters extends JavaPlugin {
 		}
 		// Save the inventories
 		unloadChunks();
-		saveAdminTables();
+		saveData();
 	}
 
 	private void unloadChunks() {
@@ -126,27 +127,28 @@ public class PublicCrafters extends JavaPlugin {
 		}
 	}
 	
-	private void loadAdminTables() {
+	private void loadData() {
 		File file = new File( getDataFolder() + "/" + "data.yml" );
 		if ( !file.exists() ) {
 			return;
 		}
 		FileConfiguration data = YamlConfiguration.loadConfiguration( file );
-		if ( !data.contains( "admin-tables" ) ) {
-			return;
+		if ( data.contains( "admin-tables" ) ) {
+			for ( String loc : data.getStringList( "admin-tables" ) ) {
+				adminTables.add( Utils.getLocationFromString( loc ) );
+			}
 		}
 		
-		for ( String loc : data.getStringList( "admin-tables" ) ) {
-			adminTables.add( Utils.getLocationFromString( loc ) );
+		if ( data.contains( "non-default" ) ) {
+			for ( String uuidString : data.getStringList( "non-default" ) ) {
+				UUID uuid = UUID.fromString( uuidString );
+				privatePlayers.add( uuid );
+			}
 		}
 	}
 	
-	private void saveAdminTables() {
+	private void saveData() {
 		File file = new File( getDataFolder() + "/" + "data.yml" );
-		if ( adminTables.isEmpty() ) {
-			file.delete();
-			return;
-		}
 		if ( !file.exists() ) {
 			try {
 				file.createNewFile();
@@ -156,13 +158,14 @@ public class PublicCrafters extends JavaPlugin {
 		}
 		FileConfiguration data = YamlConfiguration.loadConfiguration( file );
 		
-		data.set( "admin-tables", null );
 		List< String > tableStrings = new ArrayList< String >();
 		for ( Location location : adminTables ) {
 			tableStrings.add( Utils.getStringFromLocation( location ) );
 		}
 		data.set( "admin-tables", tableStrings );
 		
+		data.set( "non-default", privatePlayers.stream().map( UUID::toString ).collect( Collectors.toList() ) );
+			
 		try {
 			data.save( file );
 		} catch ( IOException e ) {
@@ -261,14 +264,14 @@ public class PublicCrafters extends JavaPlugin {
 	}
 	
 	public boolean isPrivate( UUID playerUUID ) {
-		return pPlayers.contains( playerUUID );
+		return privatePlayers.contains( playerUUID );
 	}
 
 	public void setPrivate( UUID uuid, boolean pr ) {
 		if ( pr ) {
-			pPlayers.add( uuid );
-		} else if ( pPlayers.contains( uuid ) ) {
-			pPlayers.remove( uuid );
+			privatePlayers.add( uuid );
+		} else if ( privatePlayers.contains( uuid ) ) {
+			privatePlayers.remove( uuid );
 		}
 	}
 
