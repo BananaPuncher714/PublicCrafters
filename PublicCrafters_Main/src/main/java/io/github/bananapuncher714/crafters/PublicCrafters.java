@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,14 +27,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryManager;
 import io.github.bananapuncher714.crafters.listeners.ChunkListener;
 import io.github.bananapuncher714.crafters.listeners.CraftBlockListener;
 import io.github.bananapuncher714.crafters.listeners.InventoryOpenListener;
 import io.github.bananapuncher714.crafters.listeners.PlayerListener;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.crafters.util.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 /**
  * The main class of all classes;

@@ -16,7 +16,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 
 /**
  * This is a relatively easy class to understand

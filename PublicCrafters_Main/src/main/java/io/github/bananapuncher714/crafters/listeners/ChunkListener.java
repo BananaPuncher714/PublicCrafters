@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import io.github.bananapuncher714.crafters.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
+import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryManager;
 
 /**
  * Meant to handle loading and unloading tables as the chunks load and unload;

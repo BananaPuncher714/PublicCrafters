@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.v1_10_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_17_R1;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -11,8 +11,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -26,29 +26,30 @@ import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryManager;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 import io.netty.util.internal.ThreadLocalRandom;
-import net.minecraft.server.v1_10_R1.Container;
-import net.minecraft.server.v1_10_R1.EntityHuman;
-import net.minecraft.server.v1_10_R1.EntityPlayer;
-import net.minecraft.server.v1_10_R1.EnumProtocolDirection;
-import net.minecraft.server.v1_10_R1.InventoryCraftResult;
-import net.minecraft.server.v1_10_R1.MinecraftServer;
-import net.minecraft.server.v1_10_R1.NetworkManager;
-import net.minecraft.server.v1_10_R1.Packet;
-import net.minecraft.server.v1_10_R1.PacketPlayOutAnimation;
-import net.minecraft.server.v1_10_R1.PlayerConnection;
-import net.minecraft.server.v1_10_R1.PlayerInteractManager;
-import net.minecraft.server.v1_10_R1.WorldServer;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.chat.ChatMessage;
+import net.minecraft.network.protocol.EnumProtocolDirection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.network.PlayerConnection;
+import net.minecraft.world.TileInventory;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.InventoryCraftResult;
 
-public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
+public class ContainerManager_v1_17_R1 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
 	protected final EntityPlayer mockPlayer;
 	
-	public ContainerManager_v1_10_R1() {
+	public ContainerManager_v1_17_R1() {
 		MinecraftServer server = MinecraftServer.getServer();
-		WorldServer world = server.getWorldServer( 0 );
-		mockPlayer = new EntityPlayer( server, world, new GameProfile( UUID.randomUUID(), "" ), new PlayerInteractManager( world ) );
+		WorldServer world = server.getWorlds().iterator().next();
+		mockPlayer = new EntityPlayer( server, world, new GameProfile( UUID.randomUUID(), "" ) );
 		
-		mockPlayer.playerConnection = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.CLIENTBOUND ), mockPlayer ) {
+		mockPlayer.b = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.b ), mockPlayer ) {
 			@Override
 			public void sendPacket( Packet< ? > packet ) {}
 		};
@@ -110,7 +111,8 @@ public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 	
 	@Override
 	public void load( Location location, List< ItemStack > items ) {
-		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, new SelfContainer(), 3, 3 );
+		// Is 0 really ok as an id?!?
+		CustomInventoryCrafting crafting = new CustomInventoryCrafting( location, this, new SelfContainer( 0 ), 3, 3 );
 		InventoryCraftResult result = new InventoryCraftResult();
 		crafting.resultInventory = result;
 		
@@ -137,10 +139,11 @@ public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 		}
 		return found;
 	}
-	
+
 	@Override
 	public void openWorkbench( Player player, Location loc, InventoryType type ) {
-		( ( CraftPlayer ) player ).getHandle().openTileEntity( new CustomTileEntityContainerWorkbench( this, loc ) );
+		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), new ChatMessage( "container.crafting", new Object[ 0 ] ) );
+		( ( CraftPlayer ) player ).getHandle().openContainer( tileEntity );
 	}
 	
 	@Override
@@ -163,14 +166,15 @@ public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 				continue;
 			}
 			EntityPlayer NMSPlayer = ( ( CraftPlayer ) player ).getHandle();
-			NMSPlayer.playerConnection.sendPacket( packet );
+			NMSPlayer.b.sendPacket( packet );
 		}
 	}
 	
 	protected static class SelfContainer extends Container {
 		private CustomContainerWorkbench container;
 		
-		protected SelfContainer() {
+		protected SelfContainer( int id ) {
+			super( null, id );
 		}
 		
 		protected void setContainer( CustomContainerWorkbench container ) {
@@ -178,8 +182,8 @@ public class ContainerManager_v1_10_R1 implements CraftInventoryManager {
 		}
 		
 		@Override
-		public boolean a( EntityHuman entity ) {
-			return container == null ? false : container.a( entity );
+		public boolean canUse( EntityHuman entity ) {
+			return container == null ? false : container.canUse( entity );
 		}
 
 		@Override

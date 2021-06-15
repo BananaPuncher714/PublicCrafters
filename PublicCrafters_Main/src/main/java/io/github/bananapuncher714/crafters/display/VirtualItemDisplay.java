@@ -123,7 +123,7 @@ public class VirtualItemDisplay extends ItemDisplay {
 	private static void update( Player player, Object armorStand ) {
 		try {
 			Object packet;
-			if ( ReflectionUtil.getVersion().contains( "v1_8" ) ) {
+			if ( NBTEditor.getMinecraftVersion() == MinecraftVersion.v1_8 ) {
 				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityEquipment" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), 0, ReflectionUtil.getMethod( "getEquipment" ).invoke( armorStand, 0 ) );
 			} else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
 				List< Object > equipment = new ArrayList< Object >();
@@ -169,7 +169,12 @@ public class VirtualItemDisplay extends ItemDisplay {
 		}
 
 		try {
-			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) } );
+			Object packet;
+			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) } );
+			} else {
+				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) );
+			}
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
 			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
 		} catch ( Exception exception ) {

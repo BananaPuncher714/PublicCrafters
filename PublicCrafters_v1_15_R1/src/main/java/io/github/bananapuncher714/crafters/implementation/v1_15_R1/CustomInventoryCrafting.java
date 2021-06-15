@@ -15,7 +15,7 @@ import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 import io.github.bananapuncher714.crafters.implementation.v1_15_R1.ContainerManager_v1_15_R1.SelfContainer;
 import net.minecraft.server.v1_15_R1.Container;
 import net.minecraft.server.v1_15_R1.ContainerUtil;

@@ -23,7 +23,7 @@ import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.display.CraftResultDisplay;
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 
 /**
  * Handles whenever a player clicks on a crafting table or an entity that's part of a {@link PublicCraftingInventory} or {@link CraftDisplay};

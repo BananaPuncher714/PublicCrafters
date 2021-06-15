@@ -23,8 +23,8 @@ import com.mojang.authlib.GameProfile;
 
 import io.github.bananapuncher714.crafters.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.implementation.API.CraftInventoryManager;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryManager;
+import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.server.v1_11_R1.Container;
 import net.minecraft.server.v1_11_R1.EntityHuman;

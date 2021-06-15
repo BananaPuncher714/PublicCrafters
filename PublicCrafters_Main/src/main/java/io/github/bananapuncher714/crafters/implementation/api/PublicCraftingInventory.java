@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.API;
+package io.github.bananapuncher714.crafters.implementation.api;
 
 import java.util.List;
 import java.util.UUID;

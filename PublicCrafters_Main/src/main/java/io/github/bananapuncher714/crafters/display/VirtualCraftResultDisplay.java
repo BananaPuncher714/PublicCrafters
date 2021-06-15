@@ -2,7 +2,6 @@ package io.github.bananapuncher714.crafters.display;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,6 +15,7 @@ import org.bukkit.util.Vector;
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
+import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
 public class VirtualCraftResultDisplay extends CraftResultDisplay {
 	private static Map< Location, Object > entities = new HashMap< Location, Object >();
@@ -91,9 +91,9 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX(), loc.getY(), loc.getZ(), 0f, 0f );
 				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
-				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, !ReflectionUtil.getVersion().contains( "v1_8" ) );
+				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, NBTEditor.getMinecraftVersion() != MinecraftVersion.v1_8 );
 				ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
-				if ( !ReflectionUtil.getVersion().contains( "v1_8" ) ) {
+				if ( NBTEditor.getMinecraftVersion() != MinecraftVersion.v1_8 ) {
 					ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
 					ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
 				}
@@ -160,9 +160,20 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 		}
 
 		try {
-			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ), ( int ) ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) } );
+			Object[] packets;
+			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+				packets = new Object[ 1 ];
+				packets[ 0 ] = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ), ( int ) ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) } );
+			} else {
+				packets = new Object[ 2 ];
+				packets[ 0 ] = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) );
+				packets[ 1 ] = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) );
+			}
+			
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
-			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );
+			for ( Object obj : packets ) {
+				ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, obj );
+			}
 		} catch ( Exception exception ) {
 			exception.printStackTrace();
 		}

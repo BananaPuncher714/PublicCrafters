@@ -16,7 +16,7 @@ import io.github.bananapuncher714.crafters.events.CraftResultDisplayDestroyEvent
 import io.github.bananapuncher714.crafters.events.CraftResultDisplayEvent;
 import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
 import io.github.bananapuncher714.crafters.events.ItemDisplayDestroyEvent;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 
 /**
  * This is a per-inventory object, it manages all the 9 slots of a crafting table;

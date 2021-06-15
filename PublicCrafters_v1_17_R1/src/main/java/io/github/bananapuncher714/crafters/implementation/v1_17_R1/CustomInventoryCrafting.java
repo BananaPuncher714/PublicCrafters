@@ -1,6 +1,5 @@
-package io.github.bananapuncher714.crafters.implementation.v1_16_R2;
+package io.github.bananapuncher714.crafters.implementation.v1_17_R1;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,18 +7,18 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 
 import com.google.common.collect.Sets;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
-import io.github.bananapuncher714.crafters.implementation.v1_16_R2.ContainerManager_v1_16_R2.SelfContainer;
-import net.minecraft.server.v1_16_R2.Container;
-import net.minecraft.server.v1_16_R2.ContainerUtil;
-import net.minecraft.server.v1_16_R2.InventoryCraftResult;
-import net.minecraft.server.v1_16_R2.InventoryCrafting;
-import net.minecraft.server.v1_16_R2.ItemStack;
+import io.github.bananapuncher714.crafters.implementation.v1_17_R1.ContainerManager_v1_17_R1.SelfContainer;
+import net.minecraft.world.ContainerUtil;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.InventoryCraftResult;
+import net.minecraft.world.inventory.InventoryCrafting;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * The important class, this is universal and what makes crafting tables public
@@ -32,10 +31,10 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	private UUID id;
 	private Location bloc;
 	private CraftDisplay display;
-	private ContainerManager_v1_16_R2 manager;
+	private ContainerManager_v1_17_R1 manager;
 	protected SelfContainer selfContainer;
 	
-	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_16_R2 manager, SelfContainer container, int i, int j ) {
+	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_17_R1 manager, SelfContainer container, int i, int j ) {
 		super( container, i, j );
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
@@ -46,14 +45,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	}
 	
 	private void setDefaults() {
-		try {
-			// Set items
-			Field field = InventoryCrafting.class.getDeclaredField( "items" );
-			field.setAccessible( true );
-			items = ( List< ItemStack > ) field.get( this );
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
+		items = this.getContents();
 	}
 	
 	@Override

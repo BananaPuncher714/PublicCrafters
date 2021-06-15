@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import com.google.common.collect.Sets;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.implementation.API.PublicCraftingInventory;
+import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 import io.github.bananapuncher714.crafters.implementation.v1_10_R1.ContainerManager_v1_10_R1.SelfContainer;
 import net.minecraft.server.v1_10_R1.Container;
 import net.minecraft.server.v1_10_R1.InventoryCraftResult;
