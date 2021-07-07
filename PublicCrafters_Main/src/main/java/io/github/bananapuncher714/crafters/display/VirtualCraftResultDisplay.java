@@ -1,5 +1,6 @@
 package io.github.bananapuncher714.crafters.display;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -161,13 +162,14 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 		try {
 			Object[] packets;
-			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
+			Constructor< ? > cons = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) );
+			if ( cons.getParameterTypes()[ 0 ] == int[].class ) {
 				packets = new Object[ 1 ];
-				packets[ 0 ] = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ), ( int ) ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) } );
+				packets[ 0 ] = cons.newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ), ( int ) ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) } );
 			} else {
 				packets = new Object[ 2 ];
-				packets[ 0 ] = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) );
-				packets[ 1 ] = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) );
+				packets[ 0 ] = cons.newInstance( ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) );
+				packets[ 1 ] = cons.newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorstands.get( location ) ) );
 			}
 			
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );

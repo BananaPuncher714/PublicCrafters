@@ -26,7 +26,8 @@ import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 public final class ReflectionUtil {
 	private static Class< CraftInventoryManager > containerManager = null;
 	private static String version;
-
+	private static String mcVersion;
+	
 	private static final Map< String, Class<?> > classCache;
 	private static final Map< String, Method > methodCache;
 	private static final Map< Class< ? >, Constructor< ? > > constructorCache;
@@ -35,10 +36,25 @@ public final class ReflectionUtil {
 	
 	static {
 		version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+		
 		try {
-			containerManager = ( Class< CraftInventoryManager > ) Class.forName( "io.github.bananapuncher714.crafters.implementation." + version + ".ContainerManager_" + version );
-		} catch ( ClassNotFoundException e) {
-			PublicCrafters.getInstance().getLogger().severe( "'" + version + "' is not implemented at the moment! Please contact BananaPuncher714 for future support!" );
+			Method getServerMethod = Bukkit.getServer().getClass().getMethod( "getServer" );
+			Object dedicated = getServerMethod.invoke( Bukkit.getServer() );
+			Method getVersionMethod = dedicated.getClass().getMethod( "getVersion" );
+			mcVersion = ( String ) getVersionMethod.invoke( dedicated );
+		} catch ( NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1 ) {
+			e1.printStackTrace();
+		}
+		
+		try {
+			String underscored = mcVersion.replace( '.', '_' );
+			containerManager = ( Class< CraftInventoryManager > ) Class.forName( "io.github.bananapuncher714.crafters.implementation.v" + underscored + ".ContainerManager_v" + underscored );
+		}  catch ( ClassNotFoundException e ) {
+			try {
+				containerManager = ( Class< CraftInventoryManager > ) Class.forName( "io.github.bananapuncher714.crafters.implementation." + version + ".ContainerManager_" + version );
+			} catch ( ClassNotFoundException e1 ) {
+				PublicCrafters.getInstance().getLogger().severe( "'" + version + "' is not implemented at the moment! Please contact BananaPuncher714 for future support!" );
+			}
 		}
 		
 		classCache = new HashMap< String, Class<?> >();
@@ -170,7 +186,11 @@ public final class ReflectionUtil {
 			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
 				constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int[].class ) );
 			} else {
-				constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int.class ) );
+				try {
+					constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int.class ) );
+				} catch ( NoSuchMethodException e ) {
+					constructorCache.put( getNMSClass( "PacketPlayOutEntityDestroy" ), getNMSClass( "PacketPlayOutEntityDestroy" ).getConstructor( int[].class ) );
+				}
 			}
 			
 			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {

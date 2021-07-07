@@ -1,5 +1,6 @@
 package io.github.bananapuncher714.crafters.display;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -170,10 +171,11 @@ public class VirtualItemDisplay extends ItemDisplay {
 
 		try {
 			Object packet;
-			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
-				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) } );
+			Constructor< ? > cons = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) );
+			if ( cons.getParameterTypes()[ 0 ] == int[].class ) {
+				packet = cons.newInstance( new int[] { ( int ) ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) } );
 			} else {
-				packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityDestroy" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) );
+				packet = cons.newInstance( ReflectionUtil.getMethod( "getId" ).invoke( entities.get( location ) ) );
 			}
 			Object playerConnection = ReflectionUtil.getField().get( ReflectionUtil.getMethod( "getHandle" ).invoke( player ) );
 			ReflectionUtil.getMethod( "sendPacket" ).invoke( playerConnection, packet );

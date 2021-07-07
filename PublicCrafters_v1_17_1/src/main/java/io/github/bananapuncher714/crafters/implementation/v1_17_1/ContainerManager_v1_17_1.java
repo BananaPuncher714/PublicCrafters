@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.v1_17_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_17_1;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -40,11 +40,11 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.InventoryCraftResult;
 
-public class ContainerManager_v1_17_R1 implements CraftInventoryManager {
+public class ContainerManager_v1_17_1 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
 	protected final EntityPlayer mockPlayer;
 	
-	public ContainerManager_v1_17_R1() {
+	public ContainerManager_v1_17_1() {
 		MinecraftServer server = MinecraftServer.getServer();
 		WorldServer world = server.getWorlds().iterator().next();
 		mockPlayer = new EntityPlayer( server, world, new GameProfile( UUID.randomUUID(), "" ) );
