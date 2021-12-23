@@ -1,6 +1,5 @@
-package io.github.bananapuncher714.crafters.implementation.v1_10_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_18_R1;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -9,7 +8,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 
@@ -17,43 +16,48 @@ import com.google.common.collect.Sets;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
-import io.github.bananapuncher714.crafters.implementation.v1_10_R1.ContainerManager_v1_10_R1.SelfContainer;
-import net.minecraft.server.v1_10_R1.Container;
-import net.minecraft.server.v1_10_R1.InventoryCraftResult;
-import net.minecraft.server.v1_10_R1.InventoryCrafting;
-import net.minecraft.server.v1_10_R1.ItemStack;
+import io.github.bananapuncher714.crafters.implementation.v1_18_R1.ContainerManager_v1_18_R1.SelfContainer;
+import net.minecraft.world.ContainerUtil;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.InventoryCraftResult;
+import net.minecraft.world.inventory.InventoryCrafting;
+import net.minecraft.world.item.ItemStack;
 
+/**
+ * The important class, this is universal and what makes crafting tables public
+ * 
+ * @author BananaPuncher714
+ */
 public class CustomInventoryCrafting extends InventoryCrafting implements PublicCraftingInventory {
 	Set< Container > containers = Sets.newHashSet();
-	private ItemStack[] items;
+	private List< ItemStack > items;
 	private UUID id;
 	private Location bloc;
 	private CraftDisplay display;
-	private ContainerManager_v1_10_R1 manager;
+	private ContainerManager_v1_18_R1 manager;
 	protected SelfContainer selfContainer;
 	
-	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_10_R1 manager, SelfContainer container, int i, int j ) {
+	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_18_R1 manager, SelfContainer container, int i, int j ) {
 		super( container, i, j );
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
-		this.manager = manager;
 		selfContainer = container;
-		// We need to access the items stored in the 3 by 3 grid
-		try {
-			Field field = InventoryCrafting.class.getDeclaredField( "items" );
-			field.setAccessible( true );
-			items = ( ItemStack[] ) field.get( this );
-		} catch ( Exception exception ) {
-			exception.printStackTrace();
-		}
+		this.manager = manager;
+		setDefaults();
 		display = new CraftDisplay( this );
 	}
-
+	
+	private void setDefaults() {
+		items = this.getContents();
+	}
+	
+	// setItem
 	@Override
-	public void setItem( int index, ItemStack item ) {
+	public void a( int index, ItemStack item ) {
 		// Instead of updating one container, update all the containers
 		// That are looking at the table, basically the viewers
-		items[ index ] = item;
+		
+		items.set( index, item );
 		for ( Container container : containers ) {
 			container.a( this );
 		}
@@ -61,33 +65,18 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		display.update();
 	}
 	
+	// splitStack
 	@Override
-	public ItemStack splitStack( int i, int j ) {
-		if ( items[ i ] != null ) {
-			if ( items[ i ].count <= j ) {
-				ItemStack itemstack = this.items[ i ];
-				items[ i ] = null;
-				for ( Container container : containers ) {
-					container.a( this );
-				}
-				display.update();
-				return itemstack;
-			}
-			ItemStack itemstack = items[i].cloneAndSubtract( j );
-			if ( this.items[ i ].count == 0 ) {
-				this.items[ i ] = null;
-			}
+	public ItemStack a( int i, int j ) {
+		ItemStack itemstack = ContainerUtil.a( items, i, j );
+		if ( !itemstack.b() ) {
 			for ( Container container : containers ) {
 				container.a( this );
 			}
-			display.update();
-			return itemstack;
 		}
-		for ( Container container : containers ) {
-			container.a( this );
-		}
+		// Update the armorstand grid
 		display.update();
-		return null;
+		return itemstack;
 	}
 	
 	// This is to fetch a nice list of Bukkit ItemStacks from the list of NMS ItemStacks
@@ -103,7 +92,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	@Override
 	public org.bukkit.inventory.ItemStack getResult() {
 		if ( this.resultInventory != null ) {
-			return CraftItemStack.asBukkitCopy( resultInventory.getItem( 0 ) );
+			return CraftItemStack.asBukkitCopy( resultInventory.a( 0 ) );
 		}
 		return null;
 	}
@@ -111,13 +100,13 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	protected void setItems( List< org.bukkit.inventory.ItemStack > items ) {
 		int index = 0;
 		for ( org.bukkit.inventory.ItemStack item : items ) {
-			this.items[ index++ ] = CraftItemStack.asNMSCopy( item );
+			this.items.set( index++, CraftItemStack.asNMSCopy( item ) );
 		}
-
+		
 		// Want to update the result without having to use a real player
 		if ( this.resultInventory instanceof InventoryCraftResult ) {
-			CustomContainerWorkbench container = new CustomContainerWorkbench( manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
-
+			CustomContainerWorkbench container = new CustomContainerWorkbench( 0, manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
+			
 			container.a( this );
 			
 			CraftingInventory crafting = ( CraftingInventory ) container.getBukkitView().getTopInventory();
@@ -182,7 +171,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	
 	@Override
 	public void update() {
-		if ( bloc.getBlock().getType() != Material.WORKBENCH ) {
+		if ( !bloc.getBlock().getType().name().equalsIgnoreCase( "CRAFTING_TABLE" ) ) {
 			remove();
 			manager.benches.remove( bloc );
 		} else {

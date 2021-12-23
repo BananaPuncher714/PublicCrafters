@@ -48,12 +48,14 @@ public class ContainerManager_v1_15_R1 implements CraftInventoryManager {
 	public ContainerManager_v1_15_R1() {
 		MinecraftServer server = MinecraftServer.getServer();
 		WorldServer world = server.getWorlds().iterator().next();
-		mockPlayer = new EntityPlayer( server, world, new GameProfile( UUID.randomUUID(), "" ), new PlayerInteractManager( world ) );
+		mockPlayer = new EntityPlayer( server, world, new GameProfile( new UUID( 0, 0 ), "" ), new PlayerInteractManager( world ) );
 		
 		mockPlayer.playerConnection = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.CLIENTBOUND ), mockPlayer ) {
 			@Override
 			public void sendPacket( Packet< ? > packet ) {}
 		};
+		
+		mockPlayer.getBukkitEntity().setOp( true );
 	}
 	
 	protected CustomInventoryCrafting put( Location loc, CustomInventoryCrafting cont ) {
@@ -106,8 +108,9 @@ public class ContainerManager_v1_15_R1 implements CraftInventoryManager {
 		for ( PublicCraftingInventory inventory : benches.values() ) {
 			inventory.getCraftDisplay().stop();
 			CraftInventoryLoader.save( PublicCrafters.getInstance().getSaveFolder(), inventory );
-			
 		}
+		
+		mockPlayer.getBukkitEntity().setOp( false );
 	}
 	
 	@Override

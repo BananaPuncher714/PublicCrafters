@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
 
 import com.google.common.collect.Sets;
 
@@ -103,6 +106,9 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 			CustomContainerWorkbench container = new CustomContainerWorkbench( 0, manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
 			
 			container.a( this );
+
+			CraftingInventory crafting = ( CraftingInventory ) container.getBukkitView().getTopInventory();
+			Bukkit.getPluginManager().callEvent( new PrepareItemCraftEvent( crafting, container.getBukkitView(), false ) );
 		}
 		
 		display.forceUpdate();

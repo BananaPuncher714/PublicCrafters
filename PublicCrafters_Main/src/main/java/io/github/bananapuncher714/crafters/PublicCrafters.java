@@ -86,8 +86,11 @@ public class PublicCrafters extends JavaPlugin {
 		registerListeners();
 		registerCommands();
 
-		loadChunks();
-		loadData();
+		// Update crafting tables a second later, since other plugins may load in custom recipes
+		Bukkit.getScheduler().runTaskLater( this, () -> {
+			loadChunks();
+			loadData();
+		}, 20 );
 	}
 
 	@Override

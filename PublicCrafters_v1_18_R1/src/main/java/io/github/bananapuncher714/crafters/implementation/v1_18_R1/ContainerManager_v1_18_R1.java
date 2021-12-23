@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.v1_17_1;
+package io.github.bananapuncher714.crafters.implementation.v1_18_R1;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -11,8 +11,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -40,18 +40,18 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.InventoryCraftResult;
 
-public class ContainerManager_v1_17_1 implements CraftInventoryManager {
+public class ContainerManager_v1_18_R1 implements CraftInventoryManager {
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
 	protected final EntityPlayer mockPlayer;
 	
-	public ContainerManager_v1_17_1() {
+	public ContainerManager_v1_18_R1() {
 		MinecraftServer server = MinecraftServer.getServer();
-		WorldServer world = server.getWorlds().iterator().next();
+		WorldServer world = server.D();
 		mockPlayer = new EntityPlayer( server, world, new GameProfile( new UUID( 0, 0 ), "" ) );
 		
 		mockPlayer.b = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.b ), mockPlayer ) {
 			@Override
-			public void sendPacket( Packet< ? > packet ) {}
+			public void a( Packet< ? > packet ) {}
 		};
 		
 		mockPlayer.getBukkitEntity().setOp( true );
@@ -146,7 +146,7 @@ public class ContainerManager_v1_17_1 implements CraftInventoryManager {
 	@Override
 	public void openWorkbench( Player player, Location loc, InventoryType type ) {
 		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), new ChatMessage( "container.crafting", new Object[ 0 ] ) );
-		( ( CraftPlayer ) player ).getHandle().openContainer( tileEntity );
+		( ( CraftPlayer ) player ).getHandle().a( tileEntity );
 	}
 	
 	@Override
@@ -169,7 +169,7 @@ public class ContainerManager_v1_17_1 implements CraftInventoryManager {
 				continue;
 			}
 			EntityPlayer NMSPlayer = ( ( CraftPlayer ) player ).getHandle();
-			NMSPlayer.b.sendPacket( packet );
+			NMSPlayer.b.a( packet );
 		}
 	}
 	
@@ -184,9 +184,10 @@ public class ContainerManager_v1_17_1 implements CraftInventoryManager {
 			this.container = container;
 		}
 		
+		// canUse
 		@Override
-		public boolean canUse( EntityHuman entity ) {
-			return container == null ? false : container.canUse( entity );
+		public boolean a( EntityHuman entity ) {
+			return container == null ? false : container.a( entity );
 		}
 
 		@Override
