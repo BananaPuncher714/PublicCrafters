@@ -167,6 +167,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 				bloc.getWorld().dropItem( bloc.clone().add( .5, .9, .5 ), is );
 			}
 		}
+		items.clear();
 	}
 	
 	@Override

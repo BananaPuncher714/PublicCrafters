@@ -169,7 +169,9 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 	@Override
 	public void remove() {
 		display.stop();
-		for ( ItemStack item : items ) {
+		for ( int i = 0; i < items.length; i++ ) {
+			ItemStack item = items[ i ];
+			items[ i ] = CraftItemStack.asNMSCopy( new org.bukkit.inventory.ItemStack( Material.AIR ) );
 			org.bukkit.inventory.ItemStack is = CraftItemStack.asBukkitCopy( item );
 			if ( is.getType() != Material.AIR ) {
 				bloc.getWorld().dropItem( bloc.clone().add( .5, .9, .5 ), is );
