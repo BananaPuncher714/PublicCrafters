@@ -113,8 +113,13 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 			if ( p != null ) {
 				Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, 2 );
 				Object metadata = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( itemEntity ), ReflectionUtil.getMethod( "getDataWatcher" ).invoke( itemEntity ), true );
-				
-				Object packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
+
+				Object packet2;
+				if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19 ) ) {
+					packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, 0 );					
+				} else {
+					packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
+				}
 				Object metadata2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), ReflectionUtil.getMethod( "getDataWatcher" ).invoke( armorStand ), true );
 				
 				Object mount = ReflectionUtil.getMountPacket( armorStand, itemEntity );
@@ -139,7 +144,12 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, 2 );
 			Object metadata = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( itemEntity ), ReflectionUtil.getMethod( "getDataWatcher" ).invoke( itemEntity ), true );
 
-			Object packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
+			Object packet2;
+			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19 ) ) {
+				packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, 0 );					
+			} else {
+				packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
+			}
 			Object metadata2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( armorStand ), ReflectionUtil.getMethod( "getDataWatcher" ).invoke( armorStand ), true );
 			
 			Object mount = ReflectionUtil.getMountPacket( armorStand, itemEntity );
