@@ -1,6 +1,8 @@
 package io.github.bananapuncher714.crafters.implementation.v1_19_R1;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -16,6 +18,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.AutoRecipeStackManager;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.ContainerAccess;
 import net.minecraft.world.inventory.ContainerWorkbench;
@@ -32,6 +35,30 @@ import net.minecraft.world.level.World;
  * @author BananaPuncher714
  */
 public class CustomContainerWorkbench extends ContainerWorkbench {
+	private static final Method PLAYER_INVENTORY;
+	
+	static {
+		Method playerInv = null;
+		try {
+			playerInv = EntityHuman.class.getMethod( "fB" );
+			if ( playerInv.getReturnType() != PlayerInventory.class ) {
+				playerInv = EntityHuman.class.getMethod( "fA" );
+			}
+		} catch ( NoSuchMethodError | SecurityException | NoSuchMethodException e ) {
+			e.printStackTrace();
+		}
+		PLAYER_INVENTORY = playerInv;
+	}
+	
+	private static PlayerInventory getPlayerInventory( HumanEntity player ) {
+		try {
+			return ( PlayerInventory ) PLAYER_INVENTORY.invoke( ( ( CraftHumanEntity ) player ).getHandle() );
+		} catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException e ) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	protected InventoryCraftResult resultInventory;
 	protected CustomInventoryCrafting craftInventory;
 	protected ContainerAccess containerAccess;
@@ -40,7 +67,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	private List< Slot > theseSlots;
 	
 	public CustomContainerWorkbench( int id, HumanEntity player, Location blockLocation, CustomInventoryCrafting crafting, InventoryCraftResult result ) {
-		super( id, ( ( CraftHumanEntity ) player ).getHandle().fB() );
+		super( id, getPlayerInventory( player ) );
 		
 		try {
 			Field slots = this.getClass().getField( "i" );
@@ -74,11 +101,11 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		}
 		for ( int i = 0; i < 3; i++ ) {
 			for (int j = 0; j < 9; j++) {
-				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fB(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
+				a( new Slot( getPlayerInventory( player ), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
 			}
 		}
 		for ( int i = 0; i < 9; i++ ) {
-			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fB(), i, 8 + i * 18, 142 ) );
+			a( new Slot( getPlayerInventory( player ), i, 8 + i * 18, 142 ) );
 		}
 		a( craftInventory );
 	}
@@ -126,6 +153,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		
 		if ( !world.y && PublicCrafters.getInstance().isDropItem() ) {
 			a( entity, craftInventory );
+			l();
 			a( craftInventory );
 			craftInventory.update();
 		}

@@ -126,6 +126,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		
 		if ( !world.y && PublicCrafters.getInstance().isDropItem() ) {
 			a( entity, craftInventory );
+			l();
 			a( craftInventory );
 			craftInventory.update();
 		}

@@ -1,13 +1,15 @@
-package io.github.bananapuncher714.crafters.implementation.v1_17_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_19_R2;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftInventoryCrafting;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
@@ -16,6 +18,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.IInventory;
 import net.minecraft.world.entity.player.AutoRecipeStackManager;
 import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.player.PlayerInventory;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.ContainerAccess;
 import net.minecraft.world.inventory.ContainerWorkbench;
@@ -40,8 +43,8 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	private List< Slot > theseSlots;
 	
 	public CustomContainerWorkbench( int id, HumanEntity player, Location blockLocation, CustomInventoryCrafting crafting, InventoryCraftResult result ) {
-		super( id, ( ( CraftHumanEntity ) player ).getHandle().getInventory() );
-
+		super( id, ( ( CraftHumanEntity ) player ).getHandle().fE() );
+		
 		try {
 			Field slots = this.getClass().getField( "i" );
 			theseSlots = ( List< Slot > ) slots.get( this );
@@ -51,9 +54,9 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		theseSlots.clear();
 		
 		try {
-			Field slots = Container.class.getField( "k" );
+			Field slots = Container.class.getField( "l" );
 			( ( NonNullList< ItemStack > ) slots.get( this ) ).clear();
-			slots = Container.class.getField( "n" );
+			slots = Container.class.getField( "o" );
 			( ( NonNullList< ItemStack > ) slots.get( this ) ).clear();
 		} catch ( Exception exception ) {
 			exception.printStackTrace();
@@ -74,11 +77,11 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		}
 		for ( int i = 0; i < 3; i++ ) {
 			for (int j = 0; j < 9; j++) {
-				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().getInventory(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
+				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fE(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
 			}
 		}
 		for ( int i = 0; i < 9; i++ ) {
-			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().getInventory(), i, 8 + i * 18, 142 ) );
+			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fE(), i, 8 + i * 18, 142 ) );
 		}
 		a( craftInventory );
 	}
@@ -105,13 +108,13 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	}
 	
 	@Override
-	public void i() {
-		resultInventory.clear();
-		craftInventory.clear();
+	public void l() {
+		resultInventory.a();
+		craftInventory.a();
 	}
 	
 	public boolean isNotResultSlot( Slot slot ) {
-		return slot.c != resultInventory;
+		return slot.d != resultInventory;
 	}
 	
 	/**
@@ -126,14 +129,14 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		
 		if ( !world.y && PublicCrafters.getInstance().isDropItem() ) {
 			a( entity, craftInventory );
-			i();
+			l();
 			a( craftInventory );
 			craftInventory.update();
 		}
 	}
 	
 	@Override
-	public boolean canUse( EntityHuman entity ) {
+	public boolean a( EntityHuman entity ) {
 		if ( !checkReachable ) {
 			return true;
 		}
@@ -157,24 +160,18 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 
 	@Override
 	public boolean a( IRecipe< ? super InventoryCrafting > irecipe ) {
-		return irecipe.a( craftInventory, ( ( CraftHumanEntity ) viewer ).getHandle().t );
-	}
-
-	// getResultSlotIndex
-	@Override
-	public int j() {
-		return 0;
+		return irecipe.a( craftInventory, ( ( CraftHumanEntity ) viewer ).getHandle().s );
 	}
 
 	// getGridWidth
 	@Override
-	public int k() {
+	public int n() {
 		return craftInventory.g();
 	}
 
 	// getGridHeight
 	@Override
-	public int l() {
+	public int o() {
 		return craftInventory.f();
 	}
 }
