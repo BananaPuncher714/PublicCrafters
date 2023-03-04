@@ -162,7 +162,6 @@ public final class ReflectionUtil {
 				} else {
 					methodCache.put( "setNoGravity", getNMSClass( "EntityArmorStand" ).getMethod( "setNoGravity", boolean.class ) );
 					methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "getEquipment", getNMSClass( "EnumItemSlot" ) ) );
-					methodCache.put( "valueOf", getNMSClass( "EnumItemSlot" ).getMethod( "valueOf", String.class ) );
 					methodCache.put( "setInvulnerable", getNMSClass( "EntityArmorStand" ).getMethod( "setInvulnerable", boolean.class ) );
 					methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "setMarker", boolean.class ) );
 				}
@@ -190,7 +189,10 @@ public final class ReflectionUtil {
     			    methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
     			}
 			}
-			methodCache.put( "valueOf", getNMSClass( "EnumItemSlot" ).getMethod( "valueOf", String.class ) );
+			
+			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_9 ) ) {
+			    methodCache.put( "valueOf", getNMSClass( "EnumItemSlot" ).getMethod( "valueOf", String.class ) );
+			}
 			
 			methodCache.put( "getBukkitEntity", getNMSClass( "EntityArmorStand" ).getMethod( "getBukkitEntity" ) );
 			methodCache.put( "getArmorStandHandle", getNMSClass( "CraftArmorStand" ).getMethod( "getHandle" ) );
