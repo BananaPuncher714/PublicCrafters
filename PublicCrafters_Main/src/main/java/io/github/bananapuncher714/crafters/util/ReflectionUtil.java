@@ -42,7 +42,9 @@ public final class ReflectionUtil {
 			Object dedicated = getServerMethod.invoke( Bukkit.getServer() );
 			Method getVersionMethod = null;
 			try {
-				if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
+			    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R3 ) ) {
+			        getVersionMethod = dedicated.getClass().getMethod( "G" );
+			    } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
 					getVersionMethod = dedicated.getClass().getMethod( "F" );
 				} else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_18_R1 ) ) {
 					getVersionMethod = dedicated.getClass().getMethod( "G" );
@@ -168,12 +170,12 @@ public final class ReflectionUtil {
 			} else {
 			    methodCache.put( "sendPacket", getNMSClass( "PlayerConnection" ).getMethod( "a", getNMSClass( "Packet" ) ) );
 			    methodCache.put( "setLocation", getNMSClass( "EntityArmorStand" ).getMethod( "a", double.class, double.class, double.class, float.class, float.class ) );
-			    methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "a", boolean.class ) );
 			    methodCache.put( "setInvisible", getNMSClass( "EntityArmorStand" ).getMethod( "j", boolean.class ) );
 			    methodCache.put( "setNoGravity", getNMSClass( "EntityArmorStand" ).getMethod( "e", boolean.class ) );
-			    methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
 			    methodCache.put( "setInvulnerable", getNMSClass( "EntityArmorStand" ).getMethod( "m", boolean.class ) );
 			    if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
+			        methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "a", boolean.class ) );
+			        methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
     				methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "ae" ) );
     				methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "ai" ) );
     				
@@ -182,11 +184,20 @@ public final class ReflectionUtil {
     				} else {
     					methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "b", getNMSClass( "EnumItemSlot" ) ) );
     				}
-    			} else {
+    			} else if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_19_R2 ) ) {
+    			    methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "a", boolean.class ) );
+    			    methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
                     methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "ah" ) );
     			    methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "al" ) );
     			    methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
     			    methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
+    			} else if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_19_R3 ) ) {
+    			    methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
+    			    methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "u", boolean.class ) );
+    			    methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "af" ) );
+                    methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "aj" ) );
+                    methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
+                    methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
     			}
 			}
 			

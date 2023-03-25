@@ -13,12 +13,16 @@ marker: false
 update-delay: 0
 
 # This is how a material should be turned, accepts numeric and string ids, and is written in degrees of rotation
-orientation:
-    DIAMOND_BLOCK: "0, 0, 0"
+# If you would like a diamond block to be held as-is by an armorstand without changing the position of its arm, you can use this:
+# orientation:
+#    DIAMOND_BLOCK: "0, 0, 0"
+orientation: {}
     
 # This is how much a material should be moved from its position, in x, y, and z
-offset:
-    DIAMOND_BLOCK: "0, 1, 0"
+# If you would like to move the diamond block by a certain amount, you can use this:
+# offset:
+#     DIAMOND_BLOCK: "0, 1, 0"
+offset: {}
 
 # Whether or not a player has private crafting enabled by default`
 private-by-default: false

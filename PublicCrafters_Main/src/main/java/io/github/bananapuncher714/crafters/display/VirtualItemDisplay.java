@@ -70,13 +70,13 @@ public class VirtualItemDisplay extends ItemDisplay {
                 Object worldServer = ReflectionUtil.getMethod( "getWorldHandle" ).invoke( loc.getWorld() );
                 armorStand = ReflectionUtil.constructArmorStand( worldServer );
 
-                ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
-                ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
-                ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_8 ) );
-                ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );
+                ReflectionUtil.getMethod( "setLocation" ).invoke( armorStand, loc.getX() + .5, loc.getY() - .5, loc.getZ() + .5, 0f, 0f );
+                ReflectionUtil.getMethod( "setSmall" ).invoke( armorStand, true );
+                ReflectionUtil.getMethod( "setNoGravity" ).invoke( armorStand, NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_8 ) );
+                ReflectionUtil.getMethod( "setInvisible" ).invoke( armorStand, true );
                 if ( NBTEditor.getMinecraftVersion() != MinecraftVersion.v1_8 ) {
-                    ReflectionUtil.getMethod( "setInvulnerable").invoke( armorStand, true );
-                    ReflectionUtil.getMethod( "setMarker").invoke( armorStand, PublicCrafters.getInstance().isMarker() );
+                    ReflectionUtil.getMethod( "setInvulnerable" ).invoke( armorStand, true );
+                    ReflectionUtil.getMethod( "setMarker" ).invoke( armorStand, PublicCrafters.getInstance().isMarker() );
                 }
 
 
