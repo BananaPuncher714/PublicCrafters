@@ -25,7 +25,6 @@ import io.github.bananapuncher714.crafters.CraftInventoryLoader;
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryManager;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
-import io.github.bananapuncher714.crafters.implementation.v1_19_R2.ContainerManager_v1_19_R2.SelfContainer;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.chat.IChatBaseComponent;
@@ -146,7 +145,7 @@ public class ContainerManager_v1_19_R2 implements CraftInventoryManager {
 
 	@Override
 	public void openWorkbench( Player player, Location loc, InventoryType type ) {
-		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), IChatBaseComponent.c("container.crafting") );
+		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), IChatBaseComponent.c( "container.crafting" ) );
 		( ( CraftPlayer ) player ).getHandle().a( tileEntity );
 	}
 	

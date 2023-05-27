@@ -17,6 +17,7 @@ import com.google.common.collect.Sets;
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 import io.github.bananapuncher714.crafters.implementation.v1_19_R3.ContainerManager_v1_19_R3.SelfContainer;
+import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.InventoryCraftResult;
@@ -107,6 +108,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		if ( this.resultInventory instanceof InventoryCraftResult ) {
 			CustomContainerWorkbench container = new CustomContainerWorkbench( 0, manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
 			
+			container.setTitle( ContainerManager_v1_19_R3.WORKBENCH_TITLE );
 			container.a( this );
 			
 			CraftingInventory crafting = ( CraftingInventory ) container.getBukkitView().getTopInventory();

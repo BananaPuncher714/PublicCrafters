@@ -41,6 +41,8 @@ import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.InventoryCraftResult;
 
 public class ContainerManager_v1_19_R3 implements CraftInventoryManager {
+    protected static final IChatBaseComponent WORKBENCH_TITLE = IChatBaseComponent.c("container.crafting");
+    
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
 	protected final EntityPlayer mockPlayer;
 	
@@ -145,7 +147,7 @@ public class ContainerManager_v1_19_R3 implements CraftInventoryManager {
 
 	@Override
 	public void openWorkbench( Player player, Location loc, InventoryType type ) {
-		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), IChatBaseComponent.c("container.crafting") );
+		TileInventory tileEntity = new TileInventory( new CustomTileEntityContainerWorkbench( this, loc ), WORKBENCH_TITLE );
 		( ( CraftPlayer ) player ).getHandle().a( tileEntity );
 	}
 	
