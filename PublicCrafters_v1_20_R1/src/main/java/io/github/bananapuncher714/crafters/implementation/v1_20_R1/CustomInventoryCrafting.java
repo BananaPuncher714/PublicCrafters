@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.v1_19_R3;
+package io.github.bananapuncher714.crafters.implementation.v1_20_R1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 
@@ -16,11 +16,11 @@ import com.google.common.collect.Sets;
 
 import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
-import io.github.bananapuncher714.crafters.implementation.v1_19_R3.ContainerManager_v1_19_R3.SelfContainer;
+import io.github.bananapuncher714.crafters.implementation.v1_20_R1.ContainerManager_v1_20_R1.SelfContainer;
 import net.minecraft.world.ContainerUtil;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.InventoryCraftResult;
-import net.minecraft.world.inventory.InventoryCrafting;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -28,16 +28,16 @@ import net.minecraft.world.item.ItemStack;
  * 
  * @author BananaPuncher714
  */
-public class CustomInventoryCrafting extends InventoryCrafting implements PublicCraftingInventory {
+public class CustomInventoryCrafting extends TransientCraftingContainer implements PublicCraftingInventory {
 	Set< Container > containers = Sets.newHashSet();
 	private List< ItemStack > items;
 	private UUID id;
 	private Location bloc;
 	private CraftDisplay display;
-	private ContainerManager_v1_19_R3 manager;
+	private ContainerManager_v1_20_R1 manager;
 	protected SelfContainer selfContainer;
 	
-	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_19_R3 manager, SelfContainer container, int i, int j ) {
+	public CustomInventoryCrafting( Location workbenchLoc, ContainerManager_v1_20_R1 manager, SelfContainer container, int i, int j ) {
 		super( container, i, j );
 		id = UUID.randomUUID();
 		bloc = workbenchLoc;
@@ -107,7 +107,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		if ( this.resultInventory instanceof InventoryCraftResult ) {
 			CustomContainerWorkbench container = new CustomContainerWorkbench( 0, manager.mockPlayer.getBukkitEntity(), bloc, this, ( InventoryCraftResult ) resultInventory );
 			
-			container.setTitle( ContainerManager_v1_19_R3.WORKBENCH_TITLE );
+			container.setTitle( ContainerManager_v1_20_R1.WORKBENCH_TITLE );
 			container.a( this );
 			
 			CraftingInventory crafting = ( CraftingInventory ) container.getBukkitView().getTopInventory();

@@ -13,7 +13,7 @@
 		<version>4</version>
 	</parent>
 	<artifactId>PublicCrafters</artifactId>
-	<version>4.13.8</version>
+	<version>4.13.9</version>
 
 	<build>
 		<plugins>
@@ -132,6 +132,11 @@
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>PublicCrafters_v1_19_R3</artifactId>
+			<version>${master.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.bananapuncher714</groupId>
+			<artifactId>PublicCrafters_v1_20_R1</artifactId>
 			<version>${master.version}</version>
 		</dependency>
 	</dependencies>

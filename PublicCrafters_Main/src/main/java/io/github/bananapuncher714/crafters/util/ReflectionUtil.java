@@ -191,7 +191,7 @@ public final class ReflectionUtil {
     			    methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "al" ) );
     			    methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
     			    methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
-    			} else if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_19_R3 ) ) {
+    			} else {
     			    methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
     			    methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "u", boolean.class ) );
     			    methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "af" ) );
@@ -255,8 +255,10 @@ public final class ReflectionUtil {
 			
 			if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_16 ) ) {
 				connection = getNMSClass( "EntityPlayer" ).getField( "playerConnection" );
-			} else {
+			} else if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_19_R3 ) ) {
 				connection = getNMSClass( "EntityPlayer" ).getField( "b" );
+			} else {
+			    connection = getNMSClass( "EntityPlayer" ).getField( "c" );
 			}
             
 			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
