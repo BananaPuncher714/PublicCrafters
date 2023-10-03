@@ -1,13 +1,13 @@
-package io.github.bananapuncher714.crafters.implementation.v1_20_R1;
+package io.github.bananapuncher714.crafters.implementation.v1_20_R2;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftInventoryCrafting;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
@@ -26,6 +26,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SlotResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.IRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.World;
 
 /**
@@ -40,8 +41,8 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	private List< Slot > theseSlots;
 	
 	public CustomContainerWorkbench( int id, HumanEntity player, Location blockLocation, CustomInventoryCrafting crafting, InventoryCraftResult result ) {
-		super( id, ( ( CraftHumanEntity ) player ).getHandle().fN() );
-
+		super( id, ( ( CraftHumanEntity ) player ).getHandle().fR() );
+		
 		try {
 			Field slots = this.getClass().getField( "i" );
 			theseSlots = ( List< Slot > ) slots.get( this );
@@ -74,17 +75,17 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		}
 		for ( int i = 0; i < 3; i++ ) {
 			for (int j = 0; j < 9; j++) {
-				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fN(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
+				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fR(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
 			}
 		}
 		for ( int i = 0; i < 9; i++ ) {
-			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fN(), i, 8 + i * 18, 142 ) );
+			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fR(), i, 8 + i * 18, 142 ) );
 		}
 		
 		try {
             Field titleField = Container.class.getDeclaredField( "title" );
             titleField.setAccessible( true );
-            titleField.set( this, ContainerManager_v1_20_R1.WORKBENCH_TITLE );
+            titleField.set( this, ContainerManager_v1_20_R2.WORKBENCH_TITLE );
             a( craftInventory );
             titleField.set( this, null );
         } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
@@ -165,8 +166,8 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	}
 
 	@Override
-	public boolean a( IRecipe< ? super InventoryCrafting > irecipe ) {
-		return irecipe.a( craftInventory, ( ( CraftHumanEntity ) viewer ).getHandle().dI() );
+	public boolean a( RecipeHolder< ? extends IRecipe< InventoryCrafting > > holder ) {
+		return holder.b().a( craftInventory, ( ( CraftHumanEntity ) viewer ).getHandle().dL() );
 	}
 
 	// getGridWidth
