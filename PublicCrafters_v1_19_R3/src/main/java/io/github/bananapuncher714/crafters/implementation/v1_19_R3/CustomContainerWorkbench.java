@@ -80,7 +80,16 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		for ( int i = 0; i < 9; i++ ) {
 			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fJ(), i, 8 + i * 18, 142 ) );
 		}
-		a( craftInventory );
+		
+        try {
+            Field titleField = Container.class.getDeclaredField( "title" );
+            titleField.setAccessible( true );
+            titleField.set( this, ContainerManager_v1_19_R3.WORKBENCH_TITLE );
+            a( craftInventory );
+            titleField.set( this, null );
+        } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
+            e.printStackTrace();
+        }
 	}
 	
 	public void setInventoryCrafting( CustomInventoryCrafting crafting ) {

@@ -1,4 +1,4 @@
-package io.github.bananapuncher714.crafters.implementation.v1_19_R3;
+package io.github.bananapuncher714.crafters.implementation.v1_20_R4;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -11,8 +11,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_20_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R4.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -27,33 +27,42 @@ import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryMana
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketListener;
 import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.EnumProtocolDirection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.world.TileInventory;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.inventory.Container;
 import net.minecraft.world.inventory.InventoryCraftResult;
 
-public class ContainerManager_v1_19_R3 implements CraftInventoryManager {
-    protected static final IChatBaseComponent WORKBENCH_TITLE = IChatBaseComponent.c( "container.crafting" );
+public class ContainerManager_v1_20_R4 implements CraftInventoryManager {
+    protected static final IChatBaseComponent WORKBENCH_TITLE = IChatBaseComponent.c("container.crafting");
     
 	protected Map< Location, CustomInventoryCrafting > benches = new HashMap< Location, CustomInventoryCrafting >(); 
 	protected final EntityPlayer mockPlayer;
 	
-	public ContainerManager_v1_19_R3() {
+	public ContainerManager_v1_20_R4() {
 		MinecraftServer server = MinecraftServer.getServer();
-		WorldServer world = server.D();
-		mockPlayer = new EntityPlayer( server, world, new GameProfile( new UUID( 0, 0 ), "" ) );
+		WorldServer world = server.I();
+		GameProfile profile = new GameProfile( new UUID( 0, 0 ), "" );
+		mockPlayer = new EntityPlayer( server, world, profile, ClientInformation.a() );
 		
-		mockPlayer.b = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.b ), mockPlayer ) {
+		mockPlayer.c = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.a ) {
+		    @Override
+		    public void a( PacketListener listener ) {};
+		}, mockPlayer, new CommonListenerCookie( profile, 1, ClientInformation.a(), false ) ) {
 			@Override
-			public void a( Packet< ? > packet ) {}
+			public boolean a( Packet< ? > packet ) {
+			    return true;
+			}
 		};
 		
 		mockPlayer.getBukkitEntity().setOp( true );
@@ -170,8 +179,8 @@ public class ContainerManager_v1_19_R3 implements CraftInventoryManager {
 			if ( ploc.distanceSquared( location ) > 128 ) {
 				continue;
 			}
-			EntityPlayer NMSPlayer = ( ( CraftPlayer ) player ).getHandle();
-			NMSPlayer.b.a( packet );
+			EntityPlayer nmsPlayer = ( ( CraftPlayer ) player ).getHandle();
+			nmsPlayer.c.a( packet );
 		}
 	}
 	
@@ -199,7 +208,7 @@ public class ContainerManager_v1_19_R3 implements CraftInventoryManager {
 
 		@Override
 		public net.minecraft.world.item.ItemStack a(EntityHuman arg0, int arg1) {
-			return net.minecraft.world.item.ItemStack.b;
+			return net.minecraft.world.item.ItemStack.l;
 		}
 	}
 }

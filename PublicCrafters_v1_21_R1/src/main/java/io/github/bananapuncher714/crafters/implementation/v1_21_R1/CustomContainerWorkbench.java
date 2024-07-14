@@ -1,13 +1,13 @@
-package io.github.bananapuncher714.crafters.implementation.v1_19_R2;
+package io.github.bananapuncher714.crafters.implementation.v1_21_R1;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftInventoryCrafting;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftInventoryView;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftInventoryCrafting;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.HumanEntity;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
@@ -21,11 +21,11 @@ import net.minecraft.world.inventory.ContainerAccess;
 import net.minecraft.world.inventory.ContainerWorkbench;
 import net.minecraft.world.inventory.InventoryClickType;
 import net.minecraft.world.inventory.InventoryCraftResult;
-import net.minecraft.world.inventory.InventoryCrafting;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SlotResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.IRecipe;
+import net.minecraft.world.item.crafting.RecipeCrafting;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.World;
 
 /**
@@ -40,7 +40,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	private List< Slot > theseSlots;
 	
 	public CustomContainerWorkbench( int id, HumanEntity player, Location blockLocation, CustomInventoryCrafting crafting, InventoryCraftResult result ) {
-		super( id, ( ( CraftHumanEntity ) player ).getHandle().fE() );
+		super( id, ( ( CraftHumanEntity ) player ).getHandle().fY() );
 		
 		try {
 			Field slots = this.getClass().getField( "i" );
@@ -74,13 +74,22 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 		}
 		for ( int i = 0; i < 3; i++ ) {
 			for (int j = 0; j < 9; j++) {
-				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fE(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
+				a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fY(), j + i * 9 + 9, 8 + j * 18, 84 + i * 18 ) );
 			}
 		}
 		for ( int i = 0; i < 9; i++ ) {
-			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fE(), i, 8 + i * 18, 142 ) );
+			a( new Slot( ( ( CraftHumanEntity ) player ).getHandle().fY(), i, 8 + i * 18, 142 ) );
 		}
-		a( craftInventory );
+		
+		try {
+            Field titleField = Container.class.getDeclaredField( "title" );
+            titleField.setAccessible( true );
+            titleField.set( this, ContainerManager_v1_21_R1.WORKBENCH_TITLE );
+            a( craftInventory );
+            titleField.set( this, null );
+        } catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
+            e.printStackTrace();
+        }
 	}
 	
 	public void setInventoryCrafting( CustomInventoryCrafting crafting ) {
@@ -101,7 +110,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	@Override
 	public void a( IInventory iinventory ) {
 		// Crafting
-		a( this, world, ( ( CraftHumanEntity ) viewer ).getHandle(), craftInventory, resultInventory );
+		a( this, world, ( ( CraftHumanEntity ) viewer ).getHandle(), craftInventory, resultInventory, null );
 	}
 	
 	@Override
@@ -111,20 +120,20 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	}
 	
 	public boolean isNotResultSlot( Slot slot ) {
-		return slot.d != resultInventory;
+		return slot.c != resultInventory;
 	}
 	
 	/**
 	 * This might be for when the inventory closes?
 	 */
 	@Override
-	public void b( EntityHuman entity ) {
+	public void a( EntityHuman entity ) {
 		craftInventory.selfContainer.setContainer( this );
 		super.b( entity );
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
 		
-		if ( !world.y && PublicCrafters.getInstance().isDropItem() ) {
+		if ( PublicCrafters.getInstance().isDropItem() ) {
 			a( entity, craftInventory );
 			l();
 			a( craftInventory );
@@ -133,7 +142,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	}
 	
 	@Override
-	public boolean a( EntityHuman entity ) {
+	public boolean b( EntityHuman entity ) {
 		if ( !checkReachable ) {
 			return true;
 		}
@@ -156,19 +165,19 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	}
 
 	@Override
-	public boolean a( IRecipe< ? super InventoryCrafting > irecipe ) {
-		return irecipe.a( craftInventory, ( ( CraftHumanEntity ) viewer ).getHandle().s );
+	public boolean a( RecipeHolder< RecipeCrafting > holder ) {
+		return holder.b().a( craftInventory.aE_(), ( ( CraftHumanEntity ) viewer ).getHandle().dO() );
 	}
 
 	// getGridWidth
 	@Override
 	public int n() {
-		return craftInventory.g();
+		return craftInventory.f();
 	}
 
 	// getGridHeight
 	@Override
 	public int o() {
-		return craftInventory.f();
+		return craftInventory.g();
 	}
 }

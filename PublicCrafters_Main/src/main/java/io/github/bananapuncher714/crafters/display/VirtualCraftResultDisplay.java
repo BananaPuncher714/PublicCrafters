@@ -111,7 +111,12 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 			}
 
 			if ( p != null ) {
-				Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, 2 );
+	            Object packet;
+	            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
+	                packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, ReflectionUtil.getEntityTrackerEntryFor( itemEntity ) );
+	            } else {
+	                packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, 2 );
+	            }
 	            Object metadata;
 	            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R2 ) ) {
 	                metadata = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( itemEntity ), ReflectionUtil.getMethod( "getDataWatcherItems" ).invoke( ReflectionUtil.getMethod( "getDataWatcher" ).invoke( itemEntity ) ) );
@@ -121,7 +126,11 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 				Object packet2;
 				if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
-					packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, 0 );					
+		            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
+		                packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, ReflectionUtil.getEntityTrackerEntryFor( armorStand ) );
+		            } else {
+		                packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, 0 );
+		            }			
 				} else {
 					packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
 				}
@@ -151,7 +160,12 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 	private static void respawn( Player player, Object itemEntity, Object armorStand ) {
 		try {
-			Object packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, 2 );
+			Object packet;
+			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
+			    packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, ReflectionUtil.getEntityTrackerEntryFor( itemEntity ) );
+			} else {
+			    packet = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( itemEntity, 2 );
+			}
 			Object metadata;
 			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R2 ) ) {
                 metadata = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutEntityMetadata" ) ).newInstance( ReflectionUtil.getMethod( "getId" ).invoke( itemEntity ), ReflectionUtil.getMethod( "getDataWatcherItems" ).invoke( ReflectionUtil.getMethod( "getDataWatcher" ).invoke( itemEntity ) ) );
@@ -161,7 +175,11 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 			Object packet2;
 			if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
-				packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, 0 );					
+                if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
+                    packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, ReflectionUtil.getEntityTrackerEntryFor( armorStand ) );
+                } else {
+                    packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntity" ) ).newInstance( armorStand, 0 );
+                }				
 			} else {
 				packet2 = ReflectionUtil.getConstructor( ReflectionUtil.getNMSClass( "PacketPlayOutSpawnEntityLiving" ) ).newInstance( armorStand );
 			}
