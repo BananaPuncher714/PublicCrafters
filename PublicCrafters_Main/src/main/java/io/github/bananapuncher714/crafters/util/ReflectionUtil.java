@@ -211,7 +211,7 @@ public final class ReflectionUtil {
                     methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
                     methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
                 } else {
-                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R4 ) ) {
+                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
                         methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "an" ) );
                         methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "ar" ) );
                     } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R4 ) ) {

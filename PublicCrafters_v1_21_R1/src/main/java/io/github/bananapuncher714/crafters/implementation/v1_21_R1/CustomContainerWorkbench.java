@@ -129,7 +129,7 @@ public class CustomContainerWorkbench extends ContainerWorkbench {
 	@Override
 	public void a( EntityHuman entity ) {
 		craftInventory.selfContainer.setContainer( this );
-		super.b( entity );
+		super.a( entity );
 		// Make sure the craft inventory stops watching this container
 		craftInventory.removeContainer( this );
 		
