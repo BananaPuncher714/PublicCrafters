@@ -56,14 +56,21 @@ public class CraftDisplay {
 		for ( int i = 0; i < 9; i++ ) {
 			displays.add( null );
 		}
-		updateDisplays();
+		updateDisplays( false );
 	}
 
 	/**
 	 * All this really does is run the {@link #run()} method some ticks after this is called
 	 */
+	public void update( boolean force ) {	    
+	    Bukkit.getScheduler().scheduleSyncDelayedTask( PublicCrafters.getInstance(), () -> { updateDisplays( force ); }, PublicCrafters.getInstance().getUpdateDelay() );
+	}
+	
+	/**
+	 * Non-forceful update
+	 */
 	public void update() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask( PublicCrafters.getInstance(), this::updateDisplays, PublicCrafters.getInstance().getUpdateDelay() );
+	    update( false );
 	}
 	
 	/**
@@ -102,9 +109,16 @@ public class CraftDisplay {
 	}
 	
 	/**
-	 * Update the displays to show what item is being crafted
+	 * Update the displays to show what item is being crafted, non-forcefully
 	 */
 	public void updateResult() {
+	    updateResult( false );
+	}
+	
+	/**
+	 * Update the displays to show what item is being crafted
+	 */
+	public void updateResult( boolean force ) {
 		ItemStack result = inventory.getResult();
 		if ( result == null || result.getType() == Material.AIR ) {
 			if ( resultDisplay != null ) {
@@ -117,7 +131,7 @@ public class CraftDisplay {
 		}
 		if ( resultDisplay != null ) {
 			ItemStack resultItem = resultDisplay.getItem();
-			if ( result.isSimilar( resultItem ) ) {
+			if ( result.isSimilar( resultItem ) && !force ) {
 				return;
 			}
 			
@@ -222,7 +236,7 @@ public class CraftDisplay {
 		return blockLoc;
 	}
 	
-	private void updateDisplays() {
+	private void updateDisplays( boolean force ) {
 		if ( inventory == null ) {
 			return;
 		}
@@ -235,10 +249,10 @@ public class CraftDisplay {
 
 		for ( int i = 0; i < 3; i++ ) {
 			for ( int j = 0; j < 3; j++ ) {
-				update( i, j );
+				update( i, j, force );
 			}
 		}
 		
-		updateResult();
+		updateResult( force );
 	}
 }

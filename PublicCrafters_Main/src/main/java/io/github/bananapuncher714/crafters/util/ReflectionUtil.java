@@ -44,7 +44,9 @@ public final class ReflectionUtil {
             Object dedicated = getServerMethod.invoke( Bukkit.getServer() );
             Method getVersionMethod = null;
             try {
-                if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R4 ) ) {
+                if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
+                    getVersionMethod = dedicated.getClass().getMethod( "M" );
+                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R4 ) ) {
                     getVersionMethod = dedicated.getClass().getMethod( "L" );
                 } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R3 ) ) {
                     getVersionMethod = dedicated.getClass().getMethod( "I" );
@@ -211,7 +213,10 @@ public final class ReflectionUtil {
                     methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
                     methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
                 } else {
-                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
+                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
+                        methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "ar" ) );
+                        methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "au" ) );
+                    } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
                         methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "an" ) );
                         methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "ar" ) );
                     } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R4 ) ) {
@@ -304,11 +309,15 @@ public final class ReflectionUtil {
                 connection = getNMSClass( "EntityPlayer" ).getField( "playerConnection" );
             } else if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_19_R3 ) ) {
                 connection = getNMSClass( "EntityPlayer" ).getField( "b" );
-            } else {
+            } else if ( NBTEditor.getMinecraftVersion().lessThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
                 connection = getNMSClass( "EntityPlayer" ).getField( "c" );
+            } else {
+                connection = getNMSClass( "EntityPlayer" ).getField( "f" );
             }
             
-            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
+            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
+                entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "f" ).get( null );
+            } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
                 entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "d" ).get( null );
             } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_17 ) ) {
                 entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "c" ).get( null );

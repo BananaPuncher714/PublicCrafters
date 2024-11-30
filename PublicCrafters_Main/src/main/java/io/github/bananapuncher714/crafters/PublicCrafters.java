@@ -74,7 +74,9 @@ public class PublicCrafters extends JavaPlugin {
 		new Metrics( this );
 		
 		saveResource( "README.md", true );
-		saveResource( "messages.yml", false );
+		if ( !new File( getDataFolder(), "messages.yml" ).exists() ) {
+            saveResource( "messages.yml", false );
+        }
 		saveDefaultConfig();
 		
 		loadConfig();

@@ -159,7 +159,7 @@ public class CustomInventoryCrafting extends InventoryCrafting implements Public
 		bloc = location;
 		CustomInventoryCrafting whatsHere = manager.put( location, this );
 		display = new CraftDisplay( this );
-		display.update();
+		display.update( true );
 		return whatsHere;
 	}
 	

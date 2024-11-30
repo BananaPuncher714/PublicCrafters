@@ -155,7 +155,7 @@ public class CustomInventoryCrafting extends TransientCraftingContainer implemen
 		bloc = location;
 		CustomInventoryCrafting whatsHere = manager.put( location, this );
 		display = new CraftDisplay( this );
-		display.update();
+		display.update( true );
 		return whatsHere;
 	}
 	
