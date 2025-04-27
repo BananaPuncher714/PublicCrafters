@@ -36,6 +36,8 @@
 		<module>PublicCrafters_v1_20_R4</module>
 		<module>PublicCrafters_v1_21_R1</module>
 		<module>PublicCrafters_v1_21_R2</module>
+		<module>PublicCrafters_v1_21_R3</module>
+		<module>PublicCrafters_v1_21_R4</module>
 	</modules>
 
 	<build>

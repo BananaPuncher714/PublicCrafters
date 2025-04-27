@@ -90,7 +90,12 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 				
 				armorStand = ReflectionUtil.constructArmorStand( worldServer );
 
-				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX(), loc.getY(), loc.getZ(), 0f, 0f );
+				double offset = 0;
+				// For some reason the armor stand is spawned on the table
+				if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+				    offset = -0.95;
+				}
+				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX(), loc.getY() + offset, loc.getZ(), 0f, 0f );
 				ReflectionUtil.getMethod( "setSmall").invoke( armorStand, true );
 				ReflectionUtil.getMethod( "setNoGravity").invoke( armorStand, NBTEditor.getMinecraftVersion() != MinecraftVersion.v1_8 );
 				ReflectionUtil.getMethod( "setInvisible").invoke( armorStand, true );

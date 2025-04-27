@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
@@ -213,7 +214,10 @@ public final class ReflectionUtil {
                     methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
                     methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
                 } else {
-                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
+                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+                        methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "ao" ) );
+                        methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "ar" ) );
+                    } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
                         methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "ar" ) );
                         methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "au" ) );
                     } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
@@ -232,9 +236,12 @@ public final class ReflectionUtil {
                         methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "af" ) );
                         methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "aj" ) );
                     }
-                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
+                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+                        methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
+                        methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "u", boolean.class ) );
+                    } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
                         methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "u", boolean.class ) );
-                        methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "v", boolean.class ) );                        
+                        methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "v", boolean.class ) );
                     } else {
                         methodCache.put( "setSmall", getNMSClass( "EntityArmorStand" ).getMethod( "t", boolean.class ) );
                         methodCache.put( "setMarker", getNMSClass( "EntityArmorStand" ).getMethod( "u", boolean.class ) );
@@ -273,7 +280,11 @@ public final class ReflectionUtil {
                 constructorCache.put( getNMSClass( "PacketPlayOutEntityMetadata" ),  getNMSClass( "PacketPlayOutEntityMetadata" ).getConstructor( int.class, getNMSClass( "DataWatcher" ), boolean.class ) );
             }
             if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R1 ) ) {
-                constructorCache.put( getNMSClass( "EntityTrackerEntry" ),  getNMSClass( "EntityTrackerEntry" ).getConstructor( getNMSClass( "WorldServer" ), getNMSClass( "Entity" ), int.class, boolean.class, Consumer.class, Set.class ) );
+                if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+                    constructorCache.put( getNMSClass( "EntityTrackerEntry" ),  getNMSClass( "EntityTrackerEntry" ).getConstructor( getNMSClass( "WorldServer" ), getNMSClass( "Entity" ), int.class, boolean.class, Consumer.class, BiConsumer.class, Set.class ) );
+                } else {
+                    constructorCache.put( getNMSClass( "EntityTrackerEntry" ),  getNMSClass( "EntityTrackerEntry" ).getConstructor( getNMSClass( "WorldServer" ), getNMSClass( "Entity" ), int.class, boolean.class, Consumer.class, Set.class ) );
+                }
                 constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntity" ),  getNMSClass( "PacketPlayOutSpawnEntity" ).getConstructor( getNMSClass( "Entity" ), getNMSClass( "EntityTrackerEntry" ) ) );
             } else {
                 constructorCache.put( getNMSClass( "PacketPlayOutSpawnEntity" ),  getNMSClass( "PacketPlayOutSpawnEntity" ).getConstructor( getNMSClass( "Entity" ), int.class ) );                
@@ -315,7 +326,9 @@ public final class ReflectionUtil {
                 connection = getNMSClass( "EntityPlayer" ).getField( "f" );
             }
             
-            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
+            if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+                entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "g" ).get( null );
+            } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
                 entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "f" ).get( null );
             } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
                 entityTypeArmorStand = getNMSClass( "EntityTypes" ).getField( "d" ).get( null );
@@ -359,7 +372,11 @@ public final class ReflectionUtil {
     }
     
     public static Object getEntityTrackerEntryFor( Object entity ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        return getConstructor( ReflectionUtil.getNMSClass( "EntityTrackerEntry" ) ).newInstance( null, entity, 0, false, null, null );
+        if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+            return getConstructor( ReflectionUtil.getNMSClass( "EntityTrackerEntry" ) ).newInstance( null, entity, 0, false, null, null, null );
+        } else {
+            return getConstructor( ReflectionUtil.getNMSClass( "EntityTrackerEntry" ) ).newInstance( null, entity, 0, false, null, null );
+        }
     }
     
     public static Object constructArmorStand( Object worldServer ) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
