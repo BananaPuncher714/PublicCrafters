@@ -92,7 +92,7 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 
 				double offset = 0;
 				// For some reason the armor stand is spawned on the table
-				if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R4 ) ) {
+				if ( NBTEditor.getMinecraftVersion() == MinecraftVersion.v1_21_R4 ) {
 				    offset = -0.95;
 				}
 				ReflectionUtil.getMethod( "setLocation").invoke( armorStand, loc.getX(), loc.getY() + offset, loc.getZ(), 0f, 0f );
