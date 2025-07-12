@@ -58,7 +58,7 @@ public class ContainerManager_v1_21_R5 implements CraftInventoryManager {
 		mockPlayer.g = new PlayerConnection( server, new NetworkManager( EnumProtocolDirection.a ) {
 		    @Override
 		    public void a( PacketListener listener ) {};
-		}, mockPlayer, new CommonListenerCookie( profile, 1, ClientInformation.a(), false ) ) {
+		}, mockPlayer, CommonListenerCookie.a( profile, false ) ) {
 			@Override
 			public boolean a( Packet< ? > packet ) {
 			    return true;
