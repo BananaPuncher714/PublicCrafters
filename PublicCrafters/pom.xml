@@ -13,7 +13,7 @@
 		<version>4</version>
 	</parent>
 	<artifactId>PublicCrafters</artifactId>
-	<version>4.13.17</version>
+	<version>4.13.18</version>
 
 	<build>
 		<plugins>
