@@ -4,41 +4,14 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.bananapuncher714</groupId>
-	<artifactId>PublicCrafters_Master</artifactId>
-	<version>4</version>
+	<artifactId>public-crafters-master</artifactId>
+	<version>4.0.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>PublicCrafters</module>
-		<module>PublicCrafters_Main</module>
-		<module>PublicCrafters_v1_8_R3</module>
-		<module>PublicCrafters_v1_9_R2</module>
-		<module>PublicCrafters_v1_10_R1</module>
-		<module>PublicCrafters_v1_11_R1</module>
-		<module>PublicCrafters_v1_12_R1</module>
-		<module>PublicCrafters_v1_13_R2</module>
-		<module>PublicCrafters_v1_14_R1</module>
-		<module>PublicCrafters_v1_15_R1</module>
-		<module>PublicCrafters_v1_13_R1</module>
-		<module>PublicCrafters_v1_16_R1</module>
-		<module>PublicCrafters_v1_16_R2</module>
-		<module>PublicCrafters_v1_16_R3</module>
-		<module>PublicCrafters_v1_17_R1</module>
-		<module>PublicCrafters_v1_17_1</module>
-		<module>PublicCrafters_v1_18_R1</module>
-		<module>PublicCrafters_v1_18_R2</module>
-		<module>PublicCrafters_v1_19_R1</module>
-		<module>PublicCrafters_v1_19_R2</module>
-		<module>PublicCrafters_v1_19_R3</module>
-		<module>PublicCrafters_v1_20_R1</module>
-		<module>PublicCrafters_v1_20_R2</module>
-		<module>PublicCrafters_v1_20_R3</module>
-		<module>PublicCrafters_v1_20_R4</module>
-		<module>PublicCrafters_v1_21_R1</module>
-		<module>PublicCrafters_v1_21_R2</module>
-		<module>PublicCrafters_v1_21_R3</module>
-		<module>PublicCrafters_v1_21_R4</module>
-		<module>PublicCrafters_v1_21_R5</module>
+		<module>plugin</module>
+		<module>core</module>
+		<module>implementation</module>
 	</modules>
 
 	<build>
@@ -46,7 +19,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.14.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -54,4 +27,8 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 </project>
