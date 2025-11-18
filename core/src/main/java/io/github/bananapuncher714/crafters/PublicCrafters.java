@@ -59,6 +59,8 @@ public class PublicCrafters extends JavaPlugin {
 	private boolean showResultName = true;
 	private double resultHeight = .15;
 	
+	private boolean deleteOnLoad = true;
+
 	private final File saveFolder = new File( getDataFolder() + "/" + "saves" );
 
 	private final Set< Location > adminTables = new HashSet< Location >();
@@ -124,7 +126,7 @@ public class PublicCrafters extends JavaPlugin {
 	private void loadChunks() {
 		for ( World world : Bukkit.getWorlds() ) {
 			for ( Chunk chunk : world.getLoadedChunks() ) {
-				Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( PublicCrafters.getInstance().getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ() );
+				Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ(), deleteOnLoad );
 				for ( Location location : itemMap.keySet() ) {
 					manager.load( location, itemMap.get( location ) );
 				}
@@ -186,7 +188,7 @@ public class PublicCrafters extends JavaPlugin {
 	private void registerListeners() {
 		Bukkit.getPluginManager().registerEvents( new InventoryOpenListener( this ), this );
 		Bukkit.getPluginManager().registerEvents( new CraftBlockListener( this ), this );
-		Bukkit.getPluginManager().registerEvents( new ChunkListener( manager ), this );
+		Bukkit.getPluginManager().registerEvents( new ChunkListener( manager, this ), this );
 		Bukkit.getPluginManager().registerEvents( new PlayerListener( this ), this );
 //		Bukkit.getPluginManager().registerEvents( new CraftingListener(), this );
 //		cake = new CakeListener();
@@ -210,6 +212,7 @@ public class PublicCrafters extends JavaPlugin {
 		showResult = config.getBoolean( "display-crafted-item", true );
 		showResultName = config.getBoolean( "display-crafted-item-name", true );
 		resultHeight = config.getDouble( "crafted-item-height", .15 );
+		deleteOnLoad = config.getBoolean( "delete-on-load", true );
 		
 		angles.clear();
 		if ( config.getConfigurationSection( "orientation" ) != null ) {
@@ -266,6 +269,10 @@ public class PublicCrafters extends JavaPlugin {
 		for ( String key : config.getKeys( true ) ) {
 			messages.put( key, ChatColor.translateAlternateColorCodes( '&', config.getString( key ) ) );
 		}
+	}
+
+	public void deleteTable( Location location ) {
+		CraftInventoryLoader.getItems( getSaveFolder(), location, true );
 	}
 	
 	public boolean isPrivate( UUID playerUUID ) {
@@ -326,6 +333,10 @@ public class PublicCrafters extends JavaPlugin {
 
 	public File getSaveFolder() {
 		return saveFolder;
+	}
+
+	public boolean isDeleteOnLoad() {
+		return deleteOnLoad;
 	}
 
 	public EulerAngle getAngleForMaterial( Material material ) {

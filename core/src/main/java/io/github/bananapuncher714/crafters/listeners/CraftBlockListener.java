@@ -44,6 +44,7 @@ public class CraftBlockListener implements Listener {
 		Location location = event.getBlock().getLocation();
 		plugin.getManager().remove( location );
 		plugin.getAdminTables().remove( location );
+		plugin.deleteTable( location );
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST, ignoreCancelled = true )
@@ -51,6 +52,7 @@ public class CraftBlockListener implements Listener {
 		for ( Block block : event.blockList() ) {
 			plugin.getManager().remove( block.getLocation() );
 			plugin.getAdminTables().remove( block.getLocation() );
+			plugin.deleteTable( block.getLocation() );
 		}
 	}
 	
@@ -59,6 +61,7 @@ public class CraftBlockListener implements Listener {
 		for ( Block block : event.blockList() ) {
 			plugin.getManager().remove( block.getLocation() );
 			plugin.getAdminTables().remove( block.getLocation() );
+			plugin.deleteTable( block.getLocation() );
 		}
 	}
 	
@@ -84,6 +87,7 @@ public class CraftBlockListener implements Listener {
 		}
 		plugin.getAdminTables().addAll( newLocations );
 		for ( PublicCraftingInventory crafting : moveThese ) {
+			plugin.deleteTable( crafting.getLocation() );
 			crafting.move( crafting.getLocation().getBlock().getRelative( face ).getLocation() );
 		}
 	}
@@ -104,6 +108,7 @@ public class CraftBlockListener implements Listener {
 		}
 		plugin.getAdminTables().addAll( newLocations );
 		for ( PublicCraftingInventory crafting : moveThese ) {
+			plugin.deleteTable( crafting.getLocation() );
 			crafting.move( crafting.getLocation().getBlock().getRelative( face ).getLocation() );
 		}
 	}

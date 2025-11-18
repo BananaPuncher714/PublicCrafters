@@ -23,16 +23,18 @@ import io.github.bananapuncher714.crafters.implementation.api.CraftInventoryMana
  * @author BananaPuncher714
  */
 public class ChunkListener implements Listener {
-	private CraftInventoryManager manager;
+	private final PublicCrafters plugin;
+	private final CraftInventoryManager manager;
 	
-	public ChunkListener( CraftInventoryManager manager ) {
+	public ChunkListener( CraftInventoryManager manager, PublicCrafters plugin ) {
+		this.plugin = plugin;
 		this.manager = manager;
 	}
 	
 	@EventHandler
 	private void onChunkLoadEvent( ChunkLoadEvent event ) {
 		Chunk chunk = event.getChunk();
-		Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( PublicCrafters.getInstance().getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ() );
+		Map< Location, List< ItemStack > > itemMap = CraftInventoryLoader.loadChunk( plugin.getSaveFolder(), chunk.getWorld(), chunk.getX(), chunk.getZ(), plugin.isDeleteOnLoad() );
 		for ( Location location : itemMap.keySet() ) {
 			manager.load( location, itemMap.get( location ) );
 		}

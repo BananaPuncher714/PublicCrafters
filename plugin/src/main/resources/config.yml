@@ -37,3 +37,8 @@ virtual: true
 display-crafted-item: true
 display-crafted-item-name: true
 crafted-item-height: .15
+
+# Whether or not table data should be deleted when loaded
+# The implications of not deleting on load means that if the server crashes, then the next time the server
+# is loaded, the items will re-appear on the tables, allow potential dupes.
+delete-on-load: true

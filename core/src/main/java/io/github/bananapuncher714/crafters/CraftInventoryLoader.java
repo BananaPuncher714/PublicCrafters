@@ -39,6 +39,7 @@ public final class CraftInventoryLoader {
 		File saveFile = new File( saveLoc + "/" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ() );
 		
 		try {
+			saveFile.delete();
 			saveFile.createNewFile();
 		} catch ( Exception exception ) {
 			exception.printStackTrace();
@@ -58,7 +59,7 @@ public final class CraftInventoryLoader {
 		}
 	}
 	
-	public static List< ItemStack > getItems( File baseDir, Location location ) {
+	public static List< ItemStack > getItems( File baseDir, Location location, boolean delete ) {
 		Chunk chunk = location.getChunk();
 		int x = chunk.getX();
 		int z = chunk.getZ();
@@ -68,10 +69,10 @@ public final class CraftInventoryLoader {
 
 		File saveFile = new File( saveLoc + "/" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ() );
 		
-		return getItems( saveFile );
+		return getItems( saveFile, delete );
 	}
 	
-	public static List< ItemStack > getItems( File file ) {
+	public static List< ItemStack > getItems( File file, boolean delete ) {
 		List< ItemStack > items = new ArrayList< ItemStack >();
 		
 		if ( !file.exists() ) {
@@ -86,12 +87,14 @@ public final class CraftInventoryLoader {
 		for ( int index = 0; index < 9; index++ ) {
 			items.add( config.getItemStack( "items." + index ) );
 		}
-		file.delete();
+		if ( delete ) {
+			file.delete();
+		}
 		
 		return items;
 	}
 	
-	public static Map< Location, List< ItemStack > > loadChunk( File baseDir, World world, int x, int z ) {
+	public static Map< Location, List< ItemStack > > loadChunk( File baseDir, World world, int x, int z, boolean delete ) {
 		Map< Location, List< ItemStack > > itemMap = new HashMap< Location, List< ItemStack > >();
 		
 		File saveLoc = new File( baseDir + "/" + world.getName() + "/" + x + "_" + z + "/" );
@@ -103,11 +106,15 @@ public final class CraftInventoryLoader {
 		for ( File file : saveLoc.listFiles() ) {
 			String[] locArray = file.getName().split( "_" );
 			Location location = new Location( world, Integer.parseInt( locArray[ 0 ] ), Integer.parseInt( locArray[ 1 ] ), Integer.parseInt( locArray[ 2 ] ) );
-			itemMap.put( location, getItems( file ) );
-			file.delete();
+			itemMap.put( location, getItems( file, delete ) );
+			if ( delete ) {
+				file.delete();
+			}
 		}
 		
-		saveLoc.delete();
+		if ( delete ) {
+			saveLoc.delete();
+		}
 		
 		return itemMap;
 	}
