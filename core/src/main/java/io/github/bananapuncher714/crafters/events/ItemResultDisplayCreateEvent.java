@@ -4,14 +4,14 @@ import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import io.github.bananapuncher714.crafters.display.CraftResultDisplay;
+import io.github.bananapuncher714.crafters.display.AbstractItemDisplay;
 
-public class CraftResultDisplayCreateEvent extends CraftResultDisplayEvent implements Cancellable {
+public class ItemResultDisplayCreateEvent extends ItemDisplayEvent implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private final Location location;
 	boolean cancelled = false;
 	
-	public CraftResultDisplayCreateEvent( CraftResultDisplay display, Location location ) {
+	public ItemResultDisplayCreateEvent( AbstractItemDisplay display, Location location ) {
 		super( display );
 		this.location = location.clone();
 	}
@@ -20,7 +20,7 @@ public class CraftResultDisplayCreateEvent extends CraftResultDisplayEvent imple
 		return location.clone();
 	}
 	
-	public void setCraftResultDisplay( CraftResultDisplay display ) {
+	public void setCraftResultDisplay( AbstractItemDisplay display ) {
 		this.display = display;
 	}
 

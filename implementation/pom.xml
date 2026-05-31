@@ -13,9 +13,9 @@
   <packaging>pom</packaging>
 
   <modules>
-  <module>v1_8_R3</module>
-  <module>v1_9_R2</module>
-  <module>v1_10_R1</module>
+    <module>v1_8_R3</module>
+    <module>v1_9_R2</module>
+    <module>v1_10_R1</module>
     <module>v1_11_R1</module>
     <module>v1_12_R1</module>
     <module>v1_13_R1</module>
@@ -39,5 +39,7 @@
     <module>v1_21_R4</module>
     <module>v1_21_R5</module>
     <module>v1_21_R6</module>
+    <module>v1_21_R7</module>
+    <module>v26_1</module>
 	</modules>
 </project>

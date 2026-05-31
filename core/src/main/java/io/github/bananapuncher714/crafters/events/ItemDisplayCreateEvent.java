@@ -4,8 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
-import io.github.bananapuncher714.crafters.display.CraftDisplay;
-import io.github.bananapuncher714.crafters.display.ItemDisplay;
+import io.github.bananapuncher714.crafters.display.AbstractItemDisplay;
 
 /**
  * Called whenever a {@link CraftDisplay} is about to create a new {@link ItemDisplay};
@@ -19,7 +18,7 @@ public class ItemDisplayCreateEvent extends ItemDisplayEvent implements Cancella
 	private final Location location;
 	boolean cancelled = false;
 	
-	public ItemDisplayCreateEvent( Location location, ItemDisplay item ) {
+	public ItemDisplayCreateEvent( Location location, AbstractItemDisplay item ) {
 		super( item );
 		this.location = location;
 	}
@@ -28,7 +27,7 @@ public class ItemDisplayCreateEvent extends ItemDisplayEvent implements Cancella
 		return location.clone();
 	}
 	
-	public void setItemDisplay( ItemDisplay display ) {
+	public void setItemDisplay( AbstractItemDisplay display ) {
 		item = display;
 	}
 

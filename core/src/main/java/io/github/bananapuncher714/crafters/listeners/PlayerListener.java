@@ -12,7 +12,7 @@ import io.github.bananapuncher714.crafters.display.CraftResultDisplay;
 import io.github.bananapuncher714.crafters.display.ItemDisplay;
 import io.github.bananapuncher714.crafters.display.VirtualCraftResultDisplay;
 import io.github.bananapuncher714.crafters.display.VirtualItemDisplay;
-import io.github.bananapuncher714.crafters.events.CraftResultDisplayCreateEvent;
+import io.github.bananapuncher714.crafters.events.ItemResultDisplayCreateEvent;
 import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
 
 public class PlayerListener implements Listener {
@@ -50,17 +50,17 @@ public class PlayerListener implements Listener {
 			return;
 		}
 		
-		ItemDisplay display = event.getItemDisplay();
+		AbstractItemDisplay display = event.getItemDisplay();
 		VirtualItemDisplay vDisplay = new VirtualItemDisplay( display.getCraftDisplay(), display.getLocation(), display.getItem(), display.getSlot() );
 		event.setItemDisplay( vDisplay );
 	}
 	
 	@EventHandler( priority = EventPriority.HIGHEST )
-	private void onCraftResultCreateEvent( CraftResultDisplayCreateEvent event ) {
+	private void onCraftResultCreateEvent( ItemResultDisplayCreateEvent event ) {
 		if ( !plugin.isVirtual() ) {
 			return;
 		}
-		CraftResultDisplay display = event.getDisplay();
+		AbstractItemDisplay display = event.getDisplay();
 		VirtualCraftResultDisplay vDisplay = new VirtualCraftResultDisplay( display.getCraftDisplay(), display.getLocation(), display.getItem() );
 		event.setCraftResultDisplay( vDisplay );
 	}

@@ -15,9 +15,10 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import io.github.bananapuncher714.crafters.PublicCrafters;
-import io.github.bananapuncher714.crafters.util.ReflectionUtil;
+import io.github.bananapuncher714.crafters.util.ContainerManagerLoader;
 import io.github.bananapuncher714.crafters.util.Utils;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
+import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
 /**
  * The basic unit that is responsible for managing the items that appear on the crafting table
@@ -27,7 +28,7 @@ import io.github.bananapuncher714.nbteditor.NBTEditor;
  * @author BananaPuncher714
  *
  */
-public class ItemDisplay {
+public class ItemDisplay extends AbstractItemDisplay {
 	private static Map< UUID, ItemDisplay > displays = new HashMap< UUID, ItemDisplay >();
 	
 	public static final EulerAngle BLOCK_HAND_POSE;
@@ -41,7 +42,7 @@ public class ItemDisplay {
 		versions.add( "v1_10_R1" );
 		versions.add( "v1_9_R2" );
 		
-		String version = ReflectionUtil.getVersion();
+		String version = NBTEditor.getMinecraftVersion().toString();
 		if ( versions.contains( version ) ) {
 			BLOCK_HAND_POSE = new EulerAngle( Math.toRadians( -43 ), Math.toRadians( -41.5 ), Math.toRadians( 19.5 ) );
 			ITEM_HAND_POSE = new EulerAngle( Math.toRadians( -20 ), Math.toRadians( 0), Math.toRadians( 0 ) );
@@ -52,17 +53,11 @@ public class ItemDisplay {
 	}
 	
 	private UUID uuid;
-
-	protected final int slot;
-	protected final ItemStack item;
-	protected final Location location;
-	protected final CraftDisplay parent;
 	protected EulerAngle handPose;
 	
 	public ItemDisplay( CraftDisplay container, Location loc, ItemStack item, int slot ) {
-		this.item = item;
-		this.slot = slot;
-		
+		super( container, getOffsetLocation( loc, item ), item, slot );
+
 		handPose = PublicCrafters.getInstance().getAngleForMaterial( item.getType() );
 		if ( handPose == null ) {
 			if ( item.getType().isBlock() ) {
@@ -71,23 +66,15 @@ public class ItemDisplay {
 				handPose = ITEM_HAND_POSE;
 			}
 		}
-
-		location = loc.clone();
-		
-		Vector vector = PublicCrafters.getInstance().getOffsetForMaterial( item.getType() );
-		if ( vector != null ) {
-			location.add( vector );
-		}
-		
-		parent = container;
 	}
 	
 	/**
 	 * This is the important method when creating a subclass.
 	 */
+	@Override
 	public void init() {
 		ArmorStand itemDisplay = getModelStand( location );
-		itemDisplay.setItemInHand( item );
+		itemDisplay.setItemInHand( getItem() );
 		
 		itemDisplay.setRightArmPose( handPose );
 		
@@ -98,28 +85,13 @@ public class ItemDisplay {
 	/**
 	 * This is a method you will want to override too, it is called whenever an ItemDisplay is no longer needed, and on server stop.
 	 */
+	@Override
 	public void remove() {
-		Entity display = Utils.getEntityByUUID( uuid, location.getWorld() );
+		Entity display = Utils.getEntityByUUID( uuid, getLocation().getWorld() );
 		if ( display != null ) {
 			display.remove();
 		}
 		unregisterEntity( uuid );
-	}
-	
-	public ItemStack getItem() {
-		return item;
-	}
-	
-	public Location getLocation() {
-		return location;
-	}
-	
-	public CraftDisplay getCraftDisplay() {
-		return parent;
-	}
-	
-	public int getSlot() {
-		return slot;
 	}
 	
 	/**
@@ -169,5 +141,14 @@ public class ItemDisplay {
 		NBTEditor.set( model, 1, "DisabledSlots" );
 		NBTEditor.set( model, ( byte ) 1, "Invulnerable" );
 		return model;
+	}
+
+	protected Location getOffsetLocation( Location location, ItemStack item ) {
+		Location loc = location.clone();
+		Vector vector = PublicCrafters.getInstance().getOffsetForMaterial( item.getType() );
+		if ( vector != null ) {
+			loc.add( vector );
+		}
+		return loc;
 	}
 }

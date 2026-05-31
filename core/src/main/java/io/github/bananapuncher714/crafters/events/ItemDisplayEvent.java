@@ -2,16 +2,16 @@ package io.github.bananapuncher714.crafters.events;
 
 import org.bukkit.event.Event;
 
-import io.github.bananapuncher714.crafters.display.ItemDisplay;
+import io.github.bananapuncher714.crafters.display.AbstractItemDisplay;
 
 public abstract class ItemDisplayEvent extends Event {
-	protected ItemDisplay item;
+	protected AbstractItemDisplay item;
 	
-	public ItemDisplayEvent( ItemDisplay item ) {
+	public ItemDisplayEvent( AbstractItemDisplay item ) {
 		this.item = item;
 	}
 	
-	public ItemDisplay getItemDisplay() {
+	public AbstractItemDisplay getItemDisplay() {
 		return item;
 	}
 }

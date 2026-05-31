@@ -18,12 +18,12 @@ import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
-public class VirtualCraftResultDisplay extends CraftResultDisplay {
+public class VirtualCraftResultDisplay extends AbstractItemDisplay {
 	private static Map< Location, Object > entities = new HashMap< Location, Object >();
 	private static Map< Location, Object > armorstands = new HashMap< Location, Object >();
 	
 	public VirtualCraftResultDisplay( CraftDisplay container, Location loc, ItemStack item ) {
-		super( container, loc, item );
+		super( container, loc, item, 10 );
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class VirtualCraftResultDisplay extends CraftResultDisplay {
 				Object worldServer = ReflectionUtil.getMethod( "getWorldHandle" ).invoke( loc.getWorld() );
 				itemEntity = ReflectionUtil.spawnItem( worldServer, loc, item );
 				
-				if ( !ReflectionUtil.getVersion().contains( "v1_8" ) ) {
+				if ( !NBTEditor.getMinecraftVersion().toString().contains( "v1_8" ) ) {
 					ReflectionUtil.getMethod( "setInvulnerable").invoke( itemEntity, true );
 				}
 				

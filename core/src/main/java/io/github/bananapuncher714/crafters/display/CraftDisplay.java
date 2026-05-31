@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import io.github.bananapuncher714.crafters.PublicCrafters;
 import io.github.bananapuncher714.crafters.events.CraftDisplayDestroyEvent;
 import io.github.bananapuncher714.crafters.events.CraftDisplayUpdateEvent;
-import io.github.bananapuncher714.crafters.events.CraftResultDisplayCreateEvent;
-import io.github.bananapuncher714.crafters.events.CraftResultDisplayDestroyEvent;
-import io.github.bananapuncher714.crafters.events.CraftResultDisplayEvent;
+import io.github.bananapuncher714.crafters.events.ItemResultDisplayCreateEvent;
+import io.github.bananapuncher714.crafters.events.ItemResultDisplayDestroyEvent;
+import io.github.bananapuncher714.crafters.events.ItemResultDisplayEvent;
 import io.github.bananapuncher714.crafters.events.ItemDisplayCreateEvent;
 import io.github.bananapuncher714.crafters.events.ItemDisplayDestroyEvent;
 import io.github.bananapuncher714.crafters.implementation.api.PublicCraftingInventory;
@@ -122,7 +122,7 @@ public class CraftDisplay {
 		ItemStack result = inventory.getResult();
 		if ( result == null || result.getType() == Material.AIR ) {
 			if ( resultDisplay != null ) {
-				CraftResultDisplayEvent event = new CraftResultDisplayDestroyEvent( resultDisplay );
+				ItemDisplayEvent event = new ItemResultDisplayDestroyEvent( resultDisplay );
 				Bukkit.getPluginManager().callEvent( event );
 				resultDisplay.remove();
 				resultDisplay = null;
@@ -135,7 +135,7 @@ public class CraftDisplay {
 				return;
 			}
 			
-			CraftResultDisplayEvent destroyEvent = new CraftResultDisplayDestroyEvent( resultDisplay );
+			ItemDisplayEvent destroyEvent = new ItemResultDisplayDestroyEvent( resultDisplay );
 			Bukkit.getPluginManager().callEvent( destroyEvent );
 			resultDisplay.remove();
 			resultDisplay = null;
@@ -145,7 +145,7 @@ public class CraftDisplay {
 			Location spawnLoc = blockLoc.clone();
 			spawnLoc.add( .5, 1 + PublicCrafters.getInstance().getResultHeight(), .5 );
 			resultDisplay = new CraftResultDisplay( this, spawnLoc, result );
-			CraftResultDisplayCreateEvent createEvent = new CraftResultDisplayCreateEvent( resultDisplay, spawnLoc.clone() );
+			ItemResultDisplayCreateEvent createEvent = new ItemResultDisplayCreateEvent( resultDisplay, spawnLoc.clone() );
 			Bukkit.getPluginManager().callEvent( createEvent );
 			if ( createEvent.isCancelled() ) {
 				return;

@@ -32,8 +32,11 @@ import io.github.bananapuncher714.crafters.listeners.ChunkListener;
 import io.github.bananapuncher714.crafters.listeners.CraftBlockListener;
 import io.github.bananapuncher714.crafters.listeners.InventoryOpenListener;
 import io.github.bananapuncher714.crafters.listeners.PlayerListener;
-import io.github.bananapuncher714.crafters.util.ReflectionUtil;
+import io.github.bananapuncher714.crafters.util.ContainerManagerLoader;
 import io.github.bananapuncher714.crafters.util.Utils;
+
+import io.github.bananapuncher714.nbteditor.NBTEditor;
+import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
 /**
  * The main class of all classes;
@@ -84,8 +87,8 @@ public class PublicCrafters extends JavaPlugin {
 		loadConfig();
 		loadMessages();
 		
-		manager = ReflectionUtil.getManager();
-		getLogger().info( "Detected version '" + ReflectionUtil.getVersion() + "'" );
+		manager = ContainerManagerLoader.getManager();
+		getLogger().info( "Detected version '" + ContainerManagerLoader.getVersion() + "'" );
 		
 		registerListeners();
 		registerCommands();
@@ -312,7 +315,7 @@ public class PublicCrafters extends JavaPlugin {
 	}
 
 	public boolean isVirtual() {
-		return virtual;
+		return virtual && !NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v26_1 );
 	}
 	
 	public boolean isShowResult() {

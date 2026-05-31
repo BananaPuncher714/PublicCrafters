@@ -21,22 +21,17 @@ import io.github.bananapuncher714.nbteditor.NBTEditor;
  * 
  * @author BananaPuncher714
  */
-public class CraftResultDisplay {
+public class CraftResultDisplay extends AbstractItemDisplay {
 	protected final static Set< UUID > REGISTERED_ITEMS = new HashSet< UUID >();
 	
 	private UUID uuid;
 	private UUID itemUUID;
 	
-	protected final ItemStack item;
-	protected final Location location;
-	protected final CraftDisplay parent;
-	
 	public CraftResultDisplay( CraftDisplay container, Location loc, ItemStack item ) {
-		this.parent = container;
-		this.location = loc.clone();
-		this.item = item;
+		super( container, loc, item, 10 );
 	}
 	
+	@Override
 	public void init() {
 		ArmorStand armorstand = getModelStand( location );
 		uuid = armorstand.getUniqueId();
@@ -59,6 +54,7 @@ public class CraftResultDisplay {
 		REGISTERED_ITEMS.add( itemUUID );
 	}
 	
+	@Override
 	public void remove() {
 		Entity display = Utils.getEntityByUUID( uuid, location.getWorld() );
 		if ( display != null ) {
@@ -70,18 +66,6 @@ public class CraftResultDisplay {
 		}
 		
 		REGISTERED_ITEMS.remove( itemUUID );
-	}
-	
-	public Location getLocation() {
-		return location.clone();
-	}
-	
-	public CraftDisplay getCraftDisplay() {
-		return parent;
-	}
-	
-	public ItemStack getItem() {
-		return item;
 	}
 	
 	/**

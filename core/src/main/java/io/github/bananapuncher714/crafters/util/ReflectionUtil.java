@@ -27,10 +27,6 @@ import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
  * @author BananaPuncher714
  */
 public final class ReflectionUtil {
-    private static Class< CraftInventoryManager > containerManager = null;
-    private static String version;
-    private static String mcVersion;
-    
     private static final Map< String, Class<?> > classCache;
     private static final Map< String, Method > methodCache;
     private static final Map< Class< ? >, Constructor< ? > > constructorCache;
@@ -38,48 +34,7 @@ public final class ReflectionUtil {
     private static Object entityTypeArmorStand;
     
     static {
-        version = NBTEditor.getMinecraftVersion().toString();
-        
-        try {
-            Method getServerMethod = Bukkit.getServer().getClass().getMethod( "getServer" );
-            Object dedicated = getServerMethod.invoke( Bukkit.getServer() );
-            Method getVersionMethod = null;
-            try {
-                if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R6 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "R" );
-                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R2 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "M" );
-                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R4 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "L" );
-                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_20_R3 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "I" );
-                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R3 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "G" );
-                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_19_R1 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "F" );
-                } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_18_R1 ) ) {
-                    getVersionMethod = dedicated.getClass().getMethod( "G" );
-                } else {
-                    getVersionMethod = dedicated.getClass().getMethod( "getVersion" );
-                }
-            } catch ( NoSuchMethodException e ) {
-                e.printStackTrace();
-            }
-            mcVersion = ( String ) getVersionMethod.invoke( dedicated );
-        } catch ( NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1 ) {
-            e1.printStackTrace();
-        }
-        
-        try {
-            String underscored = mcVersion.replace( '.', '_' );
-            containerManager = ( Class< CraftInventoryManager > ) Class.forName( "io.github.bananapuncher714.crafters.implementation.v" + underscored + ".ContainerManager_v" + underscored );
-        }  catch ( ClassNotFoundException e ) {
-            try {
-                containerManager = ( Class< CraftInventoryManager > ) Class.forName( "io.github.bananapuncher714.crafters.implementation." + version + ".ContainerManager_" + version );
-            } catch ( ClassNotFoundException e1 ) {
-                PublicCrafters.getInstance().getLogger().severe( "'" + version + "' is not implemented at the moment! Please contact BananaPuncher714 for future support!" );
-            }
-        }
+        String version = NBTEditor.getMinecraftVersion().toString();
         
         classCache = new HashMap< String, Class<?> >();
         try {
@@ -222,7 +177,10 @@ public final class ReflectionUtil {
                     methodCache.put( "getDataWatcherItems", getNMSClass( "DataWatcher" ).getMethod( "c" ) );
                     methodCache.put( "getEquipment", getNMSClass( "EntityArmorStand" ).getMethod( "c", getNMSClass( "EnumItemSlot" ) ) );
                 } else {
-                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R6 ) ) {
+                    if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R7 ) ) {
+                        methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "aA" ) );
+                        methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "aD" ) );
+                    } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R6 ) ) {
                         methodCache.put( "getId", getNMSClass( "Entity" ).getMethod( "az" ) );
                         methodCache.put( "getDataWatcher", getNMSClass( "Entity" ).getMethod( "aC" ) );
                     } else if ( NBTEditor.getMinecraftVersion().greaterThanOrEqualTo( MinecraftVersion.v1_21_R5 ) ) {
@@ -383,7 +341,7 @@ public final class ReflectionUtil {
         }
 
         try {
-            return Class.forName("net.minecraft.server." + version + "." + name);
+            return Class.forName("net.minecraft.server." + NBTEditor.getMinecraftVersion().toString() + "." + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -428,21 +386,5 @@ public final class ReflectionUtil {
             e.printStackTrace();
         }
         return null;
-    }
-    
-    public static CraftInventoryManager getManager() {
-        Object instance = null;
-        try {
-            instance = containerManager.newInstance();
-        } catch ( Exception exception ) {
-            exception.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin( PublicCrafters.getInstance() );
-        }
-        
-        return ( CraftInventoryManager ) instance; 
-    }
-    
-    public static String getVersion() {
-        return version;
     }
 }

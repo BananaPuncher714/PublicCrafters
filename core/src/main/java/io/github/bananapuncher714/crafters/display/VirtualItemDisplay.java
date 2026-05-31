@@ -3,9 +3,11 @@ package io.github.bananapuncher714.crafters.display;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,11 +21,43 @@ import io.github.bananapuncher714.crafters.util.ReflectionUtil;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import io.github.bananapuncher714.nbteditor.NBTEditor.MinecraftVersion;
 
-public class VirtualItemDisplay extends ItemDisplay {
+public class VirtualItemDisplay extends AbstractItemDisplay {
     private static Map< Location, Object > entities = new HashMap< Location, Object >();
+
+	public static final EulerAngle BLOCK_HAND_POSE;
+	public static final EulerAngle ITEM_HAND_POSE;
+	
+	static {
+		// Determine what hand pose is fit for each version
+		
+		Set< String > versions = new HashSet< String >();
+		versions.add( "v1_8_R3" );
+		versions.add( "v1_10_R1" );
+		versions.add( "v1_9_R2" );
+		
+		String version = NBTEditor.getMinecraftVersion().toString();
+		if ( versions.contains( version ) ) {
+			BLOCK_HAND_POSE = new EulerAngle( Math.toRadians( -43 ), Math.toRadians( -41.5 ), Math.toRadians( 19.5 ) );
+			ITEM_HAND_POSE = new EulerAngle( Math.toRadians( -20 ), Math.toRadians( 0), Math.toRadians( 0 ) );
+		} else {
+			BLOCK_HAND_POSE = new EulerAngle( Math.toRadians( -15 ), Math.toRadians( -45 ), 0 );
+			ITEM_HAND_POSE = new EulerAngle( 0, 0, 0 );
+		}
+	}
+	
+	protected EulerAngle handPose;
 
     public VirtualItemDisplay( CraftDisplay container, Location loc, ItemStack item, int slot ) {
         super( container, loc.clone().add( -.5, .5, -.5 ), item, slot );
+
+        handPose = PublicCrafters.getInstance().getAngleForMaterial( item.getType() );
+		if ( handPose == null ) {
+			if ( item.getType().isBlock() ) {
+				handPose = BLOCK_HAND_POSE;
+			} else {
+				handPose = ITEM_HAND_POSE;
+			}
+		}
     }
 
     @Override

@@ -9,7 +9,7 @@
 		<version>4.0.0</version>
 	</parent>
 	<artifactId>public-crafters-plugin</artifactId>
-	<version>4.14.0</version>
+	<version>4.15.0</version>
 
 	<build>
 		<plugins>
@@ -34,6 +34,11 @@
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>public-crafters-core</artifactId>
 			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.bananapuncher714</groupId>
+			<artifactId>public-crafters-addon-modern</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
@@ -173,6 +178,16 @@
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>public-crafters-implementation-v1_21_R6</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.bananapuncher714</groupId>
+			<artifactId>public-crafters-implementation-v1_21_R7</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.bananapuncher714</groupId>
+			<artifactId>public-crafters-implementation-v26_1</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>

@@ -2,12 +2,12 @@ package io.github.bananapuncher714.crafters.events;
 
 import org.bukkit.event.HandlerList;
 
-import io.github.bananapuncher714.crafters.display.CraftResultDisplay;
+import io.github.bananapuncher714.crafters.display.AbstractItemDisplay;
 
-public class CraftResultDisplayDestroyEvent extends CraftResultDisplayEvent {
+public class ItemResultDisplayDestroyEvent extends ItemDisplayEvent {
 	private static final HandlerList handlers = new HandlerList();
 	
-	public CraftResultDisplayDestroyEvent( CraftResultDisplay display ) {
+	public ItemResultDisplayDestroyEvent( AbstractItemDisplay display ) {
 		super( display );
 	}
 	
