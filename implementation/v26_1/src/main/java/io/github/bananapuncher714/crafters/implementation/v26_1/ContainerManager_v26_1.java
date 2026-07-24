@@ -181,7 +181,7 @@ public class ContainerManager_v26_1 implements CraftInventoryManager {
 				continue;
 			}
 			ServerPlayer nmsPlayer = ( ( CraftPlayer ) player ).getHandle();
-			nmsPlayer.connection.sendPacket( packet );
+			nmsPlayer.connection.send( packet );
 		}
 	}
 	
