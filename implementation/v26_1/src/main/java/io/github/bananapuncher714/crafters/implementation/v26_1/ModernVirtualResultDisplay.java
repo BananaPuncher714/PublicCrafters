@@ -83,8 +83,8 @@ public class ModernVirtualResultDisplay extends AbstractItemDisplay {
         if ( itemEntity == null ) {
             net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy( item );
             itemEntity = new ItemEntity( ( ( CraftWorld ) location.getWorld() ).getHandle(), location.getX() + 0.5, location.getY(), location.getZ() + 0.5, nmsItem );
-            itemEntity.setInvulnerable( true );
             itemEntity.setNoGravity( true );
+            ReflectionUtil.setInvulnerable( itemEntity, true );
             if ( PublicCrafters.getInstance().isShowResultName() ) {
                 ItemMeta meta = item.getItemMeta();
                 if ( meta.hasDisplayName() ) {
@@ -101,9 +101,9 @@ public class ModernVirtualResultDisplay extends AbstractItemDisplay {
             cloud.setRadiusPerTick( 0 );
             cloud.setDuration( -1 );
             cloud.setDurationOnUse( 0 );
-            cloud.setInvulnerable( true );
             cloud.setInvisible( true );
             cloud.setNoGravity( true );
+            ReflectionUtil.setInvulnerable( cloud, true );
             baseEntity = cloud;
             
             itemEntity.startRiding( baseEntity );
@@ -117,9 +117,9 @@ public class ModernVirtualResultDisplay extends AbstractItemDisplay {
     protected void respawn( Player player ) {
         ServerPlayer serverPlayer = ( ( CraftPlayer ) player ).getHandle();
 
-        serverPlayer.connection.send( itemEntity.getAddEntityPacket( new ServerEntity( null, itemEntity, 0, false, null, null ) ) );
+        serverPlayer.connection.send( itemEntity.getAddEntityPacket( ReflectionUtil.getServerEntityFor( itemEntity ) ) );
         itemEntity.refreshEntityData( serverPlayer );
-        serverPlayer.connection.send( baseEntity.getAddEntityPacket( new ServerEntity( null, baseEntity, 0, false, null, null ) ) );
+        serverPlayer.connection.send( baseEntity.getAddEntityPacket( ReflectionUtil.getServerEntityFor( baseEntity ) ) );
         baseEntity.refreshEntityData( serverPlayer );
 
         serverPlayer.connection.send( new ClientboundSetPassengersPacket( baseEntity ) );

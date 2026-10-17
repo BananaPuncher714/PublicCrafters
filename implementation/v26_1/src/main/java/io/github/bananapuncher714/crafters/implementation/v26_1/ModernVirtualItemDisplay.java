@@ -25,7 +25,6 @@ import io.github.bananapuncher714.crafters.display.CraftDisplay;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
 import net.minecraft.world.entity.Display;
@@ -149,7 +148,7 @@ public class ModernVirtualItemDisplay extends AbstractItemDisplay {
     private static void respawn( Player player, Entity item ) {
         ServerPlayer serverPlayer = ( ( CraftPlayer ) player ).getHandle();
 
-        serverPlayer.connection.send( item.getAddEntityPacket( new ServerEntity( null, item, 0, false, null, null ) ) );
+        serverPlayer.connection.send( item.getAddEntityPacket( ReflectionUtil.getServerEntityFor( item ) ) );
         item.refreshEntityData( serverPlayer );
     }
 
