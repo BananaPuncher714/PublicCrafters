@@ -27,6 +27,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -42,7 +43,12 @@ public class CustomInventoryCrafting extends TransientCraftingContainer implemen
             TO_BUKKIT_ITEMSTACK = CraftItemStack.class.getDeclaredMethod( "asBukkitCopy", ItemStack.class );
             TO_BUKKIT_ITEMSTACK.setAccessible( true );
         } catch ( NoSuchMethodException e ) {
-            e.printStackTrace();
+            try {
+                TO_BUKKIT_ITEMSTACK = CraftItemStack.class.getDeclaredMethod( "asBukkitCopy", ItemInstance.class );
+                TO_BUKKIT_ITEMSTACK.setAccessible( true );
+            } catch ( NoSuchMethodException e1 ) {
+                e1.printStackTrace();
+            }
         }
     }
     
