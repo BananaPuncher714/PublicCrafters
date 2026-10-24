@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>io.github.bananapuncher714</groupId>
 			<artifactId>nbteditor</artifactId>
-			<version>8.0.2</version>
+			<version>8.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bstats</groupId>
